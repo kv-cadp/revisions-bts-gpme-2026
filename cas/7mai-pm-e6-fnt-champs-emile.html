@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7 mai après-midi — E6 : Flux nets de trésorerie (2) | CADP</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" type="image/jpeg" href="../assets/img/logo-cadp.jpg">
+  <style>
+    .tresorerie-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    .tresorerie-table th, .tresorerie-table td {
+      border: 1px solid var(--or-pale);
+      padding: 0.5rem 0.7rem;
+      text-align: right;
+      vertical-align: middle;
+    }
+    .tresorerie-table th {
+      background-color: var(--navy-profond);
+      color: var(--or-principal);
+      font-weight: 700;
+      text-align: center;
+    }
+    .tresorerie-table td:first-child {
+      text-align: left;
+      font-weight: 600;
+      background-color: #FAFAF7;
+    }
+    .tresorerie-table tr.total td {
+      background-color: #F0EBD8;
+      font-weight: 700;
+    }
+    .tresorerie-table tr.solde td {
+      background-color: var(--navy-profond);
+      color: var(--or-principal);
+      font-weight: 700;
+    }
+    .tresorerie-table td.negatif {
+      color: #C33;
+      font-weight: 700;
+    }
+    .annexe {
+      background-color: #FFFEFA;
+      border-left: 4px solid var(--or-principal);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-radius: 0 6px 6px 0;
+    }
+    .annexe__numero {
+      display: inline-block;
+      background-color: var(--navy-profond);
+      color: var(--or-principal);
+      padding: 0.3rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .annexe__titre {
+      font-family: var(--font-titre);
+      color: var(--navy-profond);
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+    .donnees-cles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.8rem;
+      margin: 1rem 0;
+    }
+    .donnees-cles__item {
+      background: #FFF;
+      border: 1px solid var(--or-pale);
+      border-radius: 6px;
+      padding: 0.8rem 1rem;
+      text-align: center;
+    }
+    .donnees-cles__chiffre {
+      font-family: var(--font-titre);
+      color: var(--navy-profond);
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+    .donnees-cles__label {
+      font-size: 0.85rem;
+      color: var(--texte-leger);
+      margin-top: 0.2rem;
+    }
+    .formule {
+      background-color: #F5F0E6;
+      border-radius: 6px;
+      padding: 1rem 1.5rem;
+      margin: 1rem 0;
+      font-family: var(--font-titre);
+      color: var(--navy-profond);
+      font-size: 1rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="cadp-header">
+    <a href="../index.html"><img src="../assets/img/logo-cadp.jpg" alt="CADP" class="cadp-header__logo"></a>
+    <div class="cadp-header__titre">
+      7 mai — Après-midi (13h-16h)
+      <span class="cadp-header__sous-titre">E6 · Flux nets de trésorerie (cas n°2) · Budget de trésorerie</span>
+    </div>
+    <div class="cadp-header__mention">BTS GPME 2A</div>
+  </header>
+
+  <main class="cadp-container">
+
+    <section class="cadp-identification">
+      <div class="cadp-identification__titre">Identification</div>
+      <div class="cadp-identification__champs">
+        <div><label for="cadp-prenom">Prénom</label><input type="text" id="cadp-prenom" required></div>
+        <div><label for="cadp-nom">Nom</label><input type="text" id="cadp-nom" required></div>
+      </div>
+    </section>
+
+    <h1 class="cadp-titre-cas">Les Champs d'Émile — Gérer la trésorerie d'une exploitation saisonnière</h1>
+    <p class="cadp-sous-titre-cas">E6 · Bloc 4 · Flux nets de trésorerie et budget de trésorerie — Cas n°2</p>
+
+    <div class="cadp-encadre cadp-encadre--important">
+      <div class="cadp-encadre__titre">Contexte de la session</div>
+      <p>Tu as travaillé le cas La Maison Levert la semaine dernière. Ce deuxième cas applique les mêmes concepts (FNT, budget de trésorerie, décalages de paiement, TVA) mais sur une <strong>entreprise différente</strong> avec des caractéristiques propres : une exploitation de lavande en Drôme provençale, dont la saisonnalité est encore plus marquée (récolte concentrée en juillet, ventes étalées sur l'année).</p>
+    </div>
+
+    <!-- ANNEXE 1 -->
+    <div class="annexe">
+      <div class="annexe__numero">Annexe 1 — Présentation de l'entreprise</div>
+      <div class="annexe__titre">Les Champs d'Émile — Lavande et produits dérivés</div>
+      <p>SARL familiale fondée en 2010 à Grignan (Drôme provençale, 26). Exploitation de 15 hectares de lavande et lavandin. Émile Roche, le fondateur (aujourd'hui 62 ans), a diversifié l'activité vers la transformation : huile essentielle, sachets parfumés, savons à la lavande, miel de lavande. Sa fille Marine a rejoint l'entreprise en 2023 pour développer la vente en ligne et l'accueil touristique (visite des champs + boutique).</p>
+
+      <div class="donnees-cles">
+        <div class="donnees-cles__item"><div class="donnees-cles__chiffre">420 K€</div><div class="donnees-cles__label">CA 2025</div></div>
+        <div class="donnees-cles__item"><div class="donnees-cles__chiffre">4</div><div class="donnees-cles__label">Salariés permanents</div></div>
+        <div class="donnees-cles__item"><div class="donnees-cles__chiffre">6</div><div class="donnees-cles__label">Saisonniers (juin-août)</div></div>
+        <div class="donnees-cles__item"><div class="donnees-cles__chiffre">45 %</div><div class="donnees-cles__label">CA réalisé en été (juin-août)</div></div>
+      </div>
+
+      <p><strong>Répartition du CA :</strong> huile essentielle en gros (40 % du CA, vendue à des grossistes cosmétiques), produits finis en boutique + site web (35 %), accueil touristique / visites (15 %), ventes en marchés locaux (10 %).</p>
+      <p><strong>Saisonnalité extrême :</strong> la récolte a lieu en juillet. La distillation produit le stock d'huile essentielle pour toute l'année. Les ventes grossistes sont concentrées sur août-octobre (livraison du stock frais). Les ventes boutique/web ont un pic en été (touristes) et un second pic en novembre-décembre (cadeaux de Noël). Les mois de janvier à mai sont les plus creux (12 % du CA annuel sur 5 mois).</p>
+    </div>
+
+    <!-- ANNEXE 2 -->
+    <div class="annexe">
+      <div class="annexe__numero">Annexe 2 — Données prévisionnelles mai-août 2026</div>
+      <div class="annexe__titre">Prévisions de ventes, achats et charges</div>
+
+      <table class="tresorerie-table">
+        <thead>
+          <tr><th>Poste</th><th>Mai</th><th>Juin</th><th>Juillet</th><th>Août</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Ventes HT prévues</td><td>18 000</td><td>42 000</td><td>75 000</td><td>95 000</td></tr>
+          <tr><td>Achats matières HT (flacons, emballages, étiquettes)</td><td>5 000</td><td>12 000</td><td>8 000</td><td>6 000</td></tr>
+          <tr><td>Charges de personnel (permanents)</td><td>14 000</td><td>14 000</td><td>14 000</td><td>14 000</td></tr>
+          <tr><td>Charges saisonniers</td><td>0</td><td>8 500</td><td>18 000</td><td>12 000</td></tr>
+          <tr><td>Charges externes HT (énergie, transport, assurance)</td><td>3 500</td><td>4 200</td><td>6 800</td><td>5 500</td></tr>
+          <tr><td>Remboursement emprunt (distillateur)</td><td>1 800</td><td>1 800</td><td>1 800</td><td>1 800</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>Informations complémentaires :</strong></p>
+      <ul class="cadp-liste">
+        <li><strong>TVA :</strong> 20 % sur les ventes de produits cosmétiques et huile essentielle, 20 % sur les achats et charges externes</li>
+        <li><strong>Délais de paiement clients :</strong> boutique + web + marchés = comptant (70 % des ventes). Grossistes = 60 jours fin de mois (30 % des ventes)</li>
+        <li><strong>Délais fournisseurs :</strong> achats matières = 30 jours fin de mois. Charges externes = comptant</li>
+        <li><strong>Charges de personnel et emprunt :</strong> décaissés le mois même</li>
+        <li><strong>TVA :</strong> reversée le mois suivant</li>
+        <li><strong>Trésorerie au 1er mai 2026 :</strong> 8 200 €</li>
+        <li><strong>Ventes grossistes d'avril à reporter :</strong> 12 000 € HT (encaissement en juillet, 60 j)</li>
+        <li><strong>Achats d'avril à reporter :</strong> 4 500 € HT (décaissement en mai, 30 j)</li>
+        <li><strong>Investissement prévu en juin :</strong> réfection de la boutique d'accueil, 25 000 € TTC comptant</li>
+      </ul>
+    </div>
+
+    <!-- EXERCICE 1 — Calculs préparatoires -->
+    <section class="cadp-exercice" id="ex1">
+      <div class="cadp-exercice__numero">Exercice 1 · 8 points</div>
+      <h2 class="cadp-exercice__titre">Calculs préparatoires au budget de trésorerie</h2>
+      <p class="cadp-exercice__consigne">Avant de construire le budget, calcule les montants intermédiaires clés. TVA à 20 %. Arrondis à l'euro.</p>
+
+      <div class="formule">Rappel : FNT = Encaissements TTC − Décaissements TTC</div>
+
+      <div class="cadp-saisie" id="ex1-q1">
+        <p class="cadp-saisie__intitule">1. Ventes TTC de juin (42 000 × 1,20).</p>
+        <input type="text" placeholder="Ex : 50000">
+      </div>
+
+      <div class="cadp-saisie" id="ex1-q2">
+        <p class="cadp-saisie__intitule">2. Encaissements comptant TTC de juin (70 % des ventes TTC de juin).</p>
+        <input type="text" placeholder="Ex : 30000">
+      </div>
+
+      <div class="cadp-saisie" id="ex1-q3">
+        <p class="cadp-saisie__intitule">3. Encaissements grossistes TTC de juin reportés : les ventes grossistes (30 %) de juin seront encaissées en quel mois ? <em>(Rappel : 60 jours fin de mois)</em></p>
+        <input type="text" placeholder="Ex : septembre">
+      </div>
+
+      <div class="cadp-saisie" id="ex1-q4">
+        <p class="cadp-saisie__intitule">4. TVA collectée de juin = 42 000 × 20 % = ? <em>(en €)</em></p>
+        <input type="text" placeholder="Ex : 8000">
+      </div>
+
+      <div class="cadp-saisie" id="ex1-q5">
+        <p class="cadp-saisie__intitule">5. TVA déductible de juin = (achats 12 000 + charges ext. 4 200) × 20 % = ? <em>(en €)</em></p>
+        <input type="text" placeholder="Ex : 3000">
+      </div>
+
+      <div class="cadp-saisie" id="ex1-q6">
+        <p class="cadp-saisie__intitule">6. TVA nette à reverser au titre de juin (TVA collectée − TVA déductible) = ? <em>(en €)</em></p>
+        <input type="text" placeholder="Ex : 5000">
+      </div>
+
+      <div class="cadp-btn--actions">
+        <button class="cadp-btn cadp-btn--primaire" data-action="verifier" data-exercice="ex1">Vérifier mes réponses</button>
+        <button class="cadp-btn cadp-btn--corrige" data-action="corrige" data-exercice="ex1">Voir le corrigé</button>
+      </div>
+
+      <div class="cadp-corrige">
+        <div class="cadp-corrige__titre">Corrigé</div>
+        <p><strong>1. 50 400 €</strong> : 42 000 × 1,20 = 50 400 €.</p>
+        <p><strong>2. 35 280 €</strong> : 50 400 × 0,70 = 35 280 €.</p>
+        <p><strong>3. Août</strong> : ventes de juin, 60 jours fin de mois = fin août. Les grossistes de juin paient donc en août. (Attention : à 60 j fin de mois, les ventes de juin sont dues fin août, pas fin juillet comme à 30 j.)</p>
+        <p><strong>4. 8 400 €</strong> : 42 000 × 20 % = 8 400 €.</p>
+        <p><strong>5. 3 240 €</strong> : (12 000 + 4 200) × 20 % = 16 200 × 20 % = 3 240 €.</p>
+        <p><strong>6. 5 160 €</strong> : 8 400 − 3 240 = 5 160 €. Ce montant sera décaissé en juillet (mois suivant).</p>
+      </div>
+    </section>
+
+    <!-- EXERCICE 2 — Budget de trésorerie complet -->
+    <section class="cadp-exercice" id="ex2">
+      <div class="cadp-exercice__numero">Exercice 2 · 14 points</div>
+      <h2 class="cadp-exercice__titre">Construire le budget de trésorerie mai-août</h2>
+      <p class="cadp-exercice__consigne">Complète les valeurs manquantes du budget. Attention aux décalages : 70 % comptant, 30 % grossistes à 60 j, achats à 30 j, TVA M+1.</p>
+
+      <div class="cadp-saisie" id="ex2-q1">
+        <p class="cadp-saisie__intitule">Q1. Total encaissements de mai <em>(comptant mai TTC + grossistes avril TTC reportés)</em></p>
+        <input type="text" placeholder="...">
+      </div>
+      <div class="cadp-saisie" id="ex2-q2">
+        <p class="cadp-saisie__intitule">Q2. Total encaissements de juin <em>(comptant juin TTC — pas de grossiste reporté en juin, les grossistes d'avril arrivent en juillet à 60 j)</em></p>
+        <input type="text" placeholder="...">
+      </div>
+      <div class="cadp-saisie" id="ex2-q3">
+        <p class="cadp-saisie__intitule">Q3. Total encaissements de juillet <em>(comptant juillet TTC + grossistes avril reportés 60 j en TTC + grossistes mai reportés 60 j en TTC)</em></p>
+        <input type="text" placeholder="...">
+      </div>
+      <div class="cadp-saisie" id="ex2-q4">
+        <p class="cadp-saisie__intitule">Q4. Total décaissements de juin <em>(achats mai TTC à 30 j + personnel permanent + saisonniers + charges ext. TTC comptant + emprunt + investissement boutique + TVA mai à reverser)</em></p>
+        <input type="text" placeholder="...">
+      </div>
+      <div class="cadp-saisie" id="ex2-q5">
+        <p class="cadp-saisie__intitule">Q5. FNT de mai <em>(total encaissements mai − total décaissements mai)</em></p>
+        <input type="text" placeholder="...">
+      </div>
+      <div class="cadp-saisie" id="ex2-q6">
+        <p class="cadp-saisie__intitule">Q6. Trésorerie fin mai <em>(trésorerie début mai + FNT mai)</em></p>
+        <input type="text" placeholder="...">
+      </div>
+      <div class="cadp-saisie" id="ex2-q7">
+        <p class="cadp-saisie__intitule">Q7. FNT de juin</p>
+        <input type="text" placeholder="...">
+      </div>
+
+      <div class="cadp-btn--actions">
+        <button class="cadp-btn cadp-btn--primaire" data-action="verifier" data-exercice="ex2">Vérifier mes réponses</button>
+        <button class="cadp-btn cadp-btn--corrige" data-action="corrige" data-exercice="ex2">Voir le corrigé complet</button>
+      </div>
+
+      <div class="cadp-corrige">
+        <div class="cadp-corrige__titre">Budget de trésorerie complet — corrigé</div>
+
+        <h4>Encaissements détaillés</h4>
+        <table class="tresorerie-table">
+          <thead><tr><th>Encaissements</th><th>Mai</th><th>Juin</th><th>Juillet</th><th>Août</th></tr></thead>
+          <tbody>
+            <tr><td>Comptant TTC (70 %)</td><td>15 120</td><td>35 280</td><td>63 000</td><td>79 800</td></tr>
+            <tr><td>Grossistes 60 j TTC (30 %)</td><td>—</td><td>—</td><td>14 400 + 6 480</td><td>15 120</td></tr>
+            <tr class="total"><td>Total encaissements</td><td>15 120</td><td>35 280</td><td>83 880</td><td>94 920</td></tr>
+          </tbody>
+        </table>
+
+        <p><em>Détail grossistes juillet : ventes avril 12 000 HT × 1,20 × 30 % = 4 320... Non, recalculons. Les grossistes d'avril (12 000 HT reportés dans l'annexe) sont à 60 j fin de mois = encaissement en juillet. Montant TTC = 12 000 × 1,20 = 14 400 €. Les grossistes de mai (18 000 × 30 % = 5 400 HT) à 60 j = encaissement en juillet. Montant TTC = 5 400 × 1,20 = 6 480 €. Total grossistes juillet = 14 400 + 6 480 = 20 880 €.</em></p>
+
+        <h4>Décaissements détaillés</h4>
+        <table class="tresorerie-table">
+          <thead><tr><th>Décaissements</th><th>Mai</th><th>Juin</th><th>Juillet</th><th>Août</th></tr></thead>
+          <tbody>
+            <tr><td>Achats M-1 TTC (30 j)</td><td>5 400</td><td>6 000</td><td>14 400</td><td>9 600</td></tr>
+            <tr><td>Personnel permanent</td><td>14 000</td><td>14 000</td><td>14 000</td><td>14 000</td></tr>
+            <tr><td>Saisonniers</td><td>0</td><td>8 500</td><td>18 000</td><td>12 000</td></tr>
+            <tr><td>Charges ext. TTC comptant</td><td>4 200</td><td>5 040</td><td>8 160</td><td>6 600</td></tr>
+            <tr><td>Emprunt</td><td>1 800</td><td>1 800</td><td>1 800</td><td>1 800</td></tr>
+            <tr><td>TVA à reverser M-1</td><td>—</td><td>1 300</td><td>5 160</td><td>8 960</td></tr>
+            <tr><td>Investissement boutique</td><td>—</td><td>25 000</td><td>—</td><td>—</td></tr>
+            <tr class="total"><td>Total décaissements</td><td>25 400</td><td>61 640</td><td>61 520</td><td>52 960</td></tr>
+          </tbody>
+        </table>
+
+        <table class="tresorerie-table">
+          <tbody>
+            <tr class="solde"><td>FNT du mois</td><td class="negatif">-10 280</td><td class="negatif">-26 360</td><td>+22 360</td><td>+41 960</td></tr>
+            <tr class="solde"><td>Trésorerie début</td><td>8 200</td><td class="negatif">-2 080</td><td class="negatif">-28 440</td><td class="negatif">-6 080</td></tr>
+            <tr class="solde"><td>Trésorerie fin</td><td class="negatif">-2 080</td><td class="negatif">-28 440</td><td class="negatif">-6 080</td><td>+35 880</td></tr>
+          </tbody>
+        </table>
+
+        <h4>Réponses aux questions</h4>
+        <p><strong>Q1 = 15 120 €</strong> : comptant mai = 18 000 × 1,20 × 70 % = 15 120 €. Pas de grossiste reporté en mai (les grossistes d'avril arrivent en juillet à 60 j).</p>
+        <p><strong>Q2 = 35 280 €</strong> : comptant juin uniquement. Les grossistes d'avril n'arrivent qu'en juillet.</p>
+        <p><strong>Q3 = 83 880 €</strong> : comptant juillet (63 000) + grossistes avril (14 400) + grossistes mai (6 480) = 83 880 €.</p>
+        <p><strong>Q4 = 61 640 €</strong> : achats mai TTC 30 j (6 000) + personnel (14 000) + saisonniers (8 500) + charges ext. TTC (5 040) + emprunt (1 800) + investissement (25 000) + TVA mai (1 300) = 61 640 €.</p>
+        <p><strong>Q5 = -10 280 €</strong> : 15 120 − 25 400 = -10 280 €.</p>
+        <p><strong>Q6 = -2 080 €</strong> : 8 200 + (-10 280) = -2 080 €. La trésorerie est déjà négative fin mai.</p>
+        <p><strong>Q7 = -26 360 €</strong> : 35 280 − 61 640 = -26 360 €. Le creux s'aggrave en juin à cause de l'investissement boutique.</p>
+
+        <h4>Lecture du budget</h4>
+        <p>La trésorerie plonge dès fin mai et atteint son creux en fin juin (-28 440 €). Le retour en positif intervient fin août (+35 880 €) grâce aux ventes estivales massives et aux encaissements grossistes reportés. Le besoin de financement court terme est d'environ <strong>30 000 €</strong> pour couvrir mai à juillet. Crédit de campagne agricole adapté (produit bancaire standard pour les exploitations saisonnières).</p>
+      </div>
+    </section>
+
+    <!-- EXERCICE 3 — Analyse et recommandations -->
+    <section class="cadp-exercice" id="ex3">
+      <div class="cadp-exercice__numero">Exercice 3 · 8 points</div>
+      <h2 class="cadp-exercice__titre">Analyser et recommander</h2>
+
+      <div class="cadp-qcm__question">
+        <p class="cadp-qcm__intitule">1. <em>Comparé au cas de La Maison Levert (semaine dernière), la saisonnalité des Champs d'Émile est :</em></p>
+        <div class="cadp-qcm__options">
+          <div class="cadp-qcm__option"><input type="radio" name="ex3-q1" value="a" id="ex3-q1-a"><label for="ex3-q1-a">Moins marquée, donc moins risquée en trésorerie</label></div>
+          <div class="cadp-qcm__option"><input type="radio" name="ex3-q1" value="b" id="ex3-q1-b"><label for="ex3-q1-b">Plus marquée (45 % du CA sur 3 mois d'été + 60 j de délai grossiste), ce qui crée un décalage encore plus fort entre dépenses et encaissements</label></div>
+          <div class="cadp-qcm__option"><input type="radio" name="ex3-q1" value="c" id="ex3-q1-c"><label for="ex3-q1-c">Identique, il n'y a pas de différence</label></div>
+        </div>
+      </div>
+
+      <div class="cadp-qcm__question">
+        <p class="cadp-qcm__intitule">2. <em>Le délai de paiement grossiste est de 60 jours (vs 30 j chez Levert). Quel impact sur la trésorerie ?</em></p>
+        <div class="cadp-qcm__options">
+          <div class="cadp-qcm__option"><input type="radio" name="ex3-q2" value="a" id="ex3-q2-a"><label for="ex3-q2-a">Aucun impact, un délai est un délai</label></div>
+          <div class="cadp-qcm__option"><input type="radio" name="ex3-q2" value="b" id="ex3-q2-b"><label for="ex3-q2-b">Impact majeur : les ventes d'été ne sont encaissées que 2 mois plus tard, ce qui aggrave le creux de trésorerie pré-saison et retarde le retour en positif. C'est le facteur le plus pénalisant du budget</label></div>
+          <div class="cadp-qcm__option"><input type="radio" name="ex3-q2" value="c" id="ex3-q2-c"><label for="ex3-q2-c">Impact positif : plus le délai est long, mieux c'est</label></div>
+        </div>
+      </div>
+
+      <div class="cadp-qcm__question">
+        <p class="cadp-qcm__intitule">3. <em>Quelle mesure permettrait de réduire structurellement le besoin de trésorerie de court terme ?</em></p>
+        <div class="cadp-qcm__options">
+          <div class="cadp-qcm__option"><input type="radio" name="ex3-q3" value="a" id="ex3-q3-a"><label for="ex3-q3-a">Augmenter le prix des produits de 50 %</label></div>
+          <div class="cadp-qcm__option"><input type="radio" name="ex3-q3" value="b" id="ex3-q3-b"><label for="ex3-q3-b">Négocier avec les grossistes un délai de paiement réduit (30 j au lieu de 60 j), ce qui accélérerait les encaissements d'un mois entier et réduirait le creux de trésorerie pré-saison</label></div>
+          <div class="cadp-qcm__option"><input type="radio" name="ex3-q3" value="c" id="ex3-q3-c"><label for="ex3-q3-c">Licencier tous les saisonniers</label></div>
+        </div>
+      </div>
+
+      <!-- Production -->
+      <p class="cadp-exercice__consigne" style="margin-top:2rem;"><strong>3.4 (5 pts)</strong> — Rédige une <strong>note de recommandation courte</strong> (200-300 mots) pour Émile et Marine. Ta note doit : (1) résumer le diagnostic de trésorerie, (2) recommander un financement court terme adapté à une exploitation agricole saisonnière, (3) proposer au moins 2 mesures pour lisser la trésorerie à moyen terme.</p>
+
+      <div class="cadp-production" id="ex3-prod">
+        <textarea placeholder="NOTE DE RECOMMANDATION&#10;&#10;Destinataire : Émile et Marine Roche&#10;Objet : Gestion de la trésorerie mai-août 2026&#10;&#10;[ta note, 200-300 mots]" style="min-height:260px;"></textarea>
+        <div class="cadp-production__compteur">0 mots</div>
+      </div>
+
+      <div class="cadp-btn--actions">
+        <button class="cadp-btn cadp-btn--primaire" data-action="verifier" data-exercice="ex3">Vérifier les QCM + auto-évaluation</button>
+        <button class="cadp-btn cadp-btn--corrige" data-action="corrige" data-exercice="ex3">Voir le corrigé</button>
+      </div>
+
+      <div class="cadp-autoeval" style="margin-top:1rem;">
+        <div class="cadp-autoeval__titre">Auto-évaluation (3.4)</div>
+        <div class="cadp-autoeval__critere">
+          <div class="cadp-autoeval__libelle">Diagnostic clair avec chiffres<small>As-tu identifié le creux (≈ 28 K€), sa cause (saisonnalité + investissement + délais 60 j), et la date de retour en positif (août) ?</small></div>
+          <div class="cadp-autoeval__notes">
+            <input type="radio" name="ex3-prod-c0" value="0" data-max="2" id="ex3-prod-c0-0"><label for="ex3-prod-c0-0">0</label>
+            <input type="radio" name="ex3-prod-c0" value="1" data-max="2" id="ex3-prod-c0-1"><label for="ex3-prod-c0-1">1</label>
+            <input type="radio" name="ex3-prod-c0" value="2" data-max="2" id="ex3-prod-c0-2"><label for="ex3-prod-c0-2">2</label>
+          </div>
+        </div>
+        <div class="cadp-autoeval__critere">
+          <div class="cadp-autoeval__libelle">Financement adapté + 2 mesures de lissage<small>As-tu proposé un crédit de campagne + au moins 2 mesures structurelles (délais, préventes, étalement investissement) ?</small></div>
+          <div class="cadp-autoeval__notes">
+            <input type="radio" name="ex3-prod-c1" value="0" data-max="3" id="ex3-prod-c1-0"><label for="ex3-prod-c1-0">0</label>
+            <input type="radio" name="ex3-prod-c1" value="1" data-max="3" id="ex3-prod-c1-1"><label for="ex3-prod-c1-1">1</label>
+            <input type="radio" name="ex3-prod-c1" value="2" data-max="3" id="ex3-prod-c1-2"><label for="ex3-prod-c1-2">2</label>
+            <input type="radio" name="ex3-prod-c1" value="3" data-max="3" id="ex3-prod-c1-3"><label for="ex3-prod-c1-3">3</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="cadp-corrige">
+        <div class="cadp-corrige__titre">Corrigé</div>
+        <p><strong>1. B</strong> — 45 % du CA sur 3 mois (vs 35 % chez Levert) + délai grossiste de 60 j (vs 30 j) = saisonnalité plus marquée et décalage encore plus fort.</p>
+        <p><strong>2. B</strong> — Avec un délai de 60 j, les ventes grossistes de juin (12 600 € TTC) ne sont encaissées qu'en août. L'entreprise finance donc ses charges estivales (saisonniers, distillation) sur fonds propres pendant 2 mois avant de voir rentrer le cash correspondant. C'est le décalage le plus pénalisant du budget.</p>
+        <p><strong>3. B</strong> — Négocier un passage de 60 j à 30 j accélérerait les encaissements d'un mois entier. L'impact serait immédiat sur le budget de trésorerie : les grossistes d'avril et mai seraient encaissés en mai et juin au lieu de juillet, réduisant significativement le creux de trésorerie pré-saison.</p>
+
+        <h4>Corrigé 3.4 — Note de recommandation</h4>
+        <p style="font-style:italic;"><strong>1. Diagnostic.</strong> Le budget prévisionnel mai-août révèle un déficit de trésorerie cumulé atteignant 28 440 € en fin juin. Ce creux résulte de la combinaison de 3 facteurs : la saisonnalité forte (45 % du CA concentré sur l'été), le délai de paiement grossiste de 60 jours (les ventes estivales ne sont encaissées que 2 mois après), et l'investissement boutique de 25 000 € prévu en juin. Le retour en positif n'intervient qu'en fin août (+35 880 €).</p>
+        <p style="font-style:italic;"><strong>2. Financement recommandé.</strong> Négocier un crédit de campagne agricole de 35 000 € sur 6 mois (mai à octobre), remboursable en une fois en fin de saison grâce aux encaissements de l'été. Ce produit bancaire est spécifiquement conçu pour les exploitations saisonnières et les banques du réseau Crédit Agricole le pratiquent couramment.</p>
+        <p style="font-style:italic;"><strong>3. Mesures de lissage à moyen terme.</strong> (1) Négocier avec les 3 principaux grossistes un passage à 30 j de délai de paiement, ce qui accélérerait les encaissements d'un mois et réduirait le besoin de crédit de campagne. (2) Développer les préventes en ligne de printemps (coffrets "Lavande nouvelle récolte" livrés en septembre, payés comptant en mai-juin) pour générer du cash en période creuse. (3) Reporter l'investissement boutique à septembre (après le pic de trésorerie estival) pour éviter d'aggraver le creux de juin.</p>
+      </div>
+    </section>
+
+    <!-- ENVOI FINAL -->
+    <section style="margin-top:3rem;text-align:center;">
+      <h2 class="cadp-titre-cas" style="font-size:1.4rem;border:none;text-align:center;">Tu as terminé ?</h2>
+      <p style="margin-bottom:1.5rem;color:var(--texte-leger);">Clique ci-dessous pour transmettre tes résultats à Kévin.</p>
+      <button class="cadp-btn cadp-btn--envoyer" data-action="envoyer" data-cas="7 mai PM - GPME 2A - E6 FNT Champs Emile lavande">Envoyer mes résultats à Kévin</button>
+    </section>
+
+    <p style="text-align:center;margin-top:2rem;">
+      <a href="../index.html" class="cadp-btn cadp-btn--secondaire">Retour au sommaire</a>
+    </p>
+
+  </main>
+
+  <footer class="cadp-footer">
+    Campus Alternance Drôme Provence — Pierrelatte (26)<br>
+    BTS GPME 2A — Session du 7 mai 2026
+  </footer>
+
+  <script src="../assets/js/script.js"></script>
+
+  <script>
+    // Exercice 1 — Calculs préparatoires
+    CADP.saisie('ex1-q1', 1.33, [50400], { numerique: true, tolerance: 10 });
+    CADP.saisie('ex1-q2', 1.33, [35280], { numerique: true, tolerance: 10 });
+    CADP.saisie('ex1-q3', 1.34, ['aout']);
+    CADP.saisie('ex1-q4', 1, [8400], { numerique: true, tolerance: 5 });
+    CADP.saisie('ex1-q5', 1, [3240], { numerique: true, tolerance: 5 });
+    CADP.saisie('ex1-q6', 1, [5160], { numerique: true, tolerance: 5 });
+
+    // Exercice 2 — Budget complet
+    CADP.saisie('ex2-q1', 2, [15120], { numerique: true, tolerance: 20 });
+    CADP.saisie('ex2-q2', 2, [35280], { numerique: true, tolerance: 20 });
+    CADP.saisie('ex2-q3', 2, [83880], { numerique: true, tolerance: 50 });
+    CADP.saisie('ex2-q4', 2, [61640], { numerique: true, tolerance: 50 });
+    CADP.saisie('ex2-q5', 2, [-10280], { numerique: true, tolerance: 30 });
+    CADP.saisie('ex2-q6', 2, [-2080], { numerique: true, tolerance: 30 });
+    CADP.saisie('ex2-q7', 2, [-26360], { numerique: true, tolerance: 50 });
+
+    // Exercice 3 — Analyse
+    CADP.qcm('ex3', 3, {
+      'ex3-q1': 'b',
+      'ex3-q2': 'b',
+      'ex3-q3': 'b'
+    });
+    CADP.production('ex3-prod', 5, [
+      { libelle: 'Diagnostic clair avec chiffres', points: 2 },
+      { libelle: 'Financement adapté + 2 mesures de lissage', points: 3 }
+    ]);
+  </script>
+
+</body>
+</html>
