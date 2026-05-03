@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E52 — GRH : Les Champs d'Émile | CADP</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" type="image/jpeg" href="../assets/img/logo-cadp.jpg">
+  <style>
+    .annexe { background-color:#FFFEFA; border-left:4px solid var(--or-principal); padding:1.5rem; margin-bottom:1.5rem; border-radius:0 6px 6px 0; }
+    .annexe__numero { display:inline-block; background-color:var(--navy-profond); color:var(--or-principal); padding:0.3rem 0.8rem; border-radius:4px; font-size:0.85rem; font-weight:700; margin-bottom:0.5rem; }
+    .annexe__titre { font-family:var(--font-titre); color:var(--navy-profond); font-size:1.15rem; font-weight:700; margin-bottom:0.3rem; }
+    .article-loi { background:#FFF; border:1px solid var(--or-pale); padding:1rem; border-radius:4px; margin:0.5rem 0; font-size:0.9rem; line-height:1.6; }
+    .article-loi__ref { font-weight:700; color:var(--navy-profond); margin-bottom:0.3rem; }
+    .kpi-table { width:100%; border-collapse:collapse; margin:1rem 0; font-size:0.88rem; }
+    .kpi-table th, .kpi-table td { border:1px solid var(--or-pale); padding:0.5rem 0.7rem; text-align:right; }
+    .kpi-table th { background-color:var(--navy-profond); color:var(--or-principal); font-weight:700; text-align:center; }
+    .kpi-table td:first-child { text-align:left; font-weight:600; background-color:#FAFAF7; }
+    .dossier-bandeau { background-color:var(--navy-profond); color:var(--or-principal); padding:0.8rem 1.2rem; border-radius:6px; margin:2.5rem 0 1.5rem 0; }
+    .dossier-bandeau h3 { margin:0; font-family:var(--font-titre); font-size:1.2rem; color:var(--or-principal); }
+    .dossier-bandeau p { margin:0.3rem 0 0 0; color:#FFF; font-size:0.9rem; }
+  </style>
+</head>
+<body>
+
+  <header class="cadp-header">
+    <a href="../index.html"><img src="../assets/img/logo-cadp.jpg" alt="CADP" class="cadp-header__logo"></a>
+    <div class="cadp-header__titre">
+      7 mai — Après-midi (13h-15h30)
+      <span class="cadp-header__sous-titre">E52 · Gérer le personnel et contribuer à la GRH · 2h30</span>
+    </div>
+    <div class="cadp-header__mention">BTS GPME 2A</div>
+  </header>
+
+  <main class="cadp-container">
+
+    <section class="cadp-identification">
+      <div class="cadp-identification__titre">Identification</div>
+      <div class="cadp-identification__champs">
+        <div><label for="cadp-prenom">Prénom</label><input type="text" id="cadp-prenom" required></div>
+        <div><label for="cadp-nom">Nom</label><input type="text" id="cadp-nom" required></div>
+      </div>
+    </section>
+
+    <h1 class="cadp-titre-cas">Les Champs d'Émile — Gérer le personnel d'une exploitation saisonnière</h1>
+    <p class="cadp-sous-titre-cas">E52 · Sujet blanc · 2 dossiers · 2h30</p>
+
+    <div class="cadp-encadre cadp-encadre--important">
+      <div class="cadp-encadre__titre">Consignes</div>
+      <p>Ce sujet blanc reproduit le format de l'épreuve E52. Tu disposes de <strong>2h30</strong>. Le sujet comporte 2 dossiers et 7 annexes. Toutes les réponses doivent être <strong>rédigées, argumentées et appuyées sur les annexes</strong> (notamment les textes juridiques).</p>
+    </div>
+
+    <!-- CONTEXTE -->
+    <section class="cadp-contexte">
+      <h3>Contexte</h3>
+      <p>Tu retrouves <strong>Les Champs d'Émile</strong>, exploitation de lavande et produits dérivés à Grignan (Drôme provençale). La SARL emploie 4 salariés permanents et recrute chaque été 6 saisonniers pour la récolte (juin-août). Marine Roche, qui a rejoint l'entreprise en 2023, prend en charge la gestion du personnel. Plusieurs situations RH nécessitent ton intervention.</p>
+    </section>
+
+    <!-- ANNEXES -->
+    <div class="annexe">
+      <div class="annexe__numero">Annexe 1 — Effectif et organisation actuelle</div>
+      <table class="kpi-table">
+        <thead><tr><th>Salarié</th><th>Poste</th><th>Contrat</th><th>Brut mensuel</th><th>Ancienneté</th></tr></thead>
+        <tbody>
+          <tr><td>Émile Roche</td><td>Dirigeant / chef de culture</td><td>Gérant</td><td>3 200 €</td><td>16 ans</td></tr>
+          <tr><td>Marine Roche</td><td>Responsable vente + RH</td><td>CDI</td><td>2 400 €</td><td>3 ans</td></tr>
+          <tr><td>Julien Fabre</td><td>Ouvrier agricole polyvalent</td><td>CDI</td><td>1 900 €</td><td>8 ans</td></tr>
+          <tr><td>Nadia Bensalem</td><td>Opératrice distillation / conditionnement</td><td>CDI</td><td>1 850 €</td><td>5 ans</td></tr>
+          <tr><td>Lucas Petit</td><td>Apprenti (CAP agricole, 19 ans)</td><td>Contrat d'apprentissage (2e année)</td><td>882 € (51 % SMIC)</td><td>2 ans</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Convention collective applicable :</strong> Convention collective des exploitations agricoles de la Drôme. Durée légale du travail : 35 h/semaine. Heures supplémentaires majorées à 25 % (de la 36e à la 43e heure) et 50 % (au-delà). SMIC au 1er janvier 2026 : 11,88 €/h brut (1 801,80 € brut mensuel pour 151,67 h).</p>
+    </div>
+
+    <div class="annexe">
+      <div class="annexe__numero">Annexe 2 — Besoin de recrutement saisonnier été 2026</div>
+      <p>Marine doit recruter <strong>6 saisonniers</strong> pour la période du 15 juin au 31 août 2026 (2,5 mois). Profil : ouvriers agricoles polyvalents (récolte lavande, tri, mise en séchage). Rémunération prévue : SMIC horaire. Temps complet (35 h/semaine).</p>
+      <p><strong>Candidatures reçues :</strong> 9 candidatures, dont 2 de mineurs (Léo, 17 ans, en terminale pro ; Emma, 16 ans, en seconde). Marine se demande si elle peut les embaucher et à quelles conditions.</p>
+    </div>
+
+    <div class="annexe">
+      <div class="annexe__numero">Annexe 3 — Extraits du Code du travail</div>
+      <div class="article-loi">
+        <div class="article-loi__ref">Article L1242-2 — Cas de recours au CDD</div>
+        Un contrat de travail à durée déterminée ne peut être conclu que pour l'exécution d'une tâche précise et temporaire, et seulement dans les cas suivants : remplacement d'un salarié absent, accroissement temporaire de l'activité de l'entreprise, <strong>emplois à caractère saisonnier</strong> [...].
+      </div>
+      <div class="article-loi">
+        <div class="article-loi__ref">Article L1242-8 — Durée maximale du CDD</div>
+        La durée totale du contrat de travail à durée déterminée ne peut excéder 18 mois, renouvellement inclus [...]. Toutefois, les contrats saisonniers ne sont pas soumis à cette limite de durée.
+      </div>
+      <div class="article-loi">
+        <div class="article-loi__ref">Article L3162-1 — Travail des mineurs</div>
+        Les jeunes travailleurs de moins de 18 ans ne peuvent être employés à un travail effectif d'une durée excédant <strong>8 heures par jour</strong> et <strong>35 heures par semaine</strong>.
+      </div>
+      <div class="article-loi">
+        <div class="article-loi__ref">Article L3163-2 — Repos des mineurs</div>
+        Les jeunes travailleurs de moins de 18 ans bénéficient d'un repos quotidien d'au moins <strong>12 heures consécutives</strong> (contre 11 heures pour les adultes) et d'un repos hebdomadaire de <strong>2 jours consécutifs</strong>.
+      </div>
+      <div class="article-loi">
+        <div class="article-loi__ref">Article L3164-2 — Travaux dangereux interdits aux mineurs</div>
+        Il est interdit d'employer des travailleurs de moins de 18 ans à certaines catégories de travaux les exposant à des risques pour leur santé, leur sécurité, leur moralité ou excédant leurs forces [...].
+      </div>
+      <div class="article-loi">
+        <div class="article-loi__ref">Article L6222-1 — Contrat d'apprentissage</div>
+        L'apprenti bénéficie d'un salaire déterminé en pourcentage du SMIC, variant selon son âge et son année de formation.
+      </div>
+    </div>
+
+    <div class="annexe">
+      <div class="annexe__numero">Annexe 4 — Situation de Julien Fabre</div>
+      <p>Julien Fabre, ouvrier agricole depuis 8 ans, a informé Marine le 15 avril 2026 de sa volonté de <strong>quitter l'entreprise</strong> pour rejoindre une coopérative viticole dans le Lubéron. Il souhaite partir le plus rapidement possible. Son contrat de travail prévoit un préavis de 2 mois.</p>
+      <p>Émile Roche, surpris et déçu, envisage deux options : (1) accepter une négociation de départ (rupture conventionnelle) pour éviter un préavis "fantôme" où Julien ne serait plus motivé, ou (2) exiger le respect du préavis de 2 mois, ce qui couvrirait le début de la saison (juin-juillet).</p>
+    </div>
+
+    <div class="annexe">
+      <div class="annexe__numero">Annexe 5 — Extraits du Code du travail — Démission et rupture conventionnelle</div>
+      <div class="article-loi">
+        <div class="article-loi__ref">Article L1237-1 — Démission</div>
+        Le contrat de travail à durée indéterminée peut être rompu à l'initiative du salarié. Le salarié doit respecter le préavis prévu par le contrat de travail ou, à défaut, par la convention collective.
+      </div>
+      <div class="article-loi">
+        <div class="article-loi__ref">Article L1237-11 — Rupture conventionnelle</div>
+        L'employeur et le salarié peuvent convenir en commun des conditions de la rupture du contrat de travail qui les lie. La rupture conventionnelle ne peut être imposée par l'une ou l'autre des parties. Elle résulte d'une convention signée par les parties au contrat.
+      </div>
+      <div class="article-loi">
+        <div class="article-loi__ref">Article L1237-13 — Indemnité de rupture conventionnelle</div>
+        Le montant de l'indemnité spécifique de rupture conventionnelle ne peut pas être inférieur à celui de l'indemnité légale de licenciement prévue à l'article L1234-9 [...]. L'indemnité légale = 1/4 de mois de salaire par année d'ancienneté pour les 10 premières années.
+      </div>
+    </div>
+
+    <div class="annexe">
+      <div class="annexe__numero">Annexe 6 — Bulletin de paie simplifié de Nadia Bensalem (mars 2026)</div>
+      <table class="kpi-table">
+        <thead><tr><th>Rubrique</th><th>Base</th><th>Taux</th><th>Montant</th></tr></thead>
+        <tbody>
+          <tr><td>Salaire de base (151,67 h)</td><td>1 850,00 €</td><td></td><td>1 850,00 €</td></tr>
+          <tr><td>Heures supplémentaires (8 h à 25 %)</td><td>12,20 € × 1,25</td><td></td><td>122,00 €</td></tr>
+          <tr><td><strong>Salaire brut</strong></td><td></td><td></td><td><strong>1 972,00 €</strong></td></tr>
+          <tr><td>Cotisations salariales (CSG, CRDS, retraite, chômage...)</td><td></td><td>22 %</td><td>-433,84 €</td></tr>
+          <tr><td><strong>Salaire net avant impôt</strong></td><td></td><td></td><td><strong>1 538,16 €</strong></td></tr>
+          <tr><td>Prélèvement à la source (taux personnalisé)</td><td></td><td>3,5 %</td><td>-53,84 €</td></tr>
+          <tr><td><strong>Net à payer</strong></td><td></td><td></td><td><strong>1 484,32 €</strong></td></tr>
+        </tbody>
+      </table>
+      <p><strong>Note :</strong> le taux horaire de Nadia est de 1 850 / 151,67 = 12,20 € brut. Les 8 heures supplémentaires de mars sont dues à la préparation de la campagne de printemps (mise en bouteille, étiquetage).</p>
+    </div>
+
+    <div class="annexe">
+      <div class="annexe__numero">Annexe 7 — Projet de formation de Lucas Petit</div>
+      <p>Lucas termine son contrat d'apprentissage (CAP agricole) en juillet 2026. Il souhaite rester dans l'entreprise. Émile envisage de l'embaucher en CDI comme ouvrier agricole. Marine se demande s'il serait pertinent de l'inscrire dans un <strong>parcours de formation continue</strong> (certificat "Distillation et transformation des plantes aromatiques", 70 heures, coût 2 800 € HT, organisme agréé Qualiopi) pour qu'il puisse à terme remplacer Nadia sur le poste distillation quand celle-ci partira en retraite (horizon 2030).</p>
+    </div>
+
+    <!-- ============================================================
+         DOSSIER 1 — Recrutement et contrats (env. 1h15)
+         ============================================================ -->
+    <div class="dossier-bandeau">
+      <h3>Dossier 1 — Recrutement et gestion des contrats</h3>
+      <p>Annexes 1, 2, 3, 4 et 5</p>
+    </div>
+
+    <section class="cadp-exercice" id="d1">
+      <div class="cadp-exercice__numero">Dossier 1 · 12 points</div>
+
+      <p class="cadp-exercice__consigne"><strong>1.1 (3 pts)</strong> — Justifiez le recours au CDD saisonnier pour les 6 postes d'été. Quel est le motif juridique de recours ? Ce type de CDD est-il soumis à la durée maximale de 18 mois ? Appuyez-vous sur les articles L1242-2 et L1242-8.</p>
+      <div class="cadp-production" id="d1-q1"><textarea placeholder="1.1 — CDD saisonnier..." style="min-height:150px;"></textarea><div class="cadp-production__compteur">0 mots</div></div>
+
+      <p class="cadp-exercice__consigne" style="margin-top:1.5rem;"><strong>1.2 (4 pts)</strong> — Marine peut-elle embaucher Léo (17 ans) et Emma (16 ans) comme saisonniers ? Identifiez les <strong>conditions légales spécifiques</strong> à respecter pour l'emploi de mineurs, en vous appuyant sur les articles L3162-1, L3163-2 et L3164-2. Rédigez une note synthétique à destination d'Émile résumant les règles applicables.</p>
+      <div class="cadp-production" id="d1-q2"><textarea placeholder="1.2 — Note sur l'emploi de mineurs..." style="min-height:200px;"></textarea><div class="cadp-production__compteur">0 mots</div></div>
+
+      <p class="cadp-exercice__consigne" style="margin-top:1.5rem;"><strong>1.3 (5 pts)</strong> — Julien Fabre veut quitter l'entreprise (annexe 4). Comparez les deux options envisagées par Émile (démission avec préavis vs rupture conventionnelle) en présentant les <strong>avantages et inconvénients</strong> de chaque solution pour l'employeur ET pour le salarié. Formulez une recommandation argumentée. Appuyez-vous sur les articles L1237-1, L1237-11 et L1237-13.</p>
+      <div class="cadp-production" id="d1-q3"><textarea placeholder="1.3 — Démission vs rupture conventionnelle..." style="min-height:250px;"></textarea><div class="cadp-production__compteur">0 mots</div></div>
+
+      <div class="cadp-btn--actions">
+        <button class="cadp-btn cadp-btn--primaire" data-action="verifier" data-exercice="d1">Auto-évaluation dossier 1</button>
+        <button class="cadp-btn cadp-btn--corrige" data-action="corrige" data-exercice="d1">Voir le corrigé</button>
+      </div>
+
+      <div class="cadp-autoeval">
+        <div class="cadp-autoeval__titre">Auto-évaluation</div>
+        <div class="cadp-autoeval__critere">
+          <div class="cadp-autoeval__libelle">1.1 — Motif juridique correct + exemption 18 mois identifiée<small>As-tu cité l'article L1242-2 (emplois saisonniers) et L1242-8 (pas de limite 18 mois) ?</small></div>
+          <div class="cadp-autoeval__notes"><input type="radio" name="d1-c0" value="0" data-max="3" id="d1-c0-0"><label for="d1-c0-0">0</label><input type="radio" name="d1-c0" value="1" data-max="3" id="d1-c0-1"><label for="d1-c0-1">1</label><input type="radio" name="d1-c0" value="2" data-max="3" id="d1-c0-2"><label for="d1-c0-2">2</label><input type="radio" name="d1-c0" value="3" data-max="3" id="d1-c0-3"><label for="d1-c0-3">3</label></div>
+        </div>
+        <div class="cadp-autoeval__critere">
+          <div class="cadp-autoeval__libelle">1.2 — Toutes les conditions mineurs identifiées (8h/j, 35h/s, repos 12h, 2j consécutifs, travaux dangereux)<small>As-tu rédigé une note claire et complète pour Émile ?</small></div>
+          <div class="cadp-autoeval__notes"><input type="radio" name="d1-c1" value="0" data-max="4" id="d1-c1-0"><label for="d1-c1-0">0</label><input type="radio" name="d1-c1" value="1" data-max="4" id="d1-c1-1"><label for="d1-c1-1">1</label><input type="radio" name="d1-c1" value="2" data-max="4" id="d1-c1-2"><label for="d1-c1-2">2</label><input type="radio" name="d1-c1" value="3" data-max="4" id="d1-c1-3"><label for="d1-c1-3">3</label><input type="radio" name="d1-c1" value="4" data-max="4" id="d1-c1-4"><label for="d1-c1-4">4</label></div>
+        </div>
+        <div class="cadp-autoeval__critere">
+          <div class="cadp-autoeval__libelle">1.3 — Comparaison structurée + recommandation argumentée<small>Les 2 options sont-elles comparées (avantages/inconvénients employeur + salarié) avec une recommandation finale ?</small></div>
+          <div class="cadp-autoeval__notes"><input type="radio" name="d1-c2" value="0" data-max="5" id="d1-c2-0"><label for="d1-c2-0">0</label><input type="radio" name="d1-c2" value="1" data-max="5" id="d1-c2-1"><label for="d1-c2-1">1</label><input type="radio" name="d1-c2" value="2" data-max="5" id="d1-c2-2"><label for="d1-c2-2">2</label><input type="radio" name="d1-c2" value="3" data-max="5" id="d1-c2-3"><label for="d1-c2-3">3</label><input type="radio" name="d1-c2" value="4" data-max="5" id="d1-c2-4"><label for="d1-c2-4">4</label><input type="radio" name="d1-c2" value="5" data-max="5" id="d1-c2-5"><label for="d1-c2-5">5</label></div>
+        </div>
+      </div>
+
+      <div class="cadp-corrige">
+        <div class="cadp-corrige__titre">Corrigé dossier 1</div>
+        <h4>1.1 — CDD saisonnier</h4>
+        <p style="font-style:italic;">Le recours au CDD est justifié par l'article L1242-2 du Code du travail qui autorise le CDD pour les emplois à caractère saisonnier. La récolte de lavande (juin-août) est une activité par nature saisonnière, liée au cycle biologique de la plante — elle se répète chaque année à la même période et ne peut pas être pourvue par un CDI. L'article L1242-8 précise que les contrats saisonniers ne sont pas soumis à la durée maximale de 18 mois applicable aux autres CDD. La durée du contrat (2,5 mois) est donc parfaitement légale. Point important : le CDD saisonnier ne donne pas droit à l'indemnité de précarité de 10 % à la fin du contrat (exception au droit commun du CDD).</p>
+
+        <h4>1.2 — Emploi de mineurs</h4>
+        <p style="font-style:italic;"><strong>Note à l'attention d'Émile Roche — Conditions d'emploi de Léo (17 ans) et Emma (16 ans).</strong> L'embauche de mineurs est possible mais soumise à des conditions strictes. (1) <strong>Durée du travail</strong> (art. L3162-1) : 8 heures maximum par jour et 35 heures maximum par semaine — pas d'heures supplémentaires possibles. (2) <strong>Repos</strong> (art. L3163-2) : 12 heures de repos quotidien consécutif (au lieu de 11 h pour les adultes) et 2 jours de repos hebdomadaire consécutifs (au lieu d'1 jour). Concrètement, si la journée se termine à 19h, elle ne peut pas reprendre avant 7h le lendemain. (3) <strong>Travaux dangereux</strong> (art. L3164-2) : interdiction d'affecter les mineurs à des travaux les exposant à des risques pour leur santé ou leur sécurité — dans notre cas, il faudra vérifier que la conduite d'engins agricoles, la manipulation de l'alambic et l'exposition aux produits de traitement ne relèvent pas de cette catégorie. (4) <strong>Autorisation parentale</strong> obligatoire pour les moins de 16 ans (Emma). Recommandation : l'embauche de Léo (17 ans) est tout à fait envisageable pour des tâches de récolte et de tri, à condition de respecter les horaires. Pour Emma (16 ans), il faut en plus l'accord écrit des parents et une vigilance renforcée sur les tâches confiées.</p>
+
+        <h4>1.3 — Démission vs rupture conventionnelle</h4>
+        <p style="font-style:italic;"><strong>Option 1 — Démission avec préavis de 2 mois :</strong> Avantage employeur : Julien reste en poste juin-juillet, ce qui couvre le début de la saison. Pas d'indemnité à verser. Inconvénient : risque de démotivation, qualité du travail incertaine. Avantage salarié : pas de délai d'attente Pôle Emploi (mais pas de droit au chômage non plus en cas de démission). Inconvénient : obligation de travailler 2 mois supplémentaires alors qu'il veut partir.</p>
+        <p style="font-style:italic;"><strong>Option 2 — Rupture conventionnelle :</strong> Avantage employeur : départ négocié et apaisé, préservation de la relation. Possibilité de négocier une date de départ alignée sur les besoins (ex : fin juillet après la récolte). Inconvénient : obligation de verser une indemnité minimale = 1/4 de mois × 8 ans = 2 mois de salaire, soit environ 3 800 € brut (art. L1237-13). Avantage salarié : indemnité de départ + accès aux allocations chômage (la rupture conventionnelle ouvre droit au chômage, contrairement à la démission). Inconvénient : formalisme plus lourd (homologation DREETS).</p>
+        <p style="font-style:italic;"><strong>Recommandation :</strong> la rupture conventionnelle est la meilleure option malgré son coût (3 800 €). Elle permet de négocier une date de départ adaptée aux besoins de l'exploitation (ex : fin juillet, après la récolte), de préserver la relation (Julien part en bons termes, ce qui facilite la transmission de compétences au futur remplaçant), et elle ouvre des droits au chômage pour Julien (ce qui rend la négociation plus facile). Le coût de l'indemnité est compensé par la qualité du travail pendant les dernières semaines, car un salarié qui part dans de bonnes conditions travaille mieux qu'un salarié contraint de rester.</p>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         DOSSIER 2 — Paie et formation (env. 1h15)
+         ============================================================ -->
+    <div class="dossier-bandeau">
+      <h3>Dossier 2 — Paie et formation</h3>
+      <p>Annexes 1, 6 et 7</p>
+    </div>
+
+    <section class="cadp-exercice" id="d2">
+      <div class="cadp-exercice__numero">Dossier 2 · 8 points</div>
+
+      <p class="cadp-exercice__consigne"><strong>2.1 (3 pts)</strong> — À partir du bulletin de paie de Nadia (annexe 6), vérifiez les calculs suivants : (a) le montant des heures supplémentaires (8h à 25 %), (b) le montant des cotisations salariales, (c) le net à payer. Présentez vos calculs de manière structurée.</p>
+      <div class="cadp-production" id="d2-q1"><textarea placeholder="2.1 — Vérification du bulletin de paie..." style="min-height:180px;"></textarea><div class="cadp-production__compteur">0 mots</div></div>
+
+      <p class="cadp-exercice__consigne" style="margin-top:1.5rem;"><strong>2.2 (2 pts)</strong> — En période de récolte (juillet), Nadia effectue 42 heures par semaine pendant 4 semaines. Calculez son salaire brut du mois de juillet (salaire de base + heures supplémentaires majorées). Précisez le nombre d'heures supplémentaires et le taux de majoration applicable.</p>
+      <div class="cadp-production" id="d2-q2"><textarea placeholder="2.2 — Calcul salaire brut juillet avec HS..." style="min-height:160px;"></textarea><div class="cadp-production__compteur">0 mots</div></div>
+
+      <p class="cadp-exercice__consigne" style="margin-top:1.5rem;"><strong>2.3 (3 pts)</strong> — Marine envisage d'inscrire Lucas à une formation continue après son apprentissage (annexe 7). Rédigez une <strong>note argumentée</strong> à destination d'Émile présentant : (a) l'intérêt de cette formation pour l'entreprise (gestion prévisionnelle des compétences), (b) les dispositifs de financement mobilisables pour une PME de moins de 11 salariés, (c) votre recommandation.</p>
+      <div class="cadp-production" id="d2-q3"><textarea placeholder="2.3 — Note sur la formation de Lucas..." style="min-height:200px;"></textarea><div class="cadp-production__compteur">0 mots</div></div>
+
+      <div class="cadp-btn--actions">
+        <button class="cadp-btn cadp-btn--primaire" data-action="verifier" data-exercice="d2">Auto-évaluation dossier 2</button>
+        <button class="cadp-btn cadp-btn--corrige" data-action="corrige" data-exercice="d2">Voir le corrigé</button>
+      </div>
+
+      <div class="cadp-autoeval">
+        <div class="cadp-autoeval__titre">Auto-évaluation</div>
+        <div class="cadp-autoeval__critere">
+          <div class="cadp-autoeval__libelle">2.1 — Calculs de paie corrects et structurés<small>HS = 122 €, cotisations = 433,84 €, net à payer = 1 484,32 € — les 3 sont vérifiés ?</small></div>
+          <div class="cadp-autoeval__notes"><input type="radio" name="d2-c0" value="0" data-max="3" id="d2-c0-0"><label for="d2-c0-0">0</label><input type="radio" name="d2-c0" value="1" data-max="3" id="d2-c0-1"><label for="d2-c0-1">1</label><input type="radio" name="d2-c0" value="2" data-max="3" id="d2-c0-2"><label for="d2-c0-2">2</label><input type="radio" name="d2-c0" value="3" data-max="3" id="d2-c0-3"><label for="d2-c0-3">3</label></div>
+        </div>
+        <div class="cadp-autoeval__critere">
+          <div class="cadp-autoeval__libelle">2.2 — Calcul HS juillet correct (28h HS à 25 %)<small>Brut = 1 850 + (28 × 12,20 × 1,25) = 2 277 € ?</small></div>
+          <div class="cadp-autoeval__notes"><input type="radio" name="d2-c1" value="0" data-max="2" id="d2-c1-0"><label for="d2-c1-0">0</label><input type="radio" name="d2-c1" value="1" data-max="2" id="d2-c1-1"><label for="d2-c1-1">1</label><input type="radio" name="d2-c1" value="2" data-max="2" id="d2-c1-2"><label for="d2-c1-2">2</label></div>
+        </div>
+        <div class="cadp-autoeval__critere">
+          <div class="cadp-autoeval__libelle">2.3 — Note formation argumentée (intérêt + financement + recommandation)<small>As-tu mentionné la GPEC, l'OPCO et le plan de développement des compétences ?</small></div>
+          <div class="cadp-autoeval__notes"><input type="radio" name="d2-c2" value="0" data-max="3" id="d2-c2-0"><label for="d2-c2-0">0</label><input type="radio" name="d2-c2" value="1" data-max="3" id="d2-c2-1"><label for="d2-c2-1">1</label><input type="radio" name="d2-c2" value="2" data-max="3" id="d2-c2-2"><label for="d2-c2-2">2</label><input type="radio" name="d2-c2" value="3" data-max="3" id="d2-c2-3"><label for="d2-c2-3">3</label></div>
+        </div>
+      </div>
+
+      <div class="cadp-corrige">
+        <div class="cadp-corrige__titre">Corrigé dossier 2</div>
+
+        <h4>2.1 — Vérification du bulletin</h4>
+        <p style="font-style:italic;"><strong>(a) Heures supplémentaires :</strong> 8h × 12,20 € × 1,25 = 8 × 15,25 = 122,00 €. Correct. Le taux horaire de Nadia (1 850 / 151,67 = 12,20 €) est majoré de 25 % pour les heures supplémentaires de la 36e à la 43e heure.</p>
+        <p style="font-style:italic;"><strong>(b) Cotisations salariales :</strong> 1 972,00 × 22 % = 433,84 €. Correct. Les 22 % regroupent CSG/CRDS, retraite complémentaire, assurance chômage, prévoyance.</p>
+        <p style="font-style:italic;"><strong>(c) Net à payer :</strong> 1 972,00 − 433,84 = 1 538,16 € (net avant impôt). Prélèvement à la source : 1 538,16 × 3,5 % = 53,84 €. Net à payer : 1 538,16 − 53,84 = 1 484,32 €. Correct.</p>
+
+        <h4>2.2 — Salaire brut juillet</h4>
+        <p style="font-style:italic;">Nadia travaille 42h/semaine pendant 4 semaines en juillet. Heures supplémentaires par semaine = 42 − 35 = 7h. Total HS sur le mois = 7 × 4 = 28 heures. Toutes ces HS sont entre la 36e et la 43e heure → majoration à 25 %. Montant HS = 28 × 12,20 × 1,25 = 28 × 15,25 = 427,00 €. <strong>Salaire brut juillet = 1 850 + 427 = 2 277 €.</strong></p>
+
+        <h4>2.3 — Formation de Lucas</h4>
+        <p style="font-style:italic;"><strong>(a) Intérêt pour l'entreprise :</strong> former Lucas à la distillation s'inscrit dans une démarche de <strong>gestion prévisionnelle des emplois et des compétences (GPEC)</strong>. Nadia partira en retraite vers 2030. Si personne n'est formé d'ici là, l'entreprise perdra une compétence critique (la distillation est le cœur de sa valeur ajoutée). Lucas, déjà intégré et connaissant le fonctionnement de l'exploitation, est le candidat naturel pour cette transmission. L'investir dans cette formation est aussi un signal de confiance qui favorise sa fidélisation.</p>
+        <p style="font-style:italic;"><strong>(b) Financement :</strong> pour une PME de moins de 11 salariés, le financement peut passer par : (1) l'<strong>OPCO</strong> (Opérateur de Compétences) de branche dont dépend l'exploitation — les PME de moins de 50 salariés bénéficient d'un financement prioritaire ; (2) le <strong>plan de développement des compétences</strong> de l'entreprise (ex-plan de formation), qui permet de financer les actions de formation sur le budget formation obligatoire ; (3) le <strong>CPF</strong> (Compte Personnel de Formation) de Lucas, qui a accumulé des droits pendant son apprentissage. Ces dispositifs peuvent être combinés pour couvrir tout ou partie des 2 800 € HT.</p>
+        <p style="font-style:italic;"><strong>(c) Recommandation :</strong> lancer la formation dès septembre 2026, après l'embauche en CDI de Lucas. Le coût (2 800 €) est modeste au regard de l'enjeu (assurer la continuité de l'activité distillation à l'horizon 2030). Solliciter l'OPCO en priorité pour le financement, compléter avec le CPF de Lucas si nécessaire.</p>
+      </div>
+    </section>
+
+    <!-- ENVOI -->
+    <section style="margin-top:3rem;text-align:center;">
+      <h2 class="cadp-titre-cas" style="font-size:1.4rem;border:none;text-align:center;">Tu as terminé ?</h2>
+      <button class="cadp-btn cadp-btn--envoyer" data-action="envoyer" data-cas="7 mai PM - GPME E52 GRH - Champs Emile">Envoyer mes résultats à Kévin</button>
+    </section>
+
+    <p style="text-align:center;margin-top:2rem;">
+      <a href="../index.html" class="cadp-btn cadp-btn--secondaire">Retour au sommaire</a>
+    </p>
+
+  </main>
+
+  <footer class="cadp-footer">
+    Campus Alternance Drôme Provence — Pierrelatte (26)<br>
+    BTS GPME 2A — Session du 7 mai 2026
+  </footer>
+
+  <script src="../assets/js/script.js"></script>
+
+  <script>
+    // Dossier 1
+    CADP.production('d1-q1', 3, [{ libelle: 'Motif juridique + exemption 18 mois', points: 3 }]);
+    CADP.production('d1-q2', 4, [{ libelle: 'Conditions mineurs complètes + note structurée', points: 4 }]);
+    CADP.production('d1-q3', 5, [{ libelle: 'Comparaison structurée + recommandation argumentée', points: 5 }]);
+
+    // Dossier 2
+    CADP.production('d2-q1', 3, [{ libelle: 'Calculs de paie corrects et structurés', points: 3 }]);
+    CADP.production('d2-q2', 2, [{ libelle: 'Calcul HS juillet correct', points: 2 }]);
+    CADP.production('d2-q3', 3, [{ libelle: 'Note formation argumentée', points: 3 }]);
+  </script>
+
+</body>
+</html>
