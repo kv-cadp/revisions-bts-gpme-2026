@@ -1,0 +1,2028 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capsule GPME - Tableau de répartition des tâches - CADP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0B1929;
+  --navy-light: #1a2c45;
+  --navy-soft: #243b5c;
+  --or: #C9A84C;
+  --or-light: #d4b76a;
+  --or-soft: #e6d29c;
+  --bg: #f7f4ee;
+  --bg-light: #fdfbf6;
+  --text: #1a1a1a;
+  --text-soft: #4a4a4a;
+  --text-mute: #757575;
+  --border: #d8d2c1;
+  --border-light: #e8e3d4;
+  --success: #2d6b3f;
+  --success-bg: #e8f3eb;
+  --error: #b13a3a;
+  --error-bg: #f9eaea;
+  --warning: #8a5a00;
+  --warning-bg: #fcf3dc;
+  --info: #1f4a7a;
+  --info-bg: #e6eef7;
+  --shadow: 0 2px 12px rgba(11,25,41,0.08);
+  --shadow-lg: 0 8px 32px rgba(11,25,41,0.15);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4 { font-family: 'Playfair Display', serif; color: var(--navy); line-height: 1.25; }
+h1 { font-size: 2.4rem; font-weight: 700; }
+h2 { font-size: 1.85rem; font-weight: 600; margin-bottom: 1rem; }
+h3 { font-size: 1.4rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+h4 { font-size: 1.15rem; font-weight: 600; margin: 1rem 0 0.5rem; color: var(--navy-light); }
+
+p { margin-bottom: 1rem; }
+strong { font-weight: 600; color: var(--navy); }
+em { font-style: italic; color: var(--text-soft); }
+
+a { color: var(--navy); text-decoration: underline; text-decoration-color: var(--or); text-underline-offset: 3px; }
+a:hover { color: var(--or); }
+
+/* HEADER */
+header.cadp-header {
+  background: var(--navy);
+  color: var(--bg-light);
+  padding: 1.5rem 2rem;
+  border-bottom: 4px solid var(--or);
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.brand { display: flex; flex-direction: column; }
+.brand-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--or);
+  letter-spacing: 0.5px;
+}
+.brand-tag {
+  font-size: 0.85rem;
+  color: var(--bg-light);
+  opacity: 0.8;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.header-info {
+  display: flex;
+  gap: 2rem;
+  font-size: 0.9rem;
+  color: var(--bg-light);
+}
+.header-info span { display: flex; flex-direction: column; }
+.header-info .label { font-size: 0.75rem; color: var(--or-soft); text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* MODALE IDENTIFICATION */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11,25,41,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+.modal {
+  background: var(--bg-light);
+  max-width: 540px;
+  width: 100%;
+  border-top: 6px solid var(--or);
+  box-shadow: var(--shadow-lg);
+  padding: 2rem;
+}
+.modal h2 { color: var(--navy); margin-bottom: 0.5rem; }
+.modal p { color: var(--text-soft); margin-bottom: 1.5rem; }
+.modal-form { display: flex; flex-direction: column; gap: 1rem; }
+.form-row { display: flex; flex-direction: column; gap: 0.35rem; }
+.form-row label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--navy);
+}
+.form-row input {
+  padding: 0.7rem 0.9rem;
+  border: 1.5px solid var(--border);
+  background: white;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: border 0.2s;
+}
+.form-row input:focus {
+  outline: none;
+  border-color: var(--or);
+}
+.btn-primary {
+  background: var(--navy);
+  color: var(--or);
+  border: 2px solid var(--navy);
+  padding: 0.85rem 1.5rem;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+.btn-primary:hover { background: var(--or); color: var(--navy); border-color: var(--or); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-secondary {
+  background: transparent;
+  color: var(--navy);
+  border: 2px solid var(--navy);
+  padding: 0.7rem 1.3rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+  transition: all 0.2s;
+}
+.btn-secondary:hover { background: var(--navy); color: var(--or); }
+
+/* MAIN LAYOUT */
+.main-container {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+}
+
+/* NAV PHASES */
+.phases-nav {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: white;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.phase-tab {
+  padding: 0.85rem 0.5rem;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.phase-tab.active {
+  background: var(--navy);
+  color: var(--or);
+  border-color: var(--navy);
+}
+.phase-tab.completed {
+  background: var(--or-soft);
+  color: var(--navy);
+  border-color: var(--or);
+}
+.phase-tab:hover:not(.active) {
+  border-color: var(--or);
+  color: var(--navy);
+}
+.phase-tab .phase-num {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+.phase-tab .phase-title {
+  display: block;
+  font-size: 0.78rem;
+  line-height: 1.2;
+}
+
+/* PHASE CONTENT */
+.phase {
+  display: none;
+  background: white;
+  padding: 2.5rem;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+  animation: fadeIn 0.4s ease;
+}
+.phase.active { display: block; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.phase-header {
+  border-bottom: 2px solid var(--or);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+.phase-header .phase-eyebrow {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--or);
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+/* ENCADRES */
+.encadre {
+  border-left: 4px solid;
+  padding: 1.2rem 1.5rem;
+  margin: 1.5rem 0;
+  background: var(--bg);
+}
+.encadre-header {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+.encadre-note { border-color: var(--info); background: var(--info-bg); }
+.encadre-note .encadre-header { color: var(--info); }
+.encadre-important { border-color: var(--or); background: var(--warning-bg); }
+.encadre-important .encadre-header { color: var(--warning); }
+.encadre-attention { border-color: var(--error); background: var(--error-bg); }
+.encadre-attention .encadre-header { color: var(--error); }
+
+/* DOCUMENT-RESSOURCE */
+.doc-ressource {
+  background: var(--bg-light);
+  border: 1px solid var(--border);
+  padding: 1.5rem 1.8rem;
+  margin: 1.5rem 0;
+  position: relative;
+}
+.doc-ressource::before {
+  content: 'Document ressource';
+  position: absolute;
+  top: -0.65rem;
+  left: 1.5rem;
+  background: var(--navy);
+  color: var(--or);
+  padding: 0.2rem 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+.doc-meta {
+  font-size: 0.85rem;
+  color: var(--text-mute);
+  font-style: italic;
+  margin-top: 1rem;
+  padding-top: 0.7rem;
+  border-top: 1px dashed var(--border);
+}
+
+/* TABLEAUX */
+table.cadp-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.92rem;
+  background: white;
+}
+table.cadp-table thead th {
+  background: var(--navy);
+  color: var(--or);
+  padding: 0.7rem 0.6rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid var(--navy);
+}
+table.cadp-table td {
+  padding: 0.55rem 0.6rem;
+  border: 1px solid var(--border-light);
+}
+table.cadp-table tbody tr:nth-child(even) { background: var(--bg); }
+table.cadp-table .num-col { text-align: center; width: 40px; }
+table.cadp-table .hours-col { text-align: center; width: 65px; font-variant-numeric: tabular-nums; }
+table.cadp-table tfoot td {
+  background: var(--navy-soft);
+  color: white;
+  font-weight: 600;
+  border: 1px solid var(--navy-soft);
+}
+.tab-empty-cell { color: var(--text-mute); text-align: center; }
+
+/* QCM ET EXERCICES */
+.exercise {
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  background: var(--bg-light);
+  border: 1px solid var(--border);
+}
+.exercise-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 0.5rem;
+}
+.exercise-instruction {
+  color: var(--text-soft);
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.qcm-question {
+  margin: 1.2rem 0;
+  padding: 1rem 0;
+  border-bottom: 1px dashed var(--border);
+}
+.qcm-question:last-child { border-bottom: none; }
+.qcm-stem {
+  font-weight: 600;
+  margin-bottom: 0.7rem;
+  color: var(--navy);
+}
+.qcm-options { display: flex; flex-direction: column; gap: 0.4rem; }
+.qcm-option {
+  display: flex;
+  align-items: flex-start;
+  padding: 0.6rem 0.9rem;
+  background: white;
+  border: 1.5px solid var(--border);
+  cursor: pointer;
+  transition: all 0.15s;
+  gap: 0.6rem;
+}
+.qcm-option:hover { border-color: var(--or); }
+.qcm-option input { margin-top: 0.25rem; flex-shrink: 0; accent-color: var(--navy); }
+.qcm-option.correct {
+  background: var(--success-bg);
+  border-color: var(--success);
+}
+.qcm-option.incorrect {
+  background: var(--error-bg);
+  border-color: var(--error);
+}
+.qcm-option.expected {
+  background: var(--success-bg);
+  border-color: var(--success);
+  border-style: dashed;
+}
+.qcm-feedback {
+  margin-top: 0.7rem;
+  padding: 0.7rem 1rem;
+  font-size: 0.9rem;
+  display: none;
+}
+.qcm-feedback.shown { display: block; }
+.qcm-feedback.success { background: var(--success-bg); color: var(--success); border-left: 3px solid var(--success); }
+.qcm-feedback.error { background: var(--error-bg); color: var(--error); border-left: 3px solid var(--error); }
+
+/* SAISIE */
+.saisie-question {
+  margin: 1.2rem 0;
+  padding: 1rem 0;
+  border-bottom: 1px dashed var(--border);
+}
+.saisie-question:last-child { border-bottom: none; }
+.saisie-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+.saisie-row label { font-weight: 600; color: var(--navy); min-width: 180px; }
+.saisie-row input[type="text"], .saisie-row input[type="number"] {
+  padding: 0.55rem 0.8rem;
+  border: 1.5px solid var(--border);
+  background: white;
+  font-family: inherit;
+  font-size: 1rem;
+  width: 130px;
+  font-variant-numeric: tabular-nums;
+}
+.saisie-row input:focus { outline: none; border-color: var(--or); }
+.saisie-row input.correct { border-color: var(--success); background: var(--success-bg); }
+.saisie-row input.incorrect { border-color: var(--error); background: var(--error-bg); }
+.saisie-unit { color: var(--text-soft); font-size: 0.95rem; }
+.saisie-tolerance {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--text-mute);
+  font-style: italic;
+  margin-top: 0.3rem;
+}
+
+/* DETAIL CALCUL */
+.detail-toggle {
+  background: none;
+  border: 1px solid var(--navy);
+  color: var(--navy);
+  padding: 0.4rem 0.9rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  font-weight: 600;
+}
+.detail-toggle:hover { background: var(--navy); color: var(--or); }
+.detail-content {
+  display: none;
+  margin-top: 0.8rem;
+  padding: 1rem 1.2rem;
+  background: var(--bg);
+  border-left: 3px solid var(--or);
+  font-size: 0.93rem;
+}
+.detail-content.shown { display: block; }
+.detail-content h5 {
+  font-family: 'Playfair Display', serif;
+  color: var(--navy);
+  margin-bottom: 0.5rem;
+}
+.detail-content ol, .detail-content ul {
+  margin-left: 1.5rem;
+  margin-bottom: 0.7rem;
+}
+.detail-content code {
+  background: white;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid var(--border);
+  font-family: 'Courier New', monospace;
+  font-size: 0.88rem;
+}
+
+/* PRODUCTION LIBRE */
+.production-area {
+  margin: 1.5rem 0;
+}
+.production-area textarea {
+  width: 100%;
+  min-height: 320px;
+  padding: 1rem;
+  border: 1.5px solid var(--border);
+  background: white;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.97rem;
+  line-height: 1.6;
+  resize: vertical;
+}
+.production-area textarea:focus { outline: none; border-color: var(--or); }
+.production-counter {
+  font-size: 0.85rem;
+  color: var(--text-mute);
+  margin-top: 0.4rem;
+  text-align: right;
+}
+
+/* GRILLE AUTO-EVALUATION */
+.grille-evaluation {
+  margin-top: 1.5rem;
+  background: white;
+  border: 1px solid var(--border);
+  padding: 1.5rem;
+}
+.grille-evaluation h4 { margin-top: 0; }
+.critere-row {
+  display: grid;
+  grid-template-columns: 1fr 100px 130px;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--border-light);
+}
+.critere-row:last-child { border-bottom: none; }
+.critere-libelle { font-size: 0.95rem; }
+.critere-points { font-size: 0.85rem; color: var(--text-mute); text-align: center; }
+.critere-input {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  justify-content: flex-end;
+}
+.critere-input input {
+  width: 60px;
+  padding: 0.4rem;
+  text-align: center;
+  border: 1.5px solid var(--border);
+  font-size: 0.95rem;
+}
+.critere-total {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--navy);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+/* FICHE METHODE */
+.fiche-methode {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  color: var(--bg-light);
+  padding: 2rem;
+  margin: 2rem 0;
+  border-left: 6px solid var(--or);
+}
+.fiche-methode h3 { color: var(--or); margin-top: 0; }
+.fiche-methode ol { margin-left: 1.5rem; }
+.fiche-methode li { margin-bottom: 0.7rem; }
+.fiche-methode strong { color: var(--or-soft); }
+
+/* NAV BOUTONS PHASES */
+.phase-nav-btns {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+/* BARRE PROGRESSION */
+.progress-bar-wrap {
+  height: 6px;
+  background: var(--border-light);
+  margin: 1rem 0 2rem;
+  position: relative;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: var(--or);
+  width: 0%;
+  transition: width 0.4s;
+}
+.progress-label {
+  font-size: 0.85rem;
+  color: var(--text-mute);
+  margin-top: 0.4rem;
+  text-align: right;
+}
+
+/* ORGANIGRAMME */
+.organigramme {
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+.org-level {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1rem 0;
+  position: relative;
+}
+.org-card {
+  background: white;
+  border: 1.5px solid var(--navy);
+  padding: 0.7rem 1.2rem;
+  text-align: center;
+  min-width: 160px;
+  box-shadow: var(--shadow);
+}
+.org-card.boss { background: var(--navy); color: var(--or); border-color: var(--or); }
+.org-card .org-name { font-weight: 700; font-size: 0.95rem; }
+.org-card .org-role { font-size: 0.8rem; color: var(--text-mute); margin-top: 0.2rem; }
+.org-card.boss .org-role { color: var(--or-soft); }
+.org-arrow {
+  text-align: center;
+  color: var(--or);
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0.3rem 0;
+}
+
+/* SYNTHESE FINALE */
+.synthese-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.synthese-card {
+  background: white;
+  border-top: 4px solid var(--or);
+  padding: 1.2rem;
+  box-shadow: var(--shadow);
+}
+.synthese-card-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--or);
+  line-height: 1;
+}
+.synthese-card-title {
+  font-weight: 600;
+  color: var(--navy);
+  margin: 0.5rem 0;
+}
+.synthese-card-text {
+  font-size: 0.92rem;
+  color: var(--text-soft);
+}
+
+/* SCORE FINAL */
+.score-final {
+  background: white;
+  padding: 2rem;
+  border: 2px solid var(--or);
+  text-align: center;
+  margin: 1.5rem 0;
+}
+.score-final h3 { color: var(--navy); margin-top: 0; }
+.score-final .score-big {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: var(--or);
+  line-height: 1;
+  margin: 1rem 0;
+}
+.score-detail {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.score-cell {
+  padding: 0.8rem;
+  background: var(--bg);
+  border-left: 3px solid var(--or);
+}
+.score-cell .score-cell-label { font-size: 0.85rem; color: var(--text-mute); }
+.score-cell .score-cell-value { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 600; color: var(--navy); }
+
+/* EMAIL CTA */
+.email-cta {
+  background: var(--navy);
+  color: var(--bg-light);
+  padding: 2rem;
+  margin: 2rem 0;
+  border-left: 6px solid var(--or);
+  text-align: center;
+}
+.email-cta h3 { color: var(--or); margin-top: 0; }
+.email-cta p { margin-bottom: 1.2rem; }
+.email-cta a {
+  display: inline-block;
+  background: var(--or);
+  color: var(--navy);
+  padding: 0.85rem 2rem;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  border: 2px solid var(--or);
+}
+.email-cta a:hover { background: transparent; color: var(--or); }
+
+/* FOOTER */
+footer.cadp-footer {
+  background: var(--navy);
+  color: var(--bg-light);
+  padding: 2rem;
+  text-align: center;
+  margin-top: 3rem;
+  border-top: 4px solid var(--or);
+}
+footer.cadp-footer p { margin-bottom: 0.5rem; opacity: 0.85; font-size: 0.9rem; }
+footer.cadp-footer .cadp-name { color: var(--or); font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.1rem; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.5rem; }
+  .main-container { padding: 0 1rem; }
+  .phase { padding: 1.5rem; }
+  .phases-nav { grid-template-columns: repeat(5, 1fr); padding: 0.5rem; }
+  .phase-tab { padding: 0.5rem 0.2rem; }
+  .phase-tab .phase-title { font-size: 0.65rem; }
+  .header-info { flex-direction: column; gap: 0.5rem; }
+  .critere-row { grid-template-columns: 1fr; }
+  table.cadp-table { font-size: 0.82rem; }
+  table.cadp-table thead th, table.cadp-table td { padding: 0.4rem 0.3rem; }
+}
+
+/* IMPRESSION */
+@media print {
+  header.cadp-header, .phases-nav, .phase-nav-btns, .modal-overlay { display: none !important; }
+  .phase { display: block !important; page-break-after: always; box-shadow: none; border: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- MODALE IDENTIFICATION -->
+<div class="modal-overlay" id="modal-id">
+  <div class="modal">
+    <h2>Identification</h2>
+    <p>Avant de commencer, identifie-toi pour que tes réponses puissent t'être attribuées et que ton récapitulatif soit transmis à ton responsable pédagogique.</p>
+    <div class="modal-form">
+      <div class="form-row">
+        <label for="id-nom">Nom</label>
+        <input type="text" id="id-nom" placeholder="DUPONT">
+      </div>
+      <div class="form-row">
+        <label for="id-prenom">Prénom</label>
+        <input type="text" id="id-prenom" placeholder="Marie">
+      </div>
+      <div class="form-row">
+        <label for="id-classe">Classe</label>
+        <input type="text" id="id-classe" value="BTS GPME 2A - Promo 2426" readonly>
+      </div>
+      <button class="btn-primary" id="btn-id-valid">Commencer la capsule</button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="cadp-header">
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-name">CADP</span>
+      <span class="brand-tag">Campus Alternance Drôme Provence</span>
+    </div>
+    <div class="header-info">
+      <span><span class="label">Étudiant</span><strong id="header-name">-</strong></span>
+      <span><span class="label">Capsule</span><strong>Lundi 11 mai - 10h-12h</strong></span>
+      <span><span class="label">Session</span><strong>BTS GPME E6 - 2026</strong></span>
+    </div>
+  </div>
+</header>
+
+<main class="main-container">
+
+<!-- INTRO -->
+<section style="background:white;padding:2.5rem;border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:2rem;">
+  <div style="font-size:0.85rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--or);font-weight:600;margin-bottom:0.5rem;">Capsule de révision E6 - SFPME</div>
+  <h1>Le tableau de répartition des tâches</h1>
+  <p style="font-size:1.1rem;color:var(--text-soft);margin-top:1rem;">Un outil d'analyse de l'organisation administrative de la PME, au service de la performance et du bien-être au travail.</p>
+  <div style="display:flex;gap:2rem;flex-wrap:wrap;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border);">
+    <div><span style="display:block;font-size:0.8rem;color:var(--text-mute);text-transform:uppercase;letter-spacing:0.5px;">Activité référentiel</span><strong>A4.2 - Organisation des activités de la PME</strong></div>
+    <div><span style="display:block;font-size:0.8rem;color:var(--text-mute);text-transform:uppercase;letter-spacing:0.5px;">Tâches mobilisées</span><strong>T.4.2.1 et T.4.2.2</strong></div>
+    <div><span style="display:block;font-size:0.8rem;color:var(--text-mute);text-transform:uppercase;letter-spacing:0.5px;">Savoirs associés</span><strong>S 4.2.1 - S 4.2.2 - S 4.2.3</strong></div>
+  </div>
+</section>
+
+<!-- BARRE PROGRESSION -->
+<div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill"></div></div>
+  <div class="progress-label">Progression : <span id="progress-text">0%</span></div>
+</div>
+
+<!-- NAV PHASES -->
+<nav class="phases-nav" id="phases-nav">
+  <div class="phase-tab active" data-phase="1"><span class="phase-num">1</span><span class="phase-title">Contexte et méthode</span></div>
+  <div class="phase-tab" data-phase="2"><span class="phase-num">2</span><span class="phase-title">QCM connaissances</span></div>
+  <div class="phase-tab" data-phase="3"><span class="phase-num">3</span><span class="phase-title">Analyse guidée</span></div>
+  <div class="phase-tab" data-phase="4"><span class="phase-num">4</span><span class="phase-title">Production autonome</span></div>
+  <div class="phase-tab" data-phase="5"><span class="phase-num">5</span><span class="phase-title">Synthèse et envoi</span></div>
+</nav>
+
+<!-- ============================================ -->
+<!-- PHASE 1 - CONTEXTE ET METHODE -->
+<!-- ============================================ -->
+<section class="phase active" id="phase-1">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 1 - Durée indicative 15 minutes</div>
+    <h2>Contexte de la mission et méthode du tableau de répartition des tâches</h2>
+  </div>
+
+  <h3>La PME Olivier &amp; Filles - Distillerie Drôme Provençale</h3>
+
+  <div class="doc-ressource">
+    <h4>Fiche d'identité</h4>
+    <p><strong>Raison sociale</strong> : Olivier &amp; Filles SARL<br>
+    <strong>Activité</strong> : Production artisanale de spiritueux à base de plantes provençales (lavande, thym, romarin, génépi, tilleul). Distillation traditionnelle, gamme premium.<br>
+    <strong>Siège social</strong> : Nyons (26110), Drôme Provençale<br>
+    <strong>Effectif</strong> : 35 salariés (dont 12 en production, 8 commerciaux terrain, 12 administratifs et logistique, 3 cadres)<br>
+    <strong>Capital</strong> : 250 000 euros<br>
+    <strong>Chiffre d'affaires 2025</strong> : 4,8 millions d'euros<br>
+    <strong>Direction</strong> : Marie Olivier, dirigeante, troisième génération de la famille fondatrice<br>
+    <strong>Distribution</strong> : France (cavistes spécialisés, épiceries fines, grandes maisons gastronomiques type Galeries Lafayette Gourmet) ; démarrage export Europe en 2026 (Allemagne, Belgique, Pays-Bas)</p>
+    <p class="doc-meta">Source : présentation interne CADP, rédigée par Marc Léonetti, cabinet Léonetti Conseil, avril 2026.</p>
+  </div>
+
+  <h3>Le service administratif au siège de Nyons</h3>
+
+  <div class="organigramme">
+    <h4 style="text-align:center;margin-top:0;">Organisation du siège - Service administratif</h4>
+    <div class="org-level">
+      <div class="org-card boss">
+        <div class="org-name">Marie Olivier</div>
+        <div class="org-role">Dirigeante (DG)</div>
+      </div>
+    </div>
+    <div class="org-arrow">|</div>
+    <div class="org-level">
+      <div class="org-card">
+        <div class="org-name">Théa Bonnefoy</div>
+        <div class="org-role">Comptable, 30 ans</div>
+      </div>
+      <div class="org-card">
+        <div class="org-name">Sophie Vasquez</div>
+        <div class="org-role">Assistante commerciale, 27 ans</div>
+      </div>
+      <div class="org-card">
+        <div class="org-name">Léa Dupré</div>
+        <div class="org-role">Assistante de direction, 35 ans</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="encadre encadre-note">
+    <div class="encadre-header">Note</div>
+    <p>L'organigramme fait apparaître les liens hiérarchiques entre les agents. Il ne dit rien de la répartition réelle de la charge de travail, ni des doublons éventuels entre tâches similaires. C'est précisément ce que le tableau de répartition des tâches permet d'analyser, de manière complémentaire à l'organigramme.</p>
+  </div>
+
+  <h3>Ta mission</h3>
+
+  <div class="doc-ressource">
+    <h4>Courriel de Marie Olivier à Camille Roux, apprentie GPME</h4>
+    <p style="font-style:italic;">De : Marie Olivier &lt;m.olivier@oliviereetfilles.fr&gt;<br>
+    À : Camille Roux &lt;c.roux@oliviereetfilles.fr&gt;<br>
+    Objet : Mission - Analyse de la charge administrative au siège<br>
+    Date : Lundi 4 mai 2026, 8h47</p>
+    <p>Bonjour Camille,</p>
+    <p>Je profite du début de ton alternance chez nous pour te confier une mission importante. Depuis quelques mois, l'équipe administrative me remonte des signaux que je ne peux plus ignorer : Théa enchaîne les heures supplémentaires, m'envoie des reportings tardivement, et je sens chez elle une vraie tension. À l'inverse, j'ai l'impression que Léa pourrait absorber davantage. Sophie, quant à elle, semble correctement chargée mais je n'ai pas de chiffres précis.</p>
+    <p>J'ai donc demandé à chacune de tenir un relevé d'activité sur le mois de mars 2026. Tu trouveras le tableau consolidé en annexe (phase suivante de ta capsule de révision).</p>
+    <p>Ce que j'attends de toi :</p>
+    <ul style="margin-left:1.5rem;margin-bottom:1rem;">
+      <li>Une analyse chiffrée de la charge réelle de chacune</li>
+      <li>L'identification des éventuels doublons ou tâches mal réparties</li>
+      <li>Des propositions concrètes d'amélioration, argumentées et applicables</li>
+      <li>Un plan de mise en œuvre réaliste</li>
+    </ul>
+    <p>Je te laisse t'approprier la méthode du tableau de répartition des tâches que tu as étudiée en cours. Reviens vers moi avec une note structurée. Je compte sur toi.</p>
+    <p>Bien cordialement,<br>
+    <strong>Marie Olivier</strong><br>
+    Dirigeante - Olivier &amp; Filles SARL</p>
+    <p class="doc-meta">Document fictif rédigé pour les besoins pédagogiques. Toute ressemblance avec une situation réelle serait fortuite.</p>
+  </div>
+
+  <h3>Le tableau de répartition des tâches : la méthode</h3>
+
+  <p>Le tableau de répartition des tâches est un outil simple mais puissant d'analyse de l'organisation du travail administratif. Il permet à la direction d'une PME de visualiser <strong>qui fait quoi, en combien de temps, et avec quel niveau de polyvalence</strong>.</p>
+
+  <h4>Structure du tableau</h4>
+  <ul style="margin-left:1.5rem;margin-bottom:1rem;">
+    <li><strong>En lignes</strong> : la liste exhaustive des tâches recensées sur une période donnée (généralement 1 mois)</li>
+    <li><strong>En colonnes</strong> : les agents concernés par ces tâches</li>
+    <li><strong>Dans les cellules</strong> : le temps consacré par chaque agent à chaque tâche, exprimé en heures ou en pourcentage</li>
+  </ul>
+
+  <h4>Ce que le tableau permet de mettre en évidence</h4>
+  <ol style="margin-left:1.5rem;margin-bottom:1rem;">
+    <li>Le <strong>temps total mobilisé</strong> par chaque tâche dans l'organisation</li>
+    <li>La <strong>charge de travail</strong> de chaque agent et son taux d'engagement</li>
+    <li>Les <strong>déséquilibres</strong> entre agents (postes surchargés, saturés ou non saturés)</li>
+    <li>Les <strong>doublons</strong> : tâches identiques réalisées par plusieurs agents sans coordination</li>
+    <li>Les <strong>polyvalences</strong> : agents capables d'intervenir sur des tâches variées</li>
+    <li>Les <strong>tâches isolées</strong> : tâches réalisées par un seul agent, source de risque en cas d'absence</li>
+  </ol>
+
+  <h3>La méthode CADP en quatre étapes</h3>
+  <p>L'élaboration et l'analyse d'un TRT suivent une démarche structurée que les étudiantes ont vu en cours :</p>
+
+  <div class="synthese-cards">
+    <div class="synthese-card"><div class="synthese-card-num">1</div><div class="synthese-card-title">Feuille d'analyse des tâches</div><div class="synthese-card-text">Document recueillant pour chaque salarié la liste de ses tâches, les documents associés et le temps consacré par semaine. S'appuie sur un questionnement du salarié, complété éventuellement par observation.</div></div>
+    <div class="synthese-card"><div class="synthese-card-num">2</div><div class="synthese-card-title">Élaboration du TRT</div><div class="synthese-card-text">Regroupement des tâches par type d'activité et report dans un tableau croisé tâches/agents. La <strong>charge nette</strong> est obtenue en majorant la charge estimée de 15% pour intégrer les temps non productifs.</div></div>
+    <div class="synthese-card"><div class="synthese-card-num">3</div><div class="synthese-card-title">Analyse quantitative + tableau des compétences</div><div class="synthese-card-text">L'analyse quantitative observe le taux d'engagement de chaque poste. Le tableau des compétences détermine en parallèle le degré de compétence et de formation de chaque employé sur l'ensemble des tâches.</div></div>
+    <div class="synthese-card"><div class="synthese-card-num">4</div><div class="synthese-card-title">Construction d'un nouveau TRT</div><div class="synthese-card-text">Réajustement du volume horaire par poste pour éviter sous-activité ou suractivité, et redistribution des tâches en fonction des compétences. Des actions de formation ou des embauches peuvent être envisagées.</div></div>
+  </div>
+
+  <h4>Les notions clés à maîtriser</h4>
+  <ul style="margin-left:1.5rem;margin-bottom:1rem;">
+    <li><strong>Charge estimée</strong> : temps déclaré par le salarié sur ses tâches, recueilli sur la feuille d'analyse.</li>
+    <li><strong>Charge nette</strong> : charge estimée majorée de 15% (charge nette = charge estimée × 1,15). Cette majoration intègre les temps non productifs : pauses, aléas divers, vitesse d'exécution.</li>
+    <li><strong>Temps de travail théorique mensuel</strong> : 35h × 52 semaines / 12 mois = <strong>151,67h</strong>. C'est la mensualisation légale française pour un temps plein, qui annualise la durée hebdomadaire.</li>
+    <li><strong>Taux d'engagement</strong> : (Charge nette / Temps de travail théorique) × 100. Indicateur central de l'analyse quantitative du TRT.</li>
+    <li><strong>Tableau des compétences</strong> : grille croisant agents × tâches, indiquant le degré de maîtrise (ex. : 0 = ne sait pas faire / 1 = en formation / 2 = autonome / 3 = expert / formateur). Indispensable avant toute redistribution.</li>
+  </ul>
+
+  <div class="encadre encadre-important">
+    <div class="encadre-header">Important - Les trois seuils du taux d'engagement</div>
+    <p style="margin-bottom:.5rem;"><strong>Taux d'engagement &lt; 95%</strong> : le poste n'est pas saturé. Marges mobilisables pour absorber d'autres tâches ou faire face à des pics ponctuels.</p>
+    <p style="margin-bottom:.5rem;"><strong>Taux d'engagement entre 95% et 99%</strong> : le poste est saturé. À pleine charge sans marge, situation soutenable mais sans capacité d'absorber un imprévu.</p>
+    <p style="margin-bottom:0;"><strong>Taux d'engagement &gt; 100%</strong> : le poste est surchargé. Le salarié réalise plus d'heures que son temps théorique, ce qui se traduit par des heures supplémentaires, des retards, ou une dégradation de la qualité du travail.</p>
+  </div>
+
+  <div class="encadre encadre-attention">
+    <div class="encadre-header">Attention - Limites de l'outil</div>
+    <p>Le tableau de répartition s'appuie sur des relevés d'activité <strong>déclaratifs</strong>, donc subjectifs. Avant toute conclusion, il faut systématiquement vérifier la fiabilité des données collectées. Un tableau ne dit pas non plus la difficulté ou la valeur ajoutée des tâches : 30 minutes sur une décision stratégique n'équivalent pas à 30 minutes sur une saisie répétitive. C'est pourquoi le tableau des compétences vient en complément indispensable de l'analyse quantitative.</p>
+  </div>
+
+  <div class="phase-nav-btns">
+    <span></span>
+    <button class="btn-primary" onclick="goToPhase(2)">Passer à la phase 2 - QCM</button>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- PHASE 2 - QCM CONNAISSANCES -->
+<!-- ============================================ -->
+<section class="phase" id="phase-2">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 2 - Durée indicative 15 minutes</div>
+    <h2>QCM de connaissances - Le tableau de répartition</h2>
+  </div>
+
+  <p>Avant de t'attaquer au cas d'Olivier &amp; Filles, vérifie tes acquis sur la méthode. Réponds aux 10 questions ci-dessous, puis valide pour obtenir ton score et la correction.</p>
+
+  <div class="exercise">
+    <div id="qcm-phase2"></div>
+    <button class="btn-primary" id="btn-validate-qcm" onclick="validateQCM('phase2')">Valider mes réponses</button>
+    <div id="qcm-result-phase2" style="margin-top:1.5rem;"></div>
+  </div>
+
+  <div class="phase-nav-btns">
+    <button class="btn-secondary" onclick="goToPhase(1)">Retour phase 1</button>
+    <button class="btn-primary" onclick="goToPhase(3)">Passer à la phase 3 - Analyse guidée</button>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- PHASE 3 - ANALYSE GUIDEE -->
+<!-- ============================================ -->
+<section class="phase" id="phase-3">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 3 - Durée indicative 40 minutes</div>
+    <h2>Analyse guidée du tableau de répartition d'Olivier &amp; Filles</h2>
+  </div>
+
+  <h3>Le tableau consolidé du mois de mars 2026</h3>
+
+  <div class="doc-ressource">
+    <h4>Tableau de répartition des tâches - Service administratif - Mars 2026</h4>
+    <p>Volume horaire en heures consacrées à chaque tâche par chaque agent, sur le mois complet.</p>
+    <table class="cadp-table" id="tab-repartition">
+      <thead>
+        <tr>
+          <th class="num-col">No</th>
+          <th>Tâche</th>
+          <th class="hours-col">Théa</th>
+          <th class="hours-col">Sophie</th>
+          <th class="hours-col">Léa</th>
+          <th class="hours-col">Total</th>
+        </tr>
+      </thead>
+      <tbody id="tab-repartition-body"></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2"><strong>Charge estimée mensuelle (heures déclarées)</strong></td>
+          <td class="hours-col"><strong>145</strong></td>
+          <td class="hours-col"><strong>115</strong></td>
+          <td class="hours-col"><strong>73</strong></td>
+          <td class="hours-col"><strong>333</strong></td>
+        </tr>
+        <tr>
+          <td colspan="2"><strong>Charge nette (× 1,15)</strong></td>
+          <td class="hours-col"><strong>166,75</strong></td>
+          <td class="hours-col"><strong>132,25</strong></td>
+          <td class="hours-col"><strong>83,95</strong></td>
+          <td class="hours-col"><strong>382,95</strong></td>
+        </tr>
+        <tr>
+          <td colspan="2"><strong>Taux d'engagement (sur 151,67 h théoriques)</strong></td>
+          <td class="hours-col"><strong>110%</strong></td>
+          <td class="hours-col"><strong>87%</strong></td>
+          <td class="hours-col"><strong>55%</strong></td>
+          <td class="hours-col">-</td>
+        </tr>
+      </tfoot>
+    </table>
+    <p class="doc-meta">Source : relevés d'activité tenus par chaque agent du 1er au 31 mars 2026, consolidés par Théa Bonnefoy. Document fictif à usage pédagogique.</p>
+  </div>
+
+  <!-- EXERCICE 3.1 - SAISIE TEMPS TOTAL -->
+  <div class="exercise">
+    <div class="exercise-title">Exercice 3.1 - Vérification des charges estimées par agent</div>
+    <p class="exercise-instruction">Le tableau ci-dessus affiche les charges estimées par agent en pied de colonne (heures déclarées par chacun sur sa feuille d'analyse des tâches). Refais le calcul à partir des heures détaillées, ligne par ligne. Cela te permet de te familiariser avec la lecture du tableau et de vérifier la cohérence des données. Saisis le résultat en heures (nombre entier).</p>
+    <div id="ex31-zone"></div>
+    <button class="btn-primary" onclick="validateSaisie('ex31')">Vérifier mes calculs</button>
+    <div id="ex31-result" style="margin-top:1rem;"></div>
+  </div>
+
+  <!-- EXERCICE 3.2 - SAISIE TAUX ENGAGEMENT -->
+  <div class="exercise">
+    <div class="exercise-title">Exercice 3.2 - Calcul du taux d'engagement</div>
+    <p class="exercise-instruction">Le temps de travail mensuel théorique est de <strong>151,67 heures</strong> (35h hebdomadaires × 52 semaines / 12 mois, mensualisation légale française). Calcule d'abord la <strong>charge nette</strong> de chaque agent (charge estimée majorée de 15% pour les pauses, aléas et vitesse d'exécution), puis le <strong>taux d'engagement</strong> en pourcentage, arrondi à l'unité.</p>
+    <div class="encadre encadre-note" style="margin-bottom:1rem;">
+      <div class="encadre-header">Rappel des deux formules</div>
+      <p style="margin-bottom:.5rem;"><strong>Charge nette</strong> = Charge estimée × 1,15</p>
+      <p style="margin-bottom:0;"><strong>Taux d'engagement</strong> = (Charge nette / Temps de travail théorique) × 100</p>
+    </div>
+    <div id="ex32-zone"></div>
+    <button class="btn-primary" onclick="validateSaisie('ex32')">Vérifier mes calculs</button>
+    <div id="ex32-result" style="margin-top:1rem;"></div>
+  </div>
+
+  <!-- EXERCICE 3.3 - QCM ANALYSE -->
+  <div class="exercise">
+    <div class="exercise-title">Exercice 3.3 - Lecture analytique du tableau</div>
+    <p class="exercise-instruction">À partir du tableau et des taux que tu viens de calculer, réponds aux questions suivantes.</p>
+    <div id="qcm-phase3"></div>
+    <button class="btn-primary" onclick="validateQCM('phase3')">Valider mes réponses</button>
+    <div id="qcm-result-phase3" style="margin-top:1rem;"></div>
+  </div>
+
+  <!-- EXERCICE 3.4 - PRODUCTION GUIDEE -->
+  <div class="exercise">
+    <div class="exercise-title">Exercice 3.4 - Trois propositions de réorganisation</div>
+    <p class="exercise-instruction">À partir des constats précédents, formule <strong>trois propositions de réorganisation</strong>. Pour chacune, précise : la tâche concernée, l'action proposée, l'agent destinataire, l'effet attendu en heures et le risque éventuel à anticiper.</p>
+
+    <h4>Proposition 1</h4>
+    <div class="production-area">
+      <textarea id="prop1" placeholder="Exemple : Tâche concernée - X. Action - transférer Y heures de Théa vers Léa. Agent destinataire - Léa. Effet - libérer Y heures de charge estimée pour Théa, ramener Léa à un taux d'engagement de Z%. Risque - formation de Léa nécessaire sur la tâche."></textarea>
+      <div class="production-counter"><span id="prop1-count">0</span> caractères</div>
+    </div>
+
+    <h4>Proposition 2</h4>
+    <div class="production-area">
+      <textarea id="prop2" placeholder="Continue avec ta deuxième proposition..."></textarea>
+      <div class="production-counter"><span id="prop2-count">0</span> caractères</div>
+    </div>
+
+    <h4>Proposition 3</h4>
+    <div class="production-area">
+      <textarea id="prop3" placeholder="Et ta troisième proposition..."></textarea>
+      <div class="production-counter"><span id="prop3-count">0</span> caractères</div>
+    </div>
+
+    <button class="detail-toggle" onclick="toggleDetail('corr34')">Comparer avec un corrigé-type</button>
+    <div class="detail-content" id="corr34">
+      <h5>Corrigé-type rédigé</h5>
+      <p><strong>Proposition 1 - Suppression du doublon de saisie des commandes clients (tâche 9)</strong></p>
+      <p>Constat : Théa et Sophie saisissent toutes les deux les commandes clients dans le tableur partagé, pour 30 heures cumulées (14h Théa + 16h Sophie). C'est une duplication de tâche.<br>
+      Action : centraliser la saisie chez Sophie, qui est en première ligne sur la relation client et reçoit les bons de commande. Théa accède aux données via export tableur ou consultation directe.<br>
+      Agent destinataire : Sophie conserve les 16 heures, les 14 heures de Théa sont libérées.<br>
+      Effet attendu : Théa passe d'une charge estimée de 145h à 131h, soit une charge nette de 150,65h et un taux d'engagement de 99% (poste saturé, plus surchargé).<br>
+      Risque : assurer la fiabilité de la saisie de Sophie, prévoir une procédure documentée et un contrôle ponctuel par Théa.</p>
+
+      <p><strong>Proposition 2 - Transfert de l'archivage et de la réponse aux mails fournisseurs vers Léa</strong></p>
+      <p>Constat : Théa réalise 5 heures d'archivage de documents administratifs et 8 heures de réponses aux mails fournisseurs sur des questions de paiement, soit 13 heures de tâches qui peuvent être déléguées. Léa, à 55% d'engagement, dispose des marges nécessaires.<br>
+      Action : Léa prend en charge l'archivage administratif (avec la procédure documentée par Théa) et le premier niveau de réponse aux fournisseurs (relances simples, accusés de réception). Théa garde la main sur les questions techniques.<br>
+      Agent destinataire : Léa passe de 73h à 86h de charge estimée.<br>
+      Effet attendu (cumulé avec proposition 1) : Théa passe à 118h de charge estimée, soit une charge nette de 135,70h et un taux d'engagement de 89% (non saturée). Léa passe à 65% d'engagement.<br>
+      Risque : Léa doit être formée à la GED et au logiciel de messagerie professionnelle. Prévoir une montée en charge progressive sur 2 mois.</p>
+
+      <p><strong>Proposition 3 - Suppression du doublon de mise à jour du fichier clients (tâche 10) et confiance à Léa</strong></p>
+      <p>Constat : Théa et Sophie mettent toutes deux à jour le fichier clients dans le PGI, pour 16 heures cumulées (8h chacune). Activité administrative de saisie, déléguable et rationalisable.<br>
+      Action : Léa devient la référente unique de la mise à jour du fichier clients dans le PGI. Théa et Sophie déclenchent la mise à jour par un workflow simple (formulaire interne ou ticket). Cette nouvelle organisation supprime le doublon et professionnalise le processus, en réduisant le total à 12h (rationalisation par centralisation).<br>
+      Agent destinataire : Léa absorbe 12 heures supplémentaires.<br>
+      Effet attendu (cumulé avec propositions 1 et 2) : Théa passe à 110h de charge estimée (taux 83%), Sophie à 107h (taux 81%), Léa à 98h (taux 74%). Tous les agents convergent vers une charge équilibrée et soutenable.<br>
+      Risque : période de transition à anticiper, formation de Léa sur le module commercial du PGI, validation par Marie Olivier de la légitimité de Léa à intervenir sur le fichier clients.</p>
+
+      <p><em>Note : ces propositions sont indicatives. D'autres arbitrages sont défendables, à condition d'être chiffrés et argumentés.</em></p>
+    </div>
+  </div>
+
+  <div class="phase-nav-btns">
+    <button class="btn-secondary" onclick="goToPhase(2)">Retour phase 2</button>
+    <button class="btn-primary" onclick="goToPhase(4)">Passer à la phase 4 - Production</button>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- PHASE 4 - PRODUCTION AUTONOME -->
+<!-- ============================================ -->
+<section class="phase" id="phase-4">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 4 - Durée indicative 40 minutes</div>
+    <h2>Production en autonomie - La note à Marie Olivier</h2>
+  </div>
+
+  <p>Tu vas maintenant rédiger une <strong>note structurée</strong> à destination de Marie Olivier, présentant ton analyse et tes recommandations. Cette note est l'une des productions attendues à l'épreuve E6.</p>
+
+  <h3>Format attendu</h3>
+  <ul style="margin-left:1.5rem;margin-bottom:1rem;">
+    <li><strong>En-tête</strong> : objet, expéditeur, destinataire, date</li>
+    <li><strong>Introduction</strong> : rappel de la mission, problématique</li>
+    <li><strong>Constats chiffrés</strong> : au minimum trois constats étayés par les données du tableau</li>
+    <li><strong>Propositions argumentées</strong> : au minimum trois propositions, justifiées par les constats</li>
+    <li><strong>Plan de mise en œuvre</strong> : étapes, responsables, délais</li>
+    <li><strong>Conclusion</strong> : synthèse et invitation à la discussion</li>
+  </ul>
+
+  <div class="encadre encadre-note">
+    <div class="encadre-header">Note méthodologique</div>
+    <p>Une note professionnelle ne dépasse généralement pas <strong>2 pages</strong> (environ 800 à 1200 mots). Elle est dense, structurée, et privilégie les chiffres aux affirmations. Évite les redondances et les formules creuses ; chaque phrase doit apporter de l'information.</p>
+  </div>
+
+  <h3>Ta note structurée</h3>
+  <div class="production-area">
+    <textarea id="note-marie" placeholder="Note d'analyse - Charge administrative au siège - Mars 2026
+
+À l'attention de : Marie Olivier, Dirigeante
+De : Camille Roux, Apprentie GPME
+Date : ...
+Objet : ...
+
+Introduction
+...
+
+Constats chiffrés
+1. ...
+2. ...
+3. ...
+
+Propositions argumentées
+1. ...
+2. ...
+3. ...
+
+Plan de mise en œuvre
+...
+
+Conclusion
+..."></textarea>
+    <div class="production-counter"><span id="note-count">0</span> caractères - <span id="note-mots">0</span> mots</div>
+  </div>
+
+  <h3>Auto-évaluation pondérée sur 100 points</h3>
+  <p>Une fois ta note rédigée, évalue toi-même ta production en utilisant la grille ci-dessous. Sois honnête : c'est l'occasion d'identifier tes axes de progrès avant l'examen.</p>
+
+  <div class="grille-evaluation" id="grille-eval">
+    <h4>Grille d'auto-évaluation</h4>
+    <div class="critere-row">
+      <div class="critere-libelle">Présentation et structure formelle (en-tête, paragraphes, lisibilité)</div>
+      <div class="critere-points">/ 10 pts</div>
+      <div class="critere-input"><input type="number" id="cr1" min="0" max="10" data-max="10"> <span>/ 10</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Qualité de la problématique (pertinence, formulation)</div>
+      <div class="critere-points">/ 10 pts</div>
+      <div class="critere-input"><input type="number" id="cr2" min="0" max="10" data-max="10"> <span>/ 10</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Constats chiffrés et précis (au moins 3, étayés par le tableau)</div>
+      <div class="critere-points">/ 20 pts</div>
+      <div class="critere-input"><input type="number" id="cr3" min="0" max="20" data-max="20"> <span>/ 20</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Pertinence des propositions (lien avec les constats, faisabilité)</div>
+      <div class="critere-points">/ 25 pts</div>
+      <div class="critere-input"><input type="number" id="cr4" min="0" max="25" data-max="25"> <span>/ 25</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Argumentation des propositions (justification chiffrée)</div>
+      <div class="critere-points">/ 15 pts</div>
+      <div class="critere-input"><input type="number" id="cr5" min="0" max="15" data-max="15"> <span>/ 15</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Plan de mise en œuvre concret (qui, quoi, quand)</div>
+      <div class="critere-points">/ 15 pts</div>
+      <div class="critere-input"><input type="number" id="cr6" min="0" max="15" data-max="15"> <span>/ 15</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Qualité rédactionnelle (orthographe, syntaxe, registre)</div>
+      <div class="critere-points">/ 5 pts</div>
+      <div class="critere-input"><input type="number" id="cr7" min="0" max="5" data-max="5"> <span>/ 5</span></div>
+    </div>
+    <div class="critere-total">
+      <span>Total auto-évaluation</span>
+      <span><span id="grille-total">0</span> / 100</span>
+    </div>
+    <button class="btn-secondary" onclick="calculerGrille()" style="margin-top:1rem;">Calculer mon score</button>
+  </div>
+
+  <button class="detail-toggle" onclick="toggleDetail('note-corr')" style="margin-top:1.5rem;">Voir un exemple de note rédigée</button>
+  <div class="detail-content" id="note-corr">
+    <h5>Exemple de note rédigée (1100 mots environ)</h5>
+    <p><strong>Note d'analyse - Charge administrative au siège - Mars 2026</strong></p>
+    <p>À l'attention de : Marie Olivier, Dirigeante<br>
+    De : Camille Roux, Apprentie GPME<br>
+    Date : Vendredi 15 mai 2026<br>
+    Objet : Analyse du tableau de répartition des tâches du service administratif et propositions de réorganisation</p>
+
+    <p><strong>Introduction</strong></p>
+    <p>Conformément à ta demande du 4 mai, j'ai analysé le tableau de répartition des tâches du service administratif sur le mois de mars 2026, qui consolide les feuilles d'analyse des tâches remplies par Théa Bonnefoy, Sophie Vasquez et Léa Dupré. Cette analyse confirme tes intuitions : la charge n'est pas équitablement répartie, et plusieurs marges d'optimisation apparaissent. La présente note synthétise les constats chiffrés et formule trois propositions de réorganisation, accompagnées d'un plan de mise en œuvre.</p>
+
+    <p><strong>Constats chiffrés</strong></p>
+    <p>1. <em>Théa est en situation de surcharge structurelle</em>. Avec une charge estimée de 145 heures sur le mois (charge nette de 166,75h après majoration de 15%) pour un temps de travail théorique de 151,67 heures, son taux d'engagement atteint 110%. Cette surcharge dépasse de 10 points le seuil critique des 100% et explique les heures supplémentaires et les retards de reporting que tu m'as signalés.</p>
+    <p>2. <em>Léa est nettement non saturée</em>. Avec une charge estimée de 73 heures (charge nette de 83,95h), son taux d'engagement s'établit à 55%, soit environ 68 heures de marge mensuelle mobilisable. Sophie, à 115 heures de charge estimée (charge nette de 132,25h), présente un taux d'engagement de 87%. Elle est donc également non saturée selon la grille des seuils CADP (en dessous de 95%), même si sa zone de charge est plus modérée.</p>
+    <p>3. <em>Deux tâches comportent un doublon manifeste</em>. La saisie des commandes clients dans le tableur partagé est réalisée à la fois par Théa (14h) et Sophie (16h), pour un cumul de 30 heures mensuelles. La mise à jour du fichier clients dans le PGI est elle aussi partagée entre Théa (8h) et Sophie (8h). Au total, ces deux tâches mobilisent 46 heures par mois, dont une part significative est probablement redondante par défaut de coordination.</p>
+
+    <p><strong>Propositions argumentées</strong></p>
+    <p>1. <em>Centraliser la saisie des commandes clients chez Sophie</em>. Sophie est en première ligne dans la relation commerciale et reçoit les bons de commande. Lui confier la totalité de la saisie supprime le doublon et clarifie la chaîne de responsabilité. Théa accède aux données via export tableur. Gain estimé : 14 heures mensuelles libérées pour Théa, qui passerait à 142 heures (101%).</p>
+    <p>2. <em>Transférer l'archivage et le premier niveau de réponse aux mails fournisseurs vers Léa</em>. Ces deux tâches représentent 16 heures mensuelles chez Théa. Léa, qui dispose des marges nécessaires, peut les absorber après une formation courte sur la GED et le module messagerie. Théa conserve les questions techniques (litiges, négociations). Gain estimé : Théa passerait à 126 heures (90%), Léa monterait à 90 heures (64%).</p>
+    <p>3. <em>Faire de Léa la référente unique de la mise à jour du fichier clients dans le PGI</em>. Cette mesure rationalise la tâche 10 et professionnalise le processus de mise à jour. Théa et Sophie déclenchent les mises à jour via un workflow simple. Gain estimé : Léa absorbe 12 heures supplémentaires, Théa passerait à 118 heures (84%), Sophie à 116 heures (83%), Léa à 102 heures (73%).</p>
+
+    <p><strong>Plan de mise en œuvre</strong></p>
+    <p>Étape 1 (semaine du 18 mai 2026) : entretiens individuels avec les trois agents pour présenter l'analyse et recueillir leur point de vue. Tu pilotes ces échanges, je te prépare la trame d'entretien.</p>
+    <p>Étape 2 (du 25 mai au 15 juin) : formalisation des nouvelles procédures (saisie commandes, mise à jour fichier clients, archivage), formation de Léa sur la GED et le PGI. Théa rédige les procédures avec mon appui. Antoine Marchand, responsable production, n'est pas concerné par cette phase.</p>
+    <p>Étape 3 (du 16 juin au 31 juillet) : mise en place progressive des nouvelles répartitions, accompagnement quotidien de Léa, contrôle hebdomadaire de la charge réelle.</p>
+    <p>Étape 4 (août 2026) : nouvelle prise de mesures sur un mois complet pour valider l'équilibrage et ajuster si nécessaire.</p>
+
+    <p><strong>Conclusion</strong></p>
+    <p>Les trois propositions, cumulées, permettent de ramener Théa à un taux d'engagement soutenable et de mobiliser le potentiel inutilisé de Léa. Elles supposent un accompagnement humain attentif : la réorganisation ne doit pas être perçue comme une sanction par Théa, ni comme une corvée par Léa. Pour aller plus loin dans la démarche, il sera nécessaire de compléter le diagnostic par un tableau des compétences afin de valider que les transferts proposés sont compatibles avec les degrés de maîtrise actuels de chaque agent. Je reste à ta disposition pour préparer les entretiens et formaliser les procédures.</p>
+    <p>Camille Roux, apprentie GPME, Olivier &amp; Filles SARL.</p>
+  </div>
+
+  <div class="phase-nav-btns">
+    <button class="btn-secondary" onclick="goToPhase(3)">Retour phase 3</button>
+    <button class="btn-primary" onclick="goToPhase(5)">Passer à la phase 5 - Synthèse</button>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- PHASE 5 - SYNTHESE ET ENVOI -->
+<!-- ============================================ -->
+<section class="phase" id="phase-5">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 5 - Durée indicative 10 minutes</div>
+    <h2>Synthèse, fiche-mémo et envoi du récapitulatif</h2>
+  </div>
+
+  <h3>Les cinq points incontournables</h3>
+
+  <div class="encadre encadre-important">
+    <div class="encadre-header">Important - À retenir avant l'examen</div>
+    <ol style="margin-left:1.5rem;margin-top:0.5rem;">
+      <li>Le tableau de répartition est un outil <strong>d'analyse</strong>, pas de jugement. Il sert à comprendre, pas à sanctionner.</li>
+      <li>La méthode CADP s'articule en quatre étapes : <strong>feuille d'analyse des tâches</strong>, élaboration du TRT, analyse quantitative + tableau des compétences, construction du nouveau TRT.</li>
+      <li>Le calcul du taux d'engagement passe toujours par la <strong>charge nette</strong> (charge estimée majorée de 15%), et utilise un temps théorique de <strong>151,67h/mois</strong> (mensualisation légale française).</li>
+      <li>Les trois seuils du taux d'engagement : <strong>&lt; 95% non saturé</strong>, <strong>95-99% saturé</strong>, <strong>&gt; 100% surchargé</strong>.</li>
+      <li>Toute proposition de réorganisation doit s'accompagner d'un <strong>plan de mise en œuvre concret</strong> : qui fait quoi, quand, avec quel accompagnement (formation éventuelle).</li>
+    </ol>
+  </div>
+
+  <div class="synthese-cards">
+    <div class="synthese-card">
+      <div class="synthese-card-num">1</div>
+      <div class="synthese-card-title">Recueillir les données</div>
+      <div class="synthese-card-text">Feuille d'analyse des tâches par salarié : liste des tâches, documents associés, temps estimé par semaine.</div>
+    </div>
+    <div class="synthese-card">
+      <div class="synthese-card-num">2</div>
+      <div class="synthese-card-title">Calculer les indicateurs</div>
+      <div class="synthese-card-text">Charge estimée, charge nette (× 1,15), taux d'engagement, polyvalence, charge cumulée par tâche.</div>
+    </div>
+    <div class="synthese-card">
+      <div class="synthese-card-num">3</div>
+      <div class="synthese-card-title">Diagnostiquer</div>
+      <div class="synthese-card-text">Postes surchargés (&gt;100%), saturés (95-99%), non saturés (&lt;95%), doublons, tâches isolées.</div>
+    </div>
+    <div class="synthese-card">
+      <div class="synthese-card-num">4</div>
+      <div class="synthese-card-title">Croiser avec les compétences</div>
+      <div class="synthese-card-text">Tableau des compétences pour valider la faisabilité des transferts et identifier les besoins de formation.</div>
+    </div>
+    <div class="synthese-card">
+      <div class="synthese-card-num">5</div>
+      <div class="synthese-card-title">Construire le nouveau TRT</div>
+      <div class="synthese-card-text">Réajuster le volume horaire, redistribuer les tâches, prévoir formations ou embauches si nécessaire.</div>
+    </div>
+  </div>
+
+  <div class="fiche-methode">
+    <h3>Fiche-mémo - Lexique et formules</h3>
+    <ol>
+      <li><strong>Tableau de Répartition des Tâches (TRT)</strong> : outil de l'activité A4.2, croisant tâches (lignes) et agents (colonnes), permettant l'analyse de la charge administrative.</li>
+      <li><strong>Feuille d'analyse des tâches</strong> : document préalable au TRT, recueillant pour chaque salarié la liste de ses tâches, les documents associés et le temps consacré par semaine.</li>
+      <li><strong>Charge estimée</strong> : temps déclaré par le salarié sur sa feuille d'analyse, sans majoration.</li>
+      <li><strong>Charge nette</strong> : charge estimée × 1,15. La majoration de 15% intègre les temps non productifs (pauses, aléas, vitesse d'exécution).</li>
+      <li><strong>Temps de travail théorique mensuel</strong> : 35h × 52 semaines / 12 mois = <strong>151,67h</strong>. Mensualisation légale française annualisée.</li>
+      <li><strong>Taux d'engagement</strong> : (charge nette / temps de travail théorique) × 100. Trois seuils : &lt; 95% non saturé / 95-99% saturé / &gt; 100% surchargé.</li>
+      <li><strong>Tableau des compétences</strong> : grille croisant agents × tâches, indiquant le degré de compétence et de formation de chaque employé. Indispensable avant toute redistribution.</li>
+      <li><strong>Nouveau TRT</strong> : tableau reconstruit après l'analyse quantitative et le tableau des compétences, en réajustant volumes horaires et répartition selon les compétences.</li>
+      <li><strong>Doublon</strong> : tâche identique réalisée par deux agents ou plus sans coordination. Source de perte de temps et d'incohérence.</li>
+      <li><strong>Polyvalence</strong> : capacité d'un agent à intervenir sur des tâches variées. Atout pour la continuité du service mais à équilibrer avec la spécialisation.</li>
+      <li><strong>Tâche isolée</strong> : tâche réalisée par un seul agent. À identifier pour éviter les ruptures de service en cas d'absence.</li>
+      <li><strong>Plan de mise en œuvre</strong> : étapes concrètes avec qui, quoi, quand. Indispensable pour transformer une analyse en action.</li>
+    </ol>
+  </div>
+
+  <h3>Ton score sur la capsule</h3>
+  <div class="score-final" id="score-final">
+    <h3>Capsule lundi - Tableau de répartition des tâches</h3>
+    <div class="score-big" id="score-big-display">- / -</div>
+    <p>Score consolidé sur les exercices auto-corrigés (phases 2 et 3)</p>
+    <div class="score-detail" id="score-detail-display"></div>
+  </div>
+
+  <div class="email-cta">
+    <h3>Transmettre le récapitulatif</h3>
+    <p>En cliquant sur le bouton ci-dessous, tu génères un courriel pré-rédigé contenant ton récapitulatif. Ouvre-le dans ta messagerie et envoie-le à ton responsable pédagogique pour que ton travail soit pris en compte.</p>
+    <a href="#" id="mailto-link" onclick="genererMailto(event)">Envoyer mon récapitulatif</a>
+  </div>
+
+  <div class="encadre encadre-note">
+    <div class="encadre-header">Note - Pour aller plus loin</div>
+    <p>Cette capsule couvre l'activité A4.2. Pour préparer plus largement l'épreuve E6, retravaille en parallèle les activités A4.1 (système d'information), A4.4 (communication), A4.5 (analyse de l'activité), A4.6 (diagnostic financier) et A4.7 (tableaux de bord). Une banque de 350 QCM de révision est disponible dans la section "Bonus" du portail CADP.</p>
+  </div>
+
+  <div class="phase-nav-btns">
+    <button class="btn-secondary" onclick="goToPhase(4)">Retour phase 4</button>
+    <span></span>
+  </div>
+</section>
+
+</main>
+
+<footer class="cadp-footer">
+  <p class="cadp-name">Campus Alternance Drôme Provence</p>
+  <p>2 boulevard Frédéric Mistral - 26700 Pierrelatte</p>
+  <p>Capsule de révision E6 SFPME - Session 2026 - BTS GPME 2A</p>
+</footer>
+
+<script>
+/* =============================================== */
+/* MOTEUR CADP - Capsule lundi - A4.2              */
+/* =============================================== */
+
+// Données du tableau de répartition (validées en double-check)
+const TABLEAU_DONNEES = [
+  { num: 1, tache: "Saisie factures fournisseurs (PGI)", thea: 32, sophie: 0, lea: 0 },
+  { num: 2, tache: "Saisie factures clients (PGI)", thea: 24, sophie: 0, lea: 0 },
+  { num: 3, tache: "Rapprochement bancaire mensuel", thea: 10, sophie: 0, lea: 0 },
+  { num: 4, tache: "Suivi des règlements clients et relances", thea: 18, sophie: 0, lea: 0 },
+  { num: 5, tache: "Préparation des éléments de paie (envoi expert-comptable)", thea: 8, sophie: 0, lea: 0 },
+  { num: 6, tache: "Déclarations fiscales (TVA)", thea: 6, sophie: 0, lea: 0 },
+  { num: 7, tache: "Tenue caisse et petite caisse", thea: 4, sophie: 0, lea: 0 },
+  { num: 8, tache: "Reporting financier mensuel à la direction", thea: 8, sophie: 0, lea: 0 },
+  { num: 9, tache: "Saisie des commandes clients dans tableur partagé", thea: 14, sophie: 16, lea: 0 },
+  { num: 10, tache: "Mise à jour du fichier clients (PGI)", thea: 8, sophie: 8, lea: 0 },
+  { num: 11, tache: "Archivage des documents administratifs et comptables", thea: 5, sophie: 0, lea: 0 },
+  { num: 12, tache: "Réponse aux mails et appels fournisseurs (paiements)", thea: 8, sophie: 0, lea: 0 },
+  { num: 13, tache: "Préparation des devis clients", thea: 0, sophie: 28, lea: 0 },
+  { num: 14, tache: "Suivi des commandes et expéditions clients", thea: 0, sophie: 25, lea: 0 },
+  { num: 15, tache: "Réponse aux demandes prospects", thea: 0, sophie: 22, lea: 0 },
+  { num: 16, tache: "Préparation des salons professionnels", thea: 0, sophie: 16, lea: 14 },
+  { num: 17, tache: "Gestion agenda, déplacements et notes de frais direction", thea: 0, sophie: 0, lea: 35 },
+  { num: 18, tache: "Préparation des réunions et rédaction des comptes rendus", thea: 0, sophie: 0, lea: 24 }
+];
+
+// QCM Phase 2 (10 questions)
+const QCM_PHASE2 = [
+  {
+    stem: "Le tableau de répartition des tâches sert principalement à :",
+    options: [
+      { txt: "Établir l'organigramme hiérarchique de l'entreprise", correct: false },
+      { txt: "Analyser la charge de travail et identifier les déséquilibres entre agents", correct: true },
+      { txt: "Calculer la rémunération des salariés", correct: false },
+      { txt: "Élaborer le plan de communication interne de la PME", correct: false }
+    ],
+    feedback: "Le tableau de répartition est un outil de diagnostic de la charge de travail administrative. Il ne remplace pas l'organigramme, qui décrit les liens hiérarchiques."
+  },
+  {
+    stem: "Dans un tableau de répartition des tâches, les tâches sont placées en :",
+    options: [
+      { txt: "Lignes", correct: true },
+      { txt: "Colonnes", correct: false },
+      { txt: "Diagonale", correct: false },
+      { txt: "Cellules colorées uniquement", correct: false }
+    ],
+    feedback: "Convention universelle : tâches en lignes, agents en colonnes, durées dans les cellules d'intersection."
+  },
+  {
+    stem: "Le tableau de répartition des tâches s'inscrit dans l'activité du référentiel BTS GPME :",
+    options: [
+      { txt: "A4.1 - Contribution à la qualité du système d'information", correct: false },
+      { txt: "A4.2 - Organisation des activités de la PME", correct: true },
+      { txt: "A4.5 - Participation à l'analyse de l'activité", correct: false },
+      { txt: "A4.7 - Participation à l'élaboration de tableaux de bord", correct: false }
+    ],
+    feedback: "L'outil relève précisément de la tâche T.4.2.2 'Amélioration et suivi de l'organisation du travail administratif' et du savoir associé S 4.2.2."
+  },
+  {
+    stem: "Vrai ou faux : le tableau de répartition des tâches remplace l'organigramme hiérarchique.",
+    options: [
+      { txt: "Vrai", correct: false },
+      { txt: "Faux", correct: true }
+    ],
+    feedback: "Les deux outils sont complémentaires. L'organigramme représente la structure hiérarchique. Le tableau de répartition analyse la charge opérationnelle. L'un ne remplace pas l'autre."
+  },
+  {
+    stem: "Pour calculer le taux d'engagement d'un agent dans un TRT, on divise :",
+    options: [
+      { txt: "Le temps total des tâches par 35 heures", correct: false },
+      { txt: "La charge nette par le temps de travail théorique de la période", correct: true },
+      { txt: "Le nombre de tâches par le nombre d'agents", correct: false },
+      { txt: "Les heures supplémentaires par les heures normales", correct: false }
+    ],
+    feedback: "Formule : (charge nette / temps de travail théorique) × 100. La charge nette est la charge estimée majorée de 15%. Le temps théorique pour un temps plein est de 151,67h/mois (mensualisation légale)."
+  },
+  {
+    stem: "Selon la grille des seuils CADP, un taux d'engagement supérieur à 100% indique :",
+    options: [
+      { txt: "Un agent particulièrement productif à valoriser", correct: false },
+      { txt: "Un poste surchargé : l'agent réalise plus d'heures que son temps théorique", correct: true },
+      { txt: "Un poste saturé sans marge mais soutenable", correct: false },
+      { txt: "Un poste non saturé avec marges mobilisables", correct: false }
+    ],
+    feedback: "Les trois seuils CADP : < 95% non saturé / 95-99% saturé / > 100% surchargé. Un poste surchargé se traduit généralement par des heures supplémentaires, des retards ou une dégradation de qualité."
+  },
+  {
+    stem: "Quel terme désigne le fait qu'une même tâche soit réalisée par plusieurs agents distincts sans coordination ?",
+    options: [
+      { txt: "Polyvalence", correct: false },
+      { txt: "Doublon", correct: true },
+      { txt: "Délégation", correct: false },
+      { txt: "Substitution", correct: false }
+    ],
+    feedback: "Le doublon est une duplication non coordonnée. La polyvalence, en revanche, est la capacité d'un agent à intervenir sur plusieurs types de tâches : c'est un atout."
+  },
+  {
+    stem: "La polyvalence des agents est un atout pour la PME car (plusieurs réponses possibles) :",
+    options: [
+      { txt: "Elle permet d'assurer la continuité du service en cas d'absence", correct: true },
+      { txt: "Elle complique le suivi des compétences", correct: false },
+      { txt: "Elle favorise la mobilité interne et la motivation", correct: true },
+      { txt: "Elle augmente automatiquement la productivité", correct: false }
+    ],
+    feedback: "La polyvalence sécurise la continuité d'activité et soutient l'engagement. Elle ne garantit pas mécaniquement la productivité (qui dépend aussi de l'expertise et de la qualité des outils).",
+    multi: true
+  },
+  {
+    stem: "Dans une PME de moins de 10 salariés au siège, le tableau de répartition des tâches est :",
+    options: [
+      { txt: "Inutile car la communication directe entre agents suffit", correct: false },
+      { txt: "Particulièrement utile car les marges humaines y sont limitées", correct: true },
+      { txt: "Obligatoire par la loi", correct: false },
+      { txt: "Déconseillé par les experts en organisation", correct: false }
+    ],
+    feedback: "Dans une petite équipe, chaque heure mal répartie pèse lourdement. L'outil est d'autant plus utile que les marges humaines sont étroites. Aucune obligation légale spécifique en revanche."
+  },
+  {
+    stem: "Lorsque l'analyse révèle un déséquilibre important, la première étape professionnelle est :",
+    options: [
+      { txt: "Embaucher un nouveau salarié pour compenser", correct: false },
+      { txt: "Sanctionner l'agent surchargé pour son inefficacité", correct: false },
+      { txt: "Vérifier la fiabilité des données collectées avant toute conclusion", correct: true },
+      { txt: "Imposer une nouvelle répartition immédiatement", correct: false }
+    ],
+    feedback: "Avant toute action, vérifier la qualité des relevés. Un tableau bâti sur des données déclaratives non fiables conduit à des décisions erronées. Cette vérification fait partie intégrante de la démarche professionnelle."
+  }
+];
+
+// QCM Phase 3 (analyse du tableau)
+const QCM_PHASE3 = [
+  {
+    stem: "Quel agent est en situation de surcharge selon la grille CADP (taux d'engagement supérieur à 100%) ?",
+    options: [
+      { txt: "Théa Bonnefoy", correct: true },
+      { txt: "Sophie Vasquez", correct: false },
+      { txt: "Léa Dupré", correct: false },
+      { txt: "Aucun agent n'est surchargé", correct: false }
+    ],
+    feedback: "Théa cumule 145h de charge estimée, soit une charge nette de 166,75h et un taux d'engagement de 110% sur les 151,67h théoriques. Sophie est à 87%, Léa à 55% : toutes deux non saturées."
+  },
+  {
+    stem: "Quelle tâche présente une situation de doublon manifeste, à supprimer en priorité ?",
+    options: [
+      { txt: "Tâche 1 - Saisie factures fournisseurs", correct: false },
+      { txt: "Tâche 9 - Saisie commandes clients dans tableur partagé", correct: true },
+      { txt: "Tâche 13 - Préparation des devis clients", correct: false },
+      { txt: "Tâche 17 - Gestion agenda direction", correct: false }
+    ],
+    feedback: "Théa et Sophie y consacrent toutes deux du temps (14h Théa + 16h Sophie = 30h cumulées). Comme Sophie est en première ligne sur la relation client, la centralisation chez elle s'impose."
+  },
+  {
+    stem: "Quelle autre tâche présente également un doublon entre Théa et Sophie ?",
+    options: [
+      { txt: "Tâche 10 - Mise à jour du fichier clients (PGI)", correct: true },
+      { txt: "Tâche 11 - Archivage des documents", correct: false },
+      { txt: "Tâche 16 - Préparation des salons (légitimement partagée entre Sophie et Léa)", correct: false },
+      { txt: "Tâche 18 - Préparation des réunions", correct: false }
+    ],
+    feedback: "Théa et Sophie consacrent chacune 8 heures à la mise à jour du fichier clients dans le PGI : 16 heures cumulées sur une tâche unique. À rationaliser."
+  },
+  {
+    stem: "Léa Dupré présente un taux d'engagement de 55%. Quelle interprétation est la plus pertinente ?",
+    options: [
+      { txt: "Léa est paresseuse et doit être sanctionnée", correct: false },
+      { txt: "Léa dispose de marges importantes (poste non saturé selon CADP) pouvant être mobilisées par redistribution de tâches", correct: true },
+      { txt: "Léa doit être remerciée car son poste n'est pas justifié", correct: false },
+      { txt: "Léa fait sans doute des heures non déclarées", correct: false }
+    ],
+    feedback: "Avec un taux de 55% (poste non saturé selon la grille CADP), Léa dispose d'environ 45 points de marge, soit l'équivalent de 68 heures par mois mobilisables. Une non-saturation n'est jamais imputable à l'agent en première intention : elle révèle souvent un dimensionnement initial inadapté ou une évolution non anticipée du périmètre."
+  },
+  {
+    stem: "Quelle tâche illustre un partage légitime entre deux agents (et non un doublon) ?",
+    options: [
+      { txt: "Tâche 9 - Saisie commandes clients", correct: false },
+      { txt: "Tâche 10 - Mise à jour fichier clients", correct: false },
+      { txt: "Tâche 16 - Préparation des salons professionnels", correct: true },
+      { txt: "Tâche 17 - Gestion agenda direction", correct: false }
+    ],
+    feedback: "La préparation des salons combine logistique (Léa, 14h) et dimension commerciale (Sophie, 16h). Les deux apports sont complémentaires et non substituables : ce n'est pas un doublon."
+  }
+];
+
+/* ====== ETAT GLOBAL ====== */
+let etudiant = { nom: '', prenom: '', classe: '' };
+let scores = { phase2: null, phase3qcm: null, ex31: null, ex32: null };
+let phasesCompletes = new Set();
+let currentPhase = 1;
+
+/* ====== INIT ====== */
+window.addEventListener('DOMContentLoaded', () => {
+  // Restaurer identification si présente
+  const saved = localStorage.getItem('cadp-gpme-id');
+  if (saved) {
+    etudiant = JSON.parse(saved);
+    document.getElementById('id-nom').value = etudiant.nom;
+    document.getElementById('id-prenom').value = etudiant.prenom;
+  }
+
+  // Bouton validation identification
+  document.getElementById('btn-id-valid').addEventListener('click', validerIdentification);
+
+  // Construire le tableau de répartition
+  construireTableau();
+
+  // Construire les QCM
+  construireQCM('phase2', QCM_PHASE2, 'qcm-phase2');
+  construireQCM('phase3', QCM_PHASE3, 'qcm-phase3');
+
+  // Construire les zones de saisie ex31 et ex32
+  construireSaisie31();
+  construireSaisie32();
+
+  // Compteurs textarea
+  initCompteurTextarea('prop1');
+  initCompteurTextarea('prop2');
+  initCompteurTextarea('prop3');
+  initCompteurNote('note-marie');
+
+  // Navigation phases
+  document.querySelectorAll('.phase-tab').forEach(tab => {
+    tab.addEventListener('click', () => goToPhase(parseInt(tab.dataset.phase)));
+  });
+
+  // Restauration progression si présente
+  restaurerProgression();
+});
+
+function validerIdentification() {
+  const nom = document.getElementById('id-nom').value.trim();
+  const prenom = document.getElementById('id-prenom').value.trim();
+  if (!nom || !prenom) {
+    alert("Renseigne ton nom et ton prénom pour continuer.");
+    return;
+  }
+  etudiant = { nom: nom.toUpperCase(), prenom: prenom, classe: 'BTS GPME 2A - Promo 2426' };
+  localStorage.setItem('cadp-gpme-id', JSON.stringify(etudiant));
+  document.getElementById('header-name').textContent = etudiant.prenom + ' ' + etudiant.nom;
+  document.getElementById('modal-id').style.display = 'none';
+}
+
+/* ====== CONSTRUCTION TABLEAU REPARTITION ====== */
+function construireTableau() {
+  const tbody = document.getElementById('tab-repartition-body');
+  let html = '';
+  TABLEAU_DONNEES.forEach(t => {
+    const cellThea = t.thea > 0 ? '<td class="hours-col">' + t.thea + '</td>' : '<td class="hours-col tab-empty-cell">-</td>';
+    const cellSophie = t.sophie > 0 ? '<td class="hours-col">' + t.sophie + '</td>' : '<td class="hours-col tab-empty-cell">-</td>';
+    const cellLea = t.lea > 0 ? '<td class="hours-col">' + t.lea + '</td>' : '<td class="hours-col tab-empty-cell">-</td>';
+    const total = t.thea + t.sophie + t.lea;
+    html += '<tr><td class="num-col">' + t.num + '</td><td>' + t.tache + '</td>' + cellThea + cellSophie + cellLea + '<td class="hours-col"><strong>' + total + '</strong></td></tr>';
+  });
+  tbody.innerHTML = html;
+}
+
+/* ====== CONSTRUCTION QCM ====== */
+function construireQCM(phaseId, questions, containerId) {
+  const container = document.getElementById(containerId);
+  let html = '';
+  questions.forEach((q, idx) => {
+    const inputType = q.multi ? 'checkbox' : 'radio';
+    const name = phaseId + '-q' + idx;
+    html += '<div class="qcm-question" data-q="' + idx + '">';
+    html += '<div class="qcm-stem">Question ' + (idx + 1) + ' - ' + q.stem + '</div>';
+    html += '<div class="qcm-options">';
+    q.options.forEach((opt, i) => {
+      html += '<label class="qcm-option" data-correct="' + opt.correct + '">';
+      html += '<input type="' + inputType + '" name="' + name + '" value="' + i + '">';
+      html += '<span>' + opt.txt + '</span>';
+      html += '</label>';
+    });
+    html += '</div>';
+    html += '<div class="qcm-feedback" id="' + phaseId + '-fb-' + idx + '"></div>';
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+/* ====== VALIDATION QCM ====== */
+function validateQCM(phaseId) {
+  const questions = phaseId === 'phase2' ? QCM_PHASE2 : QCM_PHASE3;
+  const containerId = 'qcm-' + phaseId;
+  const resultId = 'qcm-result-' + phaseId;
+  const container = document.getElementById(containerId);
+
+  let bonnesReponses = 0;
+  let totalQuestions = questions.length;
+
+  questions.forEach((q, idx) => {
+    const name = phaseId + '-q' + idx;
+    const checkedInputs = document.querySelectorAll('input[name="' + name + '"]:checked');
+    const checkedValues = Array.from(checkedInputs).map(i => parseInt(i.value));
+    const correctIndices = q.options.map((opt, i) => opt.correct ? i : -1).filter(i => i !== -1);
+
+    const questionDiv = container.querySelector('[data-q="' + idx + '"]');
+    const optionLabels = questionDiv.querySelectorAll('.qcm-option');
+
+    // Comparaison stricte des sets
+    const isCorrect = checkedValues.length === correctIndices.length &&
+                      checkedValues.every(v => correctIndices.includes(v));
+
+    if (isCorrect) bonnesReponses++;
+
+    // Affichage feedback visuel
+    optionLabels.forEach((lbl, i) => {
+      lbl.classList.remove('correct', 'incorrect', 'expected');
+      if (correctIndices.includes(i)) {
+        if (checkedValues.includes(i)) lbl.classList.add('correct');
+        else lbl.classList.add('expected');
+      } else if (checkedValues.includes(i)) {
+        lbl.classList.add('incorrect');
+      }
+    });
+
+    // Texte feedback
+    const fb = document.getElementById(phaseId + '-fb-' + idx);
+    fb.classList.add('shown');
+    fb.classList.remove('success', 'error');
+    if (isCorrect) {
+      fb.classList.add('success');
+      fb.innerHTML = '<strong>Correct.</strong> ' + q.feedback;
+    } else {
+      fb.classList.add('error');
+      fb.innerHTML = '<strong>À revoir.</strong> ' + q.feedback;
+    }
+  });
+
+  const note20 = Math.round((bonnesReponses / totalQuestions) * 20 * 10) / 10;
+  scores[phaseId === 'phase2' ? 'phase2' : 'phase3qcm'] = { bonnes: bonnesReponses, total: totalQuestions, note20: note20 };
+
+  document.getElementById(resultId).innerHTML =
+    '<div class="encadre encadre-' + (note20 >= 14 ? 'note' : note20 >= 10 ? 'important' : 'attention') + '">' +
+    '<div class="encadre-header">Score</div>' +
+    '<p><strong>' + bonnesReponses + ' / ' + totalQuestions + '</strong> bonnes réponses, soit <strong>' + note20.toFixed(1) + ' / 20</strong>. ' +
+    (note20 >= 14 ? 'Très bon résultat, tu maîtrises l\'essentiel.' : note20 >= 10 ? 'Niveau satisfaisant, continue à consolider.' : 'À reprendre, relis attentivement les feedbacks ci-dessus.') +
+    '</p></div>';
+
+  phasesCompletes.add(phaseId);
+  marquerPhaseCompletee(phaseId === 'phase2' ? 2 : 3);
+  sauvegarderProgression();
+  miseAJourScoreFinal();
+}
+
+/* ====== SAISIES ====== */
+function construireSaisie31() {
+  const html =
+    '<div class="saisie-question">' +
+    '<div class="saisie-row"><label>Théa Bonnefoy :</label><input type="number" id="ex31-thea" data-bonne="145"><span class="saisie-unit">heures (charge estimée)</span></div>' +
+    '<span class="saisie-tolerance">Résultat attendu : nombre entier, tolérance 0 (calcul exact)</span>' +
+    '</div>' +
+    '<div class="saisie-question">' +
+    '<div class="saisie-row"><label>Sophie Vasquez :</label><input type="number" id="ex31-sophie" data-bonne="115"><span class="saisie-unit">heures (charge estimée)</span></div>' +
+    '<span class="saisie-tolerance">Résultat attendu : nombre entier, tolérance 0 (calcul exact)</span>' +
+    '</div>' +
+    '<div class="saisie-question">' +
+    '<div class="saisie-row"><label>Léa Dupré :</label><input type="number" id="ex31-lea" data-bonne="73"><span class="saisie-unit">heures (charge estimée)</span></div>' +
+    '<span class="saisie-tolerance">Résultat attendu : nombre entier, tolérance 0 (calcul exact)</span>' +
+    '</div>' +
+    '<button class="detail-toggle" onclick="toggleDetail(\'ex31-detail\')">Voir le détail des calculs</button>' +
+    '<div class="detail-content" id="ex31-detail">' +
+    '<h5>Démarche pas à pas</h5>' +
+    '<p><strong>Théa</strong> : on additionne ses heures sur les tâches 1 à 12 où elle apparaît.<br>' +
+    '<code>32 + 24 + 10 + 18 + 8 + 6 + 4 + 8 + 14 + 8 + 5 + 8 = 145 heures</code></p>' +
+    '<p><strong>Sophie</strong> : tâches 9, 10, 13, 14, 15, 16.<br>' +
+    '<code>16 + 8 + 28 + 25 + 22 + 16 = 115 heures</code></p>' +
+    '<p><strong>Léa</strong> : tâches 16, 17, 18.<br>' +
+    '<code>14 + 35 + 24 = 73 heures</code></p>' +
+    '<p><strong>Vérification</strong> : la somme totale (145 + 115 + 73 = 333 heures) doit correspondre à la somme des totaux par tâche affichée dans la dernière colonne du tableau. À toi de vérifier sur ta calculatrice.</p>' +
+    '<p><em>Erreur fréquente : oublier qu\'une tâche est partagée et ne compter qu\'une partie. Bien lire le tableau ligne par ligne et n\'additionner que les cellules de la colonne de l\'agent concerné.</em></p>' +
+    '<p><em>Note méthodologique : les heures saisies ici représentent la <strong>charge estimée</strong>, c\'est-à-dire le temps réel déclaré par chaque salarié sur sa feuille d\'analyse des tâches. C\'est cette charge estimée qui sera ensuite majorée de 15% pour obtenir la charge nette utilisée dans le calcul du taux d\'engagement.</em></p>' +
+    '</div>';
+  document.getElementById('ex31-zone').innerHTML = html;
+}
+
+function construireSaisie32() {
+  const html =
+    '<div class="saisie-question">' +
+    '<div class="saisie-row"><label>Théa Bonnefoy :</label><input type="number" id="ex32-thea" data-bonne="110" data-tol="1"><span class="saisie-unit">% (taux d\'engagement, arrondi à l\'unité)</span></div>' +
+    '<span class="saisie-tolerance">Tolérance : ±1 point de pourcentage</span>' +
+    '</div>' +
+    '<div class="saisie-question">' +
+    '<div class="saisie-row"><label>Sophie Vasquez :</label><input type="number" id="ex32-sophie" data-bonne="87" data-tol="1"><span class="saisie-unit">% (taux d\'engagement, arrondi à l\'unité)</span></div>' +
+    '<span class="saisie-tolerance">Tolérance : ±1 point de pourcentage</span>' +
+    '</div>' +
+    '<div class="saisie-question">' +
+    '<div class="saisie-row"><label>Léa Dupré :</label><input type="number" id="ex32-lea" data-bonne="55" data-tol="1"><span class="saisie-unit">% (taux d\'engagement, arrondi à l\'unité)</span></div>' +
+    '<span class="saisie-tolerance">Tolérance : ±1 point de pourcentage</span>' +
+    '</div>' +
+    '<button class="detail-toggle" onclick="toggleDetail(\'ex32-detail\')">Voir le détail des calculs</button>' +
+    '<div class="detail-content" id="ex32-detail">' +
+    '<h5>Démarche pas à pas - en deux étapes</h5>' +
+    '<p><strong>Étape 1 - Calcul de la charge nette</strong> (charge estimée majorée de 15%) :</p>' +
+    '<p><strong>Théa</strong> : <code>145 × 1,15 = 166,75 h</code><br>' +
+    '<strong>Sophie</strong> : <code>115 × 1,15 = 132,25 h</code><br>' +
+    '<strong>Léa</strong> : <code>73 × 1,15 = 83,95 h</code></p>' +
+    '<p><strong>Étape 2 - Calcul du taux d\'engagement</strong> (charge nette / temps théorique × 100) avec un temps théorique de <strong>151,67 h</strong> (35h × 52 / 12) :</p>' +
+    '<p><strong>Théa</strong> : <code>(166,75 / 151,67) × 100 = 109,95%</code>. Arrondi à l\'unité : <strong>110%</strong>.<br>Théa est en <strong>surcharge</strong> (taux &gt; 100%).</p>' +
+    '<p><strong>Sophie</strong> : <code>(132,25 / 151,67) × 100 = 87,20%</code>. Arrondi à l\'unité : <strong>87%</strong>.<br>Sophie est dans une <strong>zone non saturée</strong> (taux &lt; 95%), avec environ 13 points de marge mobilisable.</p>' +
+    '<p><strong>Léa</strong> : <code>(83,95 / 151,67) × 100 = 55,35%</code>. Arrondi à l\'unité : <strong>55%</strong>.<br>Léa est nettement <strong>non saturée</strong> avec environ 45 points de marge, soit l\'équivalent de 68 heures par mois mobilisables.</p>' +
+    '<p><em>Erreur fréquente n°1 : oublier la majoration de 15% et calculer directement le taux à partir de la charge estimée. Sans la charge nette, le taux est sous-évalué d\'environ 13%.</em></p>' +
+    '<p><em>Erreur fréquente n°2 : utiliser un temps théorique de 140h (35 × 4 semaines) au lieu de 151,67h (mensualisation légale française). Cela survalorise le taux et fausse l\'analyse.</em></p>' +
+    '<p><em>Erreur fréquente n°3 : arrondir trop tôt. Garde toutes les décimales jusqu\'au calcul final, puis arrondis seulement à l\'unité demandée.</em></p>' +
+    '</div>';
+  document.getElementById('ex32-zone').innerHTML = html;
+}
+
+function validateSaisie(exId) {
+  const inputs = document.querySelectorAll('#' + exId + '-zone input[type="number"]');
+  let bonnes = 0;
+  let total = 0;
+  inputs.forEach(inp => {
+    const valeur = parseFloat(inp.value);
+    const bonne = parseFloat(inp.dataset.bonne);
+    const tol = parseFloat(inp.dataset.tol || '0');
+    inp.classList.remove('correct', 'incorrect');
+    if (!isNaN(valeur)) {
+      total++;
+      if (Math.abs(valeur - bonne) <= tol) {
+        inp.classList.add('correct');
+        bonnes++;
+      } else {
+        inp.classList.add('incorrect');
+      }
+    }
+  });
+
+  const note20 = total > 0 ? Math.round((bonnes / total) * 20 * 10) / 10 : 0;
+  scores[exId] = { bonnes: bonnes, total: total, note20: note20 };
+
+  let html = '';
+  if (total === 0) {
+    html = '<div class="encadre encadre-attention"><div class="encadre-header">Saisie incomplète</div><p>Renseigne au moins une valeur avant de valider.</p></div>';
+  } else if (bonnes === total) {
+    html = '<div class="encadre encadre-note"><div class="encadre-header">Excellent</div><p>Toutes tes réponses sont correctes (' + bonnes + ' / ' + total + '). Tu maîtrises ces calculs. Si tu veux comprendre pourquoi, le détail des calculs est disponible ci-dessus.</p></div>';
+  } else {
+    html = '<div class="encadre encadre-attention"><div class="encadre-header">Réponses partielles</div><p>' + bonnes + ' bonne(s) réponse(s) sur ' + total + '. Les saisies en rouge sont à revoir. Clique sur "Voir le détail des calculs" pour comprendre la démarche pas à pas et identifier ton erreur.</p></div>';
+  }
+  document.getElementById(exId + '-result').innerHTML = html;
+
+  if (bonnes === total && total > 0) {
+    phasesCompletes.add(exId);
+    sauvegarderProgression();
+    miseAJourScoreFinal();
+  }
+}
+
+/* ====== TOGGLE DETAIL ====== */
+function toggleDetail(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('shown');
+}
+
+/* ====== COMPTEURS TEXTAREA ====== */
+function initCompteurTextarea(id) {
+  const ta = document.getElementById(id);
+  const counter = document.getElementById(id + '-count');
+  if (ta && counter) {
+    ta.addEventListener('input', () => {
+      counter.textContent = ta.value.length;
+      sauvegarderTextes();
+    });
+  }
+}
+
+function initCompteurNote(id) {
+  const ta = document.getElementById(id);
+  const counterC = document.getElementById('note-count');
+  const counterM = document.getElementById('note-mots');
+  if (ta && counterC && counterM) {
+    ta.addEventListener('input', () => {
+      counterC.textContent = ta.value.length;
+      counterM.textContent = ta.value.trim().split(/\s+/).filter(w => w.length > 0).length;
+      sauvegarderTextes();
+    });
+  }
+}
+
+function sauvegarderTextes() {
+  const data = {
+    prop1: document.getElementById('prop1').value,
+    prop2: document.getElementById('prop2').value,
+    prop3: document.getElementById('prop3').value,
+    note: document.getElementById('note-marie').value
+  };
+  localStorage.setItem('cadp-gpme-textes-lundi', JSON.stringify(data));
+}
+
+/* ====== GRILLE EVALUATION ====== */
+function calculerGrille() {
+  let total = 0;
+  let valide = true;
+  for (let i = 1; i <= 7; i++) {
+    const inp = document.getElementById('cr' + i);
+    const v = parseFloat(inp.value);
+    const max = parseFloat(inp.dataset.max);
+    if (isNaN(v) || v < 0 || v > max) {
+      inp.style.borderColor = 'var(--error)';
+      valide = false;
+    } else {
+      inp.style.borderColor = 'var(--border)';
+      total += v;
+    }
+  }
+  if (!valide) {
+    alert('Vérifie que toutes les notes sont remplies et qu\'aucune ne dépasse le maximum autorisé.');
+    document.getElementById('grille-total').textContent = '0';
+    return;
+  }
+  document.getElementById('grille-total').textContent = total;
+  scores.grille = total;
+  sauvegarderProgression();
+  miseAJourScoreFinal();
+}
+
+/* ====== NAVIGATION PHASES ====== */
+function goToPhase(num) {
+  document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+  document.getElementById('phase-' + num).classList.add('active');
+  document.querySelectorAll('.phase-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('.phase-tab[data-phase="' + num + '"]').classList.add('active');
+  currentPhase = num;
+  if (num >= 1 && !phasesCompletes.has('phase' + 1) && num > 1) {
+    phasesCompletes.add('phase1');
+    marquerPhaseCompletee(1);
+  }
+  miseAJourProgression();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function marquerPhaseCompletee(num) {
+  document.querySelector('.phase-tab[data-phase="' + num + '"]').classList.add('completed');
+}
+
+function miseAJourProgression() {
+  const totalPhases = 5;
+  const completes = phasesCompletes.size;
+  const pct = Math.round((Math.max(currentPhase - 1, completes) / totalPhases) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = pct + '%';
+}
+
+/* ====== SCORE FINAL ====== */
+function miseAJourScoreFinal() {
+  const scoresList = [];
+  if (scores.phase2) scoresList.push({ label: 'QCM Phase 2', val: scores.phase2.note20 });
+  if (scores.phase3qcm) scoresList.push({ label: 'QCM Phase 3', val: scores.phase3qcm.note20 });
+  if (scores.ex31) scoresList.push({ label: 'Calcul temps totaux', val: scores.ex31.note20 });
+  if (scores.ex32) scoresList.push({ label: 'Taux d\'engagement', val: scores.ex32.note20 });
+
+  if (scoresList.length === 0) {
+    document.getElementById('score-big-display').textContent = '- / 20';
+    document.getElementById('score-detail-display').innerHTML = '<p style="color:var(--text-mute);">Réalise les exercices auto-corrigés pour afficher ton score.</p>';
+    return;
+  }
+
+  const moyenne = scoresList.reduce((sum, s) => sum + s.val, 0) / scoresList.length;
+  document.getElementById('score-big-display').textContent = moyenne.toFixed(1) + ' / 20';
+
+  let detailHtml = '';
+  scoresList.forEach(s => {
+    detailHtml += '<div class="score-cell"><div class="score-cell-label">' + s.label + '</div><div class="score-cell-value">' + s.val.toFixed(1) + ' / 20</div></div>';
+  });
+  if (scores.grille !== undefined) {
+    detailHtml += '<div class="score-cell"><div class="score-cell-label">Auto-évaluation note</div><div class="score-cell-value">' + scores.grille + ' / 100</div></div>';
+  }
+  document.getElementById('score-detail-display').innerHTML = detailHtml;
+}
+
+/* ====== SAUVEGARDE LOCALSTORAGE ====== */
+function sauvegarderProgression() {
+  localStorage.setItem('cadp-gpme-prog-lundi', JSON.stringify({
+    scores: scores,
+    phasesCompletes: Array.from(phasesCompletes)
+  }));
+}
+
+function restaurerProgression() {
+  const saved = localStorage.getItem('cadp-gpme-prog-lundi');
+  if (saved) {
+    const data = JSON.parse(saved);
+    scores = data.scores || scores;
+    phasesCompletes = new Set(data.phasesCompletes || []);
+    phasesCompletes.forEach(p => {
+      if (p.startsWith('phase')) {
+        const num = parseInt(p.replace('phase', '').replace('qcm', ''));
+        if (!isNaN(num)) marquerPhaseCompletee(num);
+      }
+    });
+    miseAJourScoreFinal();
+  }
+
+  const textes = localStorage.getItem('cadp-gpme-textes-lundi');
+  if (textes) {
+    const data = JSON.parse(textes);
+    if (data.prop1) document.getElementById('prop1').value = data.prop1;
+    if (data.prop2) document.getElementById('prop2').value = data.prop2;
+    if (data.prop3) document.getElementById('prop3').value = data.prop3;
+    if (data.note) document.getElementById('note-marie').value = data.note;
+  }
+
+  if (etudiant.nom) {
+    document.getElementById('header-name').textContent = etudiant.prenom + ' ' + etudiant.nom;
+    document.getElementById('modal-id').style.display = 'none';
+  }
+}
+
+/* ====== GENERATION MAILTO ====== */
+function genererMailto(e) {
+  e.preventDefault();
+
+  const sujet = '[CADP - GPME] Capsule lundi - Tableau de répartition - ' + (etudiant.prenom || '?') + ' ' + (etudiant.nom || '?');
+
+  let corps = 'Bonjour,\n\n';
+  corps += 'Voici le récapitulatif de ma capsule de révision sur le tableau de répartition des tâches.\n\n';
+  corps += '=== Identification ===\n';
+  corps += 'Nom : ' + (etudiant.nom || '-') + '\n';
+  corps += 'Prénom : ' + (etudiant.prenom || '-') + '\n';
+  corps += 'Classe : ' + (etudiant.classe || '-') + '\n';
+  corps += 'Date : ' + new Date().toLocaleString('fr-FR') + '\n\n';
+
+  corps += '=== Scores aux exercices auto-corrigés ===\n';
+  if (scores.phase2) corps += 'QCM connaissances (Phase 2) : ' + scores.phase2.bonnes + '/' + scores.phase2.total + ' soit ' + scores.phase2.note20.toFixed(1) + '/20\n';
+  if (scores.phase3qcm) corps += 'QCM analyse (Phase 3) : ' + scores.phase3qcm.bonnes + '/' + scores.phase3qcm.total + ' soit ' + scores.phase3qcm.note20.toFixed(1) + '/20\n';
+  if (scores.ex31) corps += 'Calcul temps totaux : ' + scores.ex31.bonnes + '/' + scores.ex31.total + ' soit ' + scores.ex31.note20.toFixed(1) + '/20\n';
+  if (scores.ex32) corps += 'Calcul taux d\'engagement : ' + scores.ex32.bonnes + '/' + scores.ex32.total + ' soit ' + scores.ex32.note20.toFixed(1) + '/20\n';
+
+  if (scores.grille !== undefined) {
+    corps += '\n=== Auto-évaluation de la note rédigée (Phase 4) ===\n';
+    corps += 'Score auto-déclaré : ' + scores.grille + '/100\n';
+  }
+
+  const prop1 = document.getElementById('prop1').value.trim();
+  const prop2 = document.getElementById('prop2').value.trim();
+  const prop3 = document.getElementById('prop3').value.trim();
+  const note = document.getElementById('note-marie').value.trim();
+
+  if (prop1 || prop2 || prop3) {
+    corps += '\n=== Mes trois propositions de réorganisation (Phase 3) ===\n';
+    if (prop1) corps += '\nProposition 1 :\n' + prop1 + '\n';
+    if (prop2) corps += '\nProposition 2 :\n' + prop2 + '\n';
+    if (prop3) corps += '\nProposition 3 :\n' + prop3 + '\n';
+  }
+
+  if (note) {
+    corps += '\n=== Ma note structurée à Marie Olivier (Phase 4) ===\n\n' + note + '\n';
+  }
+
+  corps += '\n---\nCapsule de révision E6 SFPME - Activité A4.2 - BTS GPME 2A - Promo 2426\nCampus Alternance Drôme Provence';
+
+  const url = 'mailto:kevin.vidard@cadp.pro?subject=' + encodeURIComponent(sujet) + '&body=' + encodeURIComponent(corps);
+  window.location.href = url;
+}
+</script>
+</body>
+</html>

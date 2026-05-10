@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capsule GPME - SI et amélioration de processus - CADP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0B1929;--navy-light:#1a2c45;--navy-soft:#243b5c;--or:#C9A84C;--or-light:#d4b76a;--or-soft:#e6d29c;--bg:#f7f4ee;--bg-light:#fdfbf6;--text:#1a1a1a;--text-soft:#4a4a4a;--text-mute:#757575;--border:#d8d2c1;--border-light:#e8e3d4;--success:#2d6b3f;--success-bg:#e8f3eb;--error:#b13a3a;--error-bg:#f9eaea;--warning:#8a5a00;--warning-bg:#fcf3dc;--info:#1f4a7a;--info-bg:#e6eef7;--shadow:0 2px 12px rgba(11,25,41,0.08);--shadow-lg:0 8px 32px rgba(11,25,41,0.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',system-ui,sans-serif;font-size:16px;line-height:1.6;color:var(--text);background:var(--bg);min-height:100vh}
+h1,h2,h3,h4{font-family:'Playfair Display',serif;color:var(--navy);line-height:1.25}
+h1{font-size:2.4rem;font-weight:700}
+h2{font-size:1.85rem;font-weight:600;margin-bottom:1rem}
+h3{font-size:1.4rem;font-weight:600;margin:1.5rem 0 .75rem}
+h4{font-size:1.15rem;font-weight:600;margin:1rem 0 .5rem;color:var(--navy-light)}
+h5{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--navy);margin:.8rem 0 .4rem}
+p{margin-bottom:1rem}
+strong{font-weight:600;color:var(--navy)}
+em{font-style:italic;color:var(--text-soft)}
+header.cadp-header{background:var(--navy);color:var(--bg-light);padding:1.5rem 2rem;border-bottom:4px solid var(--or);box-shadow:var(--shadow);position:sticky;top:0;z-index:100}
+.header-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.brand{display:flex;flex-direction:column}
+.brand-name{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--or);letter-spacing:.5px}
+.brand-tag{font-size:.85rem;color:var(--bg-light);opacity:.8;letter-spacing:.5px;text-transform:uppercase}
+.header-info{display:flex;gap:2rem;font-size:.9rem;color:var(--bg-light)}
+.header-info span{display:flex;flex-direction:column}
+.header-info .label{font-size:.75rem;color:var(--or-soft);text-transform:uppercase;letter-spacing:.5px}
+.modal-overlay{position:fixed;inset:0;background:rgba(11,25,41,.85);display:flex;align-items:center;justify-content:center;z-index:1000;padding:1rem}
+.modal{background:var(--bg-light);max-width:540px;width:100%;border-top:6px solid var(--or);box-shadow:var(--shadow-lg);padding:2rem}
+.modal h2{color:var(--navy);margin-bottom:.5rem}
+.modal p{color:var(--text-soft);margin-bottom:1.5rem}
+.modal-form{display:flex;flex-direction:column;gap:1rem}
+.form-row{display:flex;flex-direction:column;gap:.35rem}
+.form-row label{font-weight:600;font-size:.9rem;color:var(--navy)}
+.form-row input{padding:.7rem .9rem;border:1.5px solid var(--border);background:white;font-family:inherit;font-size:1rem}
+.form-row input:focus{outline:none;border-color:var(--or)}
+.btn-primary{background:var(--navy);color:var(--or);border:2px solid var(--navy);padding:.85rem 1.5rem;font-family:inherit;font-size:1rem;font-weight:600;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;transition:all .2s}
+.btn-primary:hover{background:var(--or);color:var(--navy);border-color:var(--or)}
+.btn-secondary{background:transparent;color:var(--navy);border:2px solid var(--navy);padding:.7rem 1.3rem;font-family:inherit;font-size:.95rem;font-weight:600;cursor:pointer;letter-spacing:.3px;transition:all .2s}
+.btn-secondary:hover{background:var(--navy);color:var(--or)}
+.main-container{max-width:1100px;margin:2rem auto;padding:0 1.5rem}
+.phases-nav{display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem;margin-bottom:2rem;padding:1rem;background:white;border:1px solid var(--border);box-shadow:var(--shadow)}
+.phase-tab{padding:.85rem .5rem;text-align:center;font-size:.85rem;font-weight:600;background:var(--bg);border:1.5px solid var(--border);color:var(--text-soft);cursor:pointer;transition:all .2s}
+.phase-tab.active{background:var(--navy);color:var(--or);border-color:var(--navy)}
+.phase-tab.completed{background:var(--or-soft);color:var(--navy);border-color:var(--or)}
+.phase-tab:hover:not(.active){border-color:var(--or);color:var(--navy)}
+.phase-tab .phase-num{display:block;font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:.2rem}
+.phase-tab .phase-title{display:block;font-size:.78rem;line-height:1.2}
+.phase{display:none;background:white;padding:2.5rem;border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:2rem;animation:fadeIn .4s ease}
+.phase.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.phase-header{border-bottom:2px solid var(--or);padding-bottom:1rem;margin-bottom:1.5rem}
+.phase-header .phase-eyebrow{font-size:.85rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--or);font-weight:600;margin-bottom:.3rem}
+.subsection{background:var(--bg-light);border-left:4px solid var(--navy);padding:1.5rem 1.8rem;margin:2rem 0 1.5rem}
+.subsection-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--navy);margin-bottom:.5rem}
+.subsection-eyebrow{font-size:.8rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--or);font-weight:600;margin-bottom:.3rem}
+.encadre{border-left:4px solid;padding:1.2rem 1.5rem;margin:1.5rem 0;background:var(--bg)}
+.encadre-header{font-family:'Playfair Display',serif;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-size:.9rem;margin-bottom:.5rem}
+.encadre-note{border-color:var(--info);background:var(--info-bg)}
+.encadre-note .encadre-header{color:var(--info)}
+.encadre-important{border-color:var(--or);background:var(--warning-bg)}
+.encadre-important .encadre-header{color:var(--warning)}
+.encadre-attention{border-color:var(--error);background:var(--error-bg)}
+.encadre-attention .encadre-header{color:var(--error)}
+.doc-ressource{background:var(--bg-light);border:1px solid var(--border);padding:1.5rem 1.8rem;margin:1.5rem 0;position:relative}
+.doc-ressource::before{content:'Document ressource';position:absolute;top:-.65rem;left:1.5rem;background:var(--navy);color:var(--or);padding:.2rem .7rem;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.8px}
+.doc-meta{font-size:.85rem;color:var(--text-mute);font-style:italic;margin-top:1rem;padding-top:.7rem;border-top:1px dashed var(--border)}
+table.cadp-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.92rem;background:white}
+table.cadp-table thead th{background:var(--navy);color:var(--or);padding:.6rem .5rem;text-align:left;font-weight:600;font-size:.82rem;text-transform:uppercase;letter-spacing:.5px;border:1px solid var(--navy)}
+table.cadp-table td{padding:.5rem .55rem;border:1px solid var(--border-light);vertical-align:top}
+table.cadp-table tbody tr:nth-child(even){background:var(--bg)}
+table.cadp-table .num-col{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+table.cadp-table .total-row td{background:var(--navy-soft);color:white;font-weight:600;border:1px solid var(--navy-soft)}
+.exercise{margin:1.5rem 0;padding:1.5rem;background:var(--bg-light);border:1px solid var(--border)}
+.exercise-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600;color:var(--navy);margin-bottom:.5rem}
+.exercise-instruction{color:var(--text-soft);margin-bottom:1rem;font-size:.95rem}
+.qcm-question{margin:1.2rem 0;padding:1rem 0;border-bottom:1px dashed var(--border)}
+.qcm-question:last-child{border-bottom:none}
+.qcm-stem{font-weight:600;margin-bottom:.7rem;color:var(--navy)}
+.qcm-options{display:flex;flex-direction:column;gap:.4rem}
+.qcm-option{display:flex;align-items:flex-start;padding:.6rem .9rem;background:white;border:1.5px solid var(--border);cursor:pointer;transition:all .15s;gap:.6rem}
+.qcm-option:hover{border-color:var(--or)}
+.qcm-option input{margin-top:.25rem;flex-shrink:0;accent-color:var(--navy)}
+.qcm-option.correct{background:var(--success-bg);border-color:var(--success)}
+.qcm-option.incorrect{background:var(--error-bg);border-color:var(--error)}
+.qcm-option.expected{background:var(--success-bg);border-color:var(--success);border-style:dashed}
+.qcm-feedback{margin-top:.7rem;padding:.7rem 1rem;font-size:.9rem;display:none}
+.qcm-feedback.shown{display:block}
+.qcm-feedback.success{background:var(--success-bg);color:var(--success);border-left:3px solid var(--success)}
+.qcm-feedback.error{background:var(--error-bg);color:var(--error);border-left:3px solid var(--error)}
+.saisie-question{margin:1.2rem 0;padding:1rem 0;border-bottom:1px dashed var(--border)}
+.saisie-question:last-child{border-bottom:none}
+.saisie-row{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-top:.5rem}
+.saisie-row label{font-weight:600;color:var(--navy);min-width:240px}
+.saisie-row input[type=text],.saisie-row input[type=number]{padding:.55rem .8rem;border:1.5px solid var(--border);background:white;font-family:inherit;font-size:1rem;width:130px;font-variant-numeric:tabular-nums}
+.saisie-row input:focus{outline:none;border-color:var(--or)}
+.saisie-row input.correct{border-color:var(--success);background:var(--success-bg)}
+.saisie-row input.incorrect{border-color:var(--error);background:var(--error-bg)}
+.saisie-unit{color:var(--text-soft);font-size:.95rem}
+.saisie-tolerance{display:block;font-size:.82rem;color:var(--text-mute);font-style:italic;margin-top:.3rem}
+.detail-toggle{background:none;border:1px solid var(--navy);color:var(--navy);padding:.4rem .9rem;font-family:inherit;font-size:.85rem;cursor:pointer;margin-top:.5rem;font-weight:600}
+.detail-toggle:hover{background:var(--navy);color:var(--or)}
+.detail-content{display:none;margin-top:.8rem;padding:1rem 1.2rem;background:var(--bg);border-left:3px solid var(--or);font-size:.93rem}
+.detail-content.shown{display:block}
+.detail-content h5{font-family:'Playfair Display',serif;color:var(--navy);margin-bottom:.5rem}
+.detail-content ol,.detail-content ul{margin-left:1.5rem;margin-bottom:.7rem}
+.detail-content code{background:white;padding:.1rem .4rem;border:1px solid var(--border);font-family:'Courier New',monospace;font-size:.88rem}
+.production-area{margin:1.5rem 0}
+.production-area textarea{width:100%;min-height:300px;padding:1rem;border:1.5px solid var(--border);background:white;font-family:'Source Sans 3',sans-serif;font-size:.97rem;line-height:1.6;resize:vertical}
+.production-area textarea:focus{outline:none;border-color:var(--or)}
+.production-counter{font-size:.85rem;color:var(--text-mute);margin-top:.4rem;text-align:right}
+.grille-evaluation{margin-top:1.5rem;background:white;border:1px solid var(--border);padding:1.5rem}
+.grille-evaluation h4{margin-top:0}
+.critere-row{display:grid;grid-template-columns:1fr 100px 130px;gap:1rem;align-items:center;padding:.7rem 0;border-bottom:1px solid var(--border-light)}
+.critere-row:last-child{border-bottom:none}
+.critere-libelle{font-size:.95rem}
+.critere-points{font-size:.85rem;color:var(--text-mute);text-align:center}
+.critere-input{display:flex;align-items:center;gap:.4rem;justify-content:flex-end}
+.critere-input input{width:60px;padding:.4rem;text-align:center;border:1.5px solid var(--border);font-size:.95rem}
+.critere-total{margin-top:1rem;padding-top:1rem;border-top:2px solid var(--navy);display:flex;justify-content:space-between;align-items:center;font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:600;color:var(--navy)}
+.fiche-methode{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);color:var(--bg-light);padding:2rem;margin:2rem 0;border-left:6px solid var(--or)}
+.fiche-methode h3{color:var(--or);margin-top:0}
+.fiche-methode ol{margin-left:1.5rem}
+.fiche-methode li{margin-bottom:.7rem}
+.fiche-methode strong{color:var(--or-soft)}
+.phase-nav-btns{display:flex;justify-content:space-between;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.progress-bar-wrap{height:6px;background:var(--border-light);margin:1rem 0 2rem;position:relative}
+.progress-bar-fill{height:100%;background:var(--or);width:0%;transition:width .4s}
+.progress-label{font-size:.85rem;color:var(--text-mute);margin-top:.4rem;text-align:right}
+.score-final{background:white;padding:2rem;border:2px solid var(--or);text-align:center;margin:1.5rem 0}
+.score-final h3{color:var(--navy);margin-top:0}
+.score-final .score-big{font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:700;color:var(--or);line-height:1;margin:1rem 0}
+.score-detail{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-top:1.5rem}
+.score-cell{padding:.8rem;background:var(--bg);border-left:3px solid var(--or)}
+.score-cell .score-cell-label{font-size:.85rem;color:var(--text-mute)}
+.score-cell .score-cell-value{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:600;color:var(--navy)}
+.email-cta{background:var(--navy);color:var(--bg-light);padding:2rem;margin:2rem 0;border-left:6px solid var(--or);text-align:center}
+.email-cta h3{color:var(--or);margin-top:0}
+.email-cta p{margin-bottom:1.2rem}
+.email-cta a{display:inline-block;background:var(--or);color:var(--navy);padding:.85rem 2rem;text-decoration:none;font-weight:700;font-size:1rem;letter-spacing:.5px;text-transform:uppercase;transition:all .2s;border:2px solid var(--or)}
+.email-cta a:hover{background:transparent;color:var(--or)}
+footer.cadp-footer{background:var(--navy);color:var(--bg-light);padding:2rem;text-align:center;margin-top:3rem;border-top:4px solid var(--or)}
+footer.cadp-footer p{margin-bottom:.5rem;opacity:.85;font-size:.9rem}
+footer.cadp-footer .cadp-name{color:var(--or);font-family:'Playfair Display',serif;font-weight:700;font-size:1.1rem}
+.synthese-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.5rem 0}
+.synthese-card{background:white;border-top:4px solid var(--or);padding:1.2rem;box-shadow:var(--shadow)}
+.synthese-card-num{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:700;color:var(--or);line-height:1}
+.synthese-card-title{font-weight:600;color:var(--navy);margin:.5rem 0}
+.synthese-card-text{font-size:.92rem;color:var(--text-soft)}
+/* DER specifique */
+.der-table{font-size:.85rem}
+.der-table thead th{font-size:.78rem;padding:.5rem .35rem}
+.der-table td{padding:.4rem .5rem;font-size:.85rem;vertical-align:top}
+.der-event{background:var(--info-bg);color:var(--info);font-weight:600;padding:.4rem .6rem;border-left:3px solid var(--info);font-size:.82rem}
+.der-operation{background:var(--bg-light);color:var(--text);padding:.4rem .6rem;border-left:3px solid var(--navy);font-size:.85rem}
+.der-resultat{background:var(--success-bg);color:var(--success);font-weight:600;padding:.4rem .6rem;border-left:3px solid var(--success);font-size:.82rem}
+.der-anomalie{background:var(--error-bg);border-left:3px solid var(--error);padding:.4rem .6rem;font-size:.82rem;color:var(--error);font-style:italic;margin-top:.3rem}
+.der-acteur-ext{background:var(--warning-bg);color:var(--warning);font-weight:600;padding:.4rem .6rem;border-left:3px solid var(--warning);font-size:.82rem}
+.dysf-grid{display:grid;gap:.7rem;margin:1rem 0}
+.dysf-row{display:grid;grid-template-columns:30px 1fr 200px;gap:.7rem;align-items:center;padding:.6rem;background:white;border:1px solid var(--border)}
+.dysf-num{font-family:'Playfair Display',serif;font-weight:700;color:var(--or);font-size:1.2rem}
+.dysf-row label{font-weight:500;font-size:.92rem}
+.dysf-row select{padding:.4rem .6rem;border:1.5px solid var(--border);background:white;font-family:inherit;font-size:.9rem}
+.dysf-row select.correct{border-color:var(--success);background:var(--success-bg)}
+.dysf-row select.incorrect{border-color:var(--error);background:var(--error-bg)}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:1.5rem 0}
+.kpi-card{background:white;padding:1rem 1.2rem;border-left:4px solid var(--or);box-shadow:var(--shadow)}
+.kpi-label{font-size:.85rem;color:var(--text-mute);text-transform:uppercase;letter-spacing:.5px}
+.kpi-value{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--navy);margin-top:.3rem}
+.kpi-comment{font-size:.8rem;color:var(--text-soft);margin-top:.3rem;font-style:italic}
+.kpi-card.alert{border-left-color:var(--error)}
+.kpi-card.alert .kpi-value{color:var(--error)}
+.kpi-card.good{border-left-color:var(--success)}
+.kpi-card.good .kpi-value{color:var(--success)}
+@media (max-width:768px){h1{font-size:1.8rem}h2{font-size:1.5rem}.main-container{padding:0 1rem}.phase{padding:1.5rem}.phases-nav{padding:.5rem}.phase-tab{padding:.5rem .2rem}.phase-tab .phase-title{font-size:.65rem}.header-info{flex-direction:column;gap:.5rem}.critere-row{grid-template-columns:1fr}table.cadp-table{font-size:.78rem}table.cadp-table thead th,table.cadp-table td{padding:.3rem .25rem}.saisie-row label{min-width:auto}.dysf-row{grid-template-columns:1fr}}
+@media print{header.cadp-header,.phases-nav,.phase-nav-btns,.modal-overlay{display:none!important}.phase{display:block!important;page-break-after:always;box-shadow:none;border:none}}
+</style>
+</head>
+<body>
+
+<div class="modal-overlay" id="modal-id">
+  <div class="modal">
+    <h2>Identification</h2>
+    <p>Avant de commencer, identifie-toi pour que tes réponses puissent t'être attribuées et que ton récapitulatif soit transmis à ton responsable pédagogique.</p>
+    <div class="modal-form">
+      <div class="form-row"><label for="id-nom">Nom</label><input type="text" id="id-nom" placeholder="DUPONT"></div>
+      <div class="form-row"><label for="id-prenom">Prénom</label><input type="text" id="id-prenom" placeholder="Marie"></div>
+      <div class="form-row"><label for="id-classe">Classe</label><input type="text" id="id-classe" value="BTS GPME 2A - Promo 2426" readonly></div>
+      <button class="btn-primary" id="btn-id-valid">Commencer la capsule</button>
+    </div>
+  </div>
+</div>
+
+<header class="cadp-header">
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-name">CADP</span>
+      <span class="brand-tag">Campus Alternance Drôme Provence</span>
+    </div>
+    <div class="header-info">
+      <span><span class="label">Étudiant</span><strong id="header-name">-</strong></span>
+      <span><span class="label">Capsule</span><strong>Mardi 12 mai - 13h-16h</strong></span>
+      <span><span class="label">Session</span><strong>BTS GPME E6 - 2026</strong></span>
+    </div>
+  </div>
+</header>
+
+<main class="main-container">
+
+<section style="background:white;padding:2.5rem;border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:2rem;">
+  <div style="font-size:.85rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--or);font-weight:600;margin-bottom:.5rem;">Capsule de révision E6 - SFPME</div>
+  <h1>Système d'information et amélioration de processus</h1>
+  <p style="font-size:1.1rem;color:var(--text-soft);margin-top:1rem;">Diagnostic du SI, modélisation d'un processus défaillant en D.E.R., identification des dysfonctionnements et formulation de recommandations.</p>
+  <div style="display:flex;gap:2rem;flex-wrap:wrap;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border);">
+    <div><span style="display:block;font-size:.8rem;color:var(--text-mute);text-transform:uppercase;letter-spacing:.5px;">Activités référentiel</span><strong>A4.1 - Qualité du SI &amp; A4.2 - Organisation des activités</strong></div>
+    <div><span style="display:block;font-size:.8rem;color:var(--text-mute);text-transform:uppercase;letter-spacing:.5px;">Tâches</span><strong>T.4.1.2 - T.4.1.3 - T.4.1.4 - T.4.2.1 - T.4.2.2 - T.4.2.3</strong></div>
+  </div>
+</section>
+
+<div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill"></div></div>
+  <div class="progress-label">Progression : <span id="progress-text">0%</span></div>
+</div>
+
+<nav class="phases-nav" id="phases-nav">
+  <div class="phase-tab active" data-phase="1"><span class="phase-num">1</span><span class="phase-title">Contexte et méthode</span></div>
+  <div class="phase-tab" data-phase="2"><span class="phase-num">2</span><span class="phase-title">Diagnostic du SI</span></div>
+  <div class="phase-tab" data-phase="3"><span class="phase-num">3</span><span class="phase-title">D.E.R. et dysfonctionnements</span></div>
+  <div class="phase-tab" data-phase="4"><span class="phase-num">4</span><span class="phase-title">Recommandations</span></div>
+  <div class="phase-tab" data-phase="5"><span class="phase-num">5</span><span class="phase-title">Note de synthèse</span></div>
+</nav>
+
+<!-- ===================== PHASE 1 ===================== -->
+<section class="phase active" id="phase-1">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 1 - Durée indicative 10 minutes</div>
+    <h2>Contexte de la mission et lexique</h2>
+  </div>
+
+  <div class="doc-ressource">
+    <h4>Compte-rendu d'incident commercial</h4>
+    <p><strong>De</strong> : Camille Roux, apprentie GPME - <strong>Pour</strong> : Marie Olivier, dirigeante - <strong>Date</strong> : 11 mai 2026<br>
+    <strong>Objet</strong> : Incident commande Hambourg - Restaurant Hanseatic Gastronomy</p>
+    <p>Marie,</p>
+    <p>Je te résume l'incident survenu la semaine dernière sur la commande du restaurant Hanseatic Gastronomy (1 étoile Michelin, Hambourg), notre premier client export gastronomique allemand obtenu lors du salon ProWein. La commande initiale portait sur 24 bouteilles de notre cuvée « Mistral Premium » <em>et</em> 12 bouteilles de la cuvée « Lavandin Réserve ». À l'arrivée, le client n'a reçu que les 24 bouteilles de Mistral Premium. Les 12 bouteilles de Lavandin Réserve manquaient.</p>
+    <p>Le chef sommelier nous a écrit un mail très sec, et nous avons dû supporter 1 800 € de pénalités contractuelles, plus une livraison express en urgence (4 200 € de frais de manque à gagner sur la marge de la nouvelle expédition). Surtout, nous avons probablement perdu la confiance d'un prescripteur clé sur le marché allemand.</p>
+    <p>Tu m'as demandé de comprendre ce qui s'est passé. Après avoir interrogé Sophie, Antoine et Théa, je vois que le problème ne tient pas à une faute individuelle : c'est notre <strong>processus de traitement des commandes export</strong> qui est défaillant, et notre <strong>système d'information</strong> ne le supporte pas correctement. Je vais te livrer cet après-midi un diagnostic complet et des recommandations concrètes, en vue du démarrage de notre activité export Europe en 2026.</p>
+    <p>Camille Roux, apprentie GPME, Olivier &amp; Filles SARL.</p>
+    <p class="doc-meta">Document fictif rédigé pour les besoins pédagogiques.</p>
+  </div>
+
+  <h3>Le triptyque de cette mission</h3>
+
+  <div class="synthese-cards">
+    <div class="synthese-card"><div class="synthese-card-num">1</div><div class="synthese-card-title">Diagnostiquer le SI</div><div class="synthese-card-text">Identifier les forces et faiblesses du système d'information actuel, repérer les risques de sécurité.</div></div>
+    <div class="synthese-card"><div class="synthese-card-num">2</div><div class="synthese-card-title">Modéliser le processus</div><div class="synthese-card-text">Représenter le processus actuel en diagramme événement-résultat (D.E.R.), identifier les dysfonctionnements.</div></div>
+    <div class="synthese-card"><div class="synthese-card-num">3</div><div class="synthese-card-title">Recommander</div><div class="synthese-card-text">Proposer des évolutions du SI et un processus cible, justifier économiquement.</div></div>
+  </div>
+
+  <h3>Lexique express</h3>
+
+  <div class="encadre encadre-note">
+    <div class="encadre-header">Note - Mots-clés à connaître</div>
+    <ul style="margin-left:1.5rem;">
+      <li><strong>Système d'information (SI)</strong> : ensemble organisé des ressources matérielles, logicielles, humaines et procédurales permettant de collecter, stocker, traiter et diffuser l'information.</li>
+      <li><strong>ERP</strong> (Enterprise Resource Planning, ou PGI en français) : logiciel intégré couvrant plusieurs fonctions (commercial, production, comptabilité, RH) avec une base de données unique.</li>
+      <li><strong>CRM</strong> (Customer Relationship Management) : logiciel de gestion de la relation client (prospects, clients, opportunités, historique des échanges).</li>
+      <li><strong>RGPD</strong> : Règlement Général sur la Protection des Données, applicable depuis 2018. Encadre la collecte et le traitement des données personnelles.</li>
+      <li><strong>D.E.R.</strong> (Diagramme Événement-Résultat) : représentation graphique d'un processus, organisée en colonnes par acteur, qui montre la succession événements - opérations - résultats.</li>
+      <li><strong>Indicateur de performance d'un processus</strong> : mesure quantitative qui permet d'évaluer l'efficacité (atteinte du résultat), l'efficience (optimisation des moyens) ou la qualité d'un processus.</li>
+      <li><strong>Dématérialisation</strong> : substitution d'un support numérique à un support papier (devis, bons de commande, factures, etc.).</li>
+    </ul>
+  </div>
+
+  <div class="encadre encadre-important">
+    <div class="encadre-header">Important - Le D.E.R. en bref</div>
+    <p>Le diagramme événement-résultat se lit verticalement, de haut en bas. Trois symboles structurants :</p>
+    <ul style="margin-left:1.5rem;">
+      <li><strong>Événement</strong> : déclencheur d'une action (réception d'un mail, signature d'un contrat, fin d'une production). Représenté par un encadré bleu dans la capsule.</li>
+      <li><strong>Opération</strong> : action réalisée par un acteur. Représentée par un encadré navy.</li>
+      <li><strong>Résultat</strong> : sortie produite par une ou plusieurs opérations. Représenté par un encadré vert.</li>
+    </ul>
+    <p>Les colonnes représentent les acteurs (internes et externes). Une opération apparaît dans la colonne de l'acteur qui la réalise.</p>
+  </div>
+
+  <div class="phase-nav-btns">
+    <span></span>
+    <button class="btn-primary" onclick="goToPhase(2)">Passer à la phase 2 - Diagnostic du SI</button>
+  </div>
+</section>
+
+<!-- ===================== PHASE 2 ===================== -->
+<section class="phase" id="phase-2">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 2 - Durée indicative 50 minutes</div>
+    <h2>Diagnostic du système d'information actuel</h2>
+  </div>
+
+  <div class="doc-ressource">
+    <h4>Cartographie du SI d'Olivier &amp; Filles - mai 2026</h4>
+    <p>Le SI actuel est essentiellement bureautique, sans véritable intégration entre les services. Voici l'inventaire des outils utilisés service par service.</p>
+    <table class="cadp-table">
+      <thead><tr><th>Service</th><th>Outils utilisés</th><th>Données stockées</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Commercial</strong> (Sophie, Lucas)</td><td>Excel (catalogue, stocks, devis), modèle Word (devis), Outlook (mails clients)</td><td>Fichier client sur disque local de Sophie. Sauvegarde manuelle hebdomadaire sur clé USB.</td></tr>
+        <tr><td><strong>Production</strong> (Antoine)</td><td>Tableau Excel de planification, notes papier, agenda mural</td><td>Aucune base de données structurée. Documents papier conservés dans des classeurs.</td></tr>
+        <tr><td><strong>Comptabilité</strong> (Théa)</td><td>Sage 50 Comptabilité, Excel (suivi trésorerie), Outlook</td><td>Sage 50 hébergé sur le poste de Théa. Sauvegarde quotidienne sur disque externe.</td></tr>
+        <tr><td><strong>Direction</strong> (Marie)</td><td>Excel (tableau de bord), Word, Outlook</td><td>Sur poste personnel.</td></tr>
+        <tr><td><strong>Partagé</strong></td><td>Dossier réseau commun « Public » sur le serveur local</td><td>Documents divers, sans politique de classement. Pas de gestion de droits.</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Réseau et matériel</strong> : 12 postes Windows, un serveur local avec dossier partagé, une box internet avec wifi commun à tous (mot de passe affiché sur un papier dans la salle de pause). Pas de pare-feu professionnel.</p>
+    <p><strong>Sauvegardes</strong> : pas de politique formalisée. Sage 50 sauvegardé tous les soirs sur disque externe par Théa, le reste de manière irrégulière.</p>
+    <p><strong>Sécurité</strong> : antivirus Windows Defender sur les postes. Mots de passe choisis librement par chaque utilisateur, sans politique de complexité ni de renouvellement. Aucune authentification à double facteur. Aucune charte informatique.</p>
+    <p><strong>RGPD</strong> : aucune démarche formalisée. Pas de registre des traitements. Pas de DPO désigné.</p>
+    <p class="doc-meta">Cartographie réalisée par Marc Léonetti, expert-comptable, cabinet Léonetti Conseil, à l'occasion de la mission d'évaluation du SI - mars 2026. Document fictif à usage pédagogique.</p>
+  </div>
+
+  <!-- 2.1 QCM SI -->
+  <div class="subsection">
+    <div class="subsection-eyebrow">Section 2.1 - Concepts</div>
+    <div class="subsection-title">QCM - Notions du SI et sécurité</div>
+  </div>
+
+  <div class="exercise">
+    <div class="exercise-title">QCM - 10 questions</div>
+    <p class="exercise-instruction">Une seule bonne réponse par question, sauf mention contraire. Tolérance zéro : tu coches juste ou tu coches faux.</p>
+    <div id="qcm-si"></div>
+    <button class="btn-primary" onclick="validateQCM('si')">Valider le QCM</button>
+    <div id="qcm-result-si" style="margin-top:1rem;"></div>
+  </div>
+
+  <!-- 2.2 IDENTIFICATION RISQUES -->
+  <div class="subsection">
+    <div class="subsection-eyebrow">Section 2.2 - Analyse des risques</div>
+    <div class="subsection-title">Identifier la nature des risques détectés</div>
+  </div>
+
+  <p>À partir de la cartographie du SI ci-dessus, classe chaque situation observée selon la nature du risque qu'elle représente.</p>
+
+  <div class="exercise">
+    <div class="exercise-title">Exercice - Classification de 6 risques</div>
+    <p class="exercise-instruction">Pour chaque situation, sélectionne le type de risque dominant.</p>
+    <div class="dysf-grid" id="risques-grid"></div>
+    <button class="btn-primary" onclick="validateRisques()">Vérifier mon classement</button>
+    <div id="risques-result" style="margin-top:1rem;"></div>
+
+    <button class="detail-toggle" onclick="toggleDetail('risques-detail')">Voir les corrections détaillées</button>
+    <div class="detail-content" id="risques-detail">
+      <h5>Démarche d'analyse</h5>
+      <p>Pour chaque situation observée dans le SI, on identifie d'abord le type de menace, puis l'impact potentiel. Les quatre familles de risques classiquement utilisées en BTS GPME sont :</p>
+      <ul>
+        <li><strong>Risque sécurité technique</strong> : intrusion, virus, défaillance matérielle, perte de données</li>
+        <li><strong>Risque organisationnel</strong> : perte d'information, doublons, non-traçabilité, absence de procédure</li>
+        <li><strong>Risque conformité (légal/RGPD)</strong> : non-respect d'obligations réglementaires</li>
+        <li><strong>Risque humain</strong> : dépendance à une personne, erreurs, formation insuffisante</li>
+      </ul>
+      <p>Un même fait peut relever de plusieurs risques mais on retient celui qui domine.</p>
+    </div>
+  </div>
+
+  <div class="phase-nav-btns">
+    <button class="btn-secondary" onclick="goToPhase(1)">Retour phase 1</button>
+    <button class="btn-primary" onclick="goToPhase(3)">Passer à la phase 3 - D.E.R.</button>
+  </div>
+</section>
+
+<!-- ===================== PHASE 3 ===================== -->
+<section class="phase" id="phase-3">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 3 - Durée indicative 60 minutes</div>
+    <h2>Modélisation du processus actuel et identification des dysfonctionnements</h2>
+  </div>
+
+  <h3>Reconstitution du processus actuel</h3>
+
+  <p>À partir des entretiens menés avec Sophie, Antoine et Théa, voici le diagramme événement-résultat (D.E.R.) du processus actuel « traitement d'une commande export », tel qu'il s'est déroulé pour la commande Hanseatic Gastronomy de Hambourg.</p>
+
+  <div class="doc-ressource">
+    <h4>D.E.R. actuel - Traitement commande export</h4>
+
+    <table class="cadp-table der-table">
+      <thead>
+        <tr>
+          <th style="width:14%;">Client (externe)</th>
+          <th style="width:22%;">Sophie<br>Assistante commerciale</th>
+          <th style="width:22%;">Lucas<br>Resp. commercial</th>
+          <th style="width:22%;">Antoine<br>Resp. production</th>
+          <th style="width:20%;">Théa<br>Comptable</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="der-event">Demande de devis<br>par mail</div></td>
+          <td colspan="4"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><div class="der-operation">1 - Consulte le stock dans le fichier Excel partagé</div></td>
+          <td colspan="3"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><div class="der-operation">2 - Rédige un devis dans un modèle Word</div></td>
+          <td colspan="3"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><div class="der-operation">3 - Envoie le devis par mail au client (sans copie à Lucas)</div></td>
+          <td colspan="3"></td>
+        </tr>
+        <tr>
+          <td colspan="4"></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><div class="der-resultat">Devis reçu</div></td>
+          <td colspan="4"></td>
+        </tr>
+        <tr>
+          <td><div class="der-event">Validation du devis<br>par mail</div></td>
+          <td colspan="4"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><div class="der-operation">4 - Imprime le mail de validation</div></td>
+          <td colspan="3"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><div class="der-operation">5 - Va voir Antoine à l'atelier et lui transmet la commande oralement</div></td>
+          <td></td>
+          <td><div class="der-operation">6 - Note la commande sur un papier collé sur son bureau</div></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3"></td>
+          <td><div class="der-operation">7 - Planifie la production (papier)</div></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3"></td>
+          <td><div class="der-operation">8 - Lance la production</div></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3"></td>
+          <td><div class="der-event">Production terminée</div></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3"></td>
+          <td><div class="der-operation">9 - Établit un bon de livraison sur Word à partir de ses notes</div></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3"></td>
+          <td><div class="der-resultat">Bon de livraison émis</div></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3"></td>
+          <td><div class="der-operation">10 - Remet le bon de livraison au transporteur</div></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="2"></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><div class="der-operation">11 - Reçoit copie du bon de livraison, demande à Théa d'établir la facture (mail)</div></td>
+          <td colspan="2"></td>
+          <td><div class="der-operation">12 - Saisit la facture dans Sage 50</div></td>
+        </tr>
+        <tr>
+          <td colspan="4"></td>
+          <td><div class="der-resultat">Facture émise et envoyée</div></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="doc-meta">D.E.R. reconstitué à partir d'entretiens avec les acteurs - Camille Roux, mai 2026. Le client Hanseatic Gastronomy avait commandé 24 bouteilles « Mistral Premium » + 12 bouteilles « Lavandin Réserve ». Antoine, à partir de sa note papier, n'a produit que les 24 bouteilles « Mistral Premium ». L'erreur n'a été détectée qu'à la réception, par le client.</p>
+  </div>
+
+  <!-- 3.1 INDICATEURS -->
+  <div class="subsection">
+    <div class="subsection-eyebrow">Section 3.1 - Mesurer la performance</div>
+    <div class="subsection-title">Calcul de 3 indicateurs du processus actuel</div>
+  </div>
+
+  <div class="encadre encadre-note">
+    <div class="encadre-header">Données chiffrées</div>
+    <ul style="margin-left:1.5rem;">
+      <li>Sur les 12 derniers mois, Olivier &amp; Filles a traité <strong>8 commandes export</strong>.</li>
+      <li>Délai moyen entre demande de devis et expédition (lead time) sur ces 8 commandes : <strong>21 jours</strong>.</li>
+      <li>Sur ces 8 commandes, <strong>1 erreur</strong> majeure (Hambourg).</li>
+      <li>Coût total de l'incident Hambourg : <strong>1 800 € pénalités + 4 200 € manque à gagner = 6 000 €</strong>.</li>
+    </ul>
+  </div>
+
+  <div class="exercise">
+    <div class="exercise-title">Exercice - Calcul des indicateurs</div>
+    <p class="exercise-instruction">Saisis les valeurs en respectant les unités demandées. Tolérance ±0,5 sur le pourcentage et ±100 € sur le coût.</p>
+
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Lead time moyen actuel :</label><input type="number" id="ind-leadtime" data-bonne="21" data-tol="0"><span class="saisie-unit">jours</span></div>
+      <span class="saisie-tolerance">Donnée de l'énoncé. Question simple pour vérifier la lecture.</span>
+    </div>
+
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Taux d'erreur sur les commandes export :</label><input type="text" id="ind-erreur" data-bonne="12.5" data-tol="0.5" data-decimal="true"><span class="saisie-unit">% (avec décimale)</span></div>
+      <span class="saisie-tolerance">(Nombre d'erreurs / Nombre de commandes) x 100. Saisis 12.5 ou 12,5.</span>
+    </div>
+
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Coût moyen d'une commande défaillante :</label><input type="number" id="ind-cout" data-bonne="6000" data-tol="100"><span class="saisie-unit">euros</span></div>
+      <span class="saisie-tolerance">Coût total des incidents / Nombre d'incidents</span>
+    </div>
+
+    <button class="btn-primary" onclick="validateSaisie('ind')">Vérifier mes calculs</button>
+    <div id="ind-result" style="margin-top:1rem;"></div>
+
+    <button class="detail-toggle" onclick="toggleDetail('ind-detail')">Voir le détail des calculs</button>
+    <div class="detail-content" id="ind-detail">
+      <h5>Démarche</h5>
+      <p><strong>Lead time</strong> : donnée directe de l'énoncé = <strong>21 jours</strong>. Pour un client gastronomique export, c'est jugé trop long. La référence du marché des spiritueux premium est de 10 à 14 jours.</p>
+      <p><strong>Taux d'erreur</strong> : <code>1 / 8 x 100 = 12,5%</code>. Très élevé : un cabinet d'audit considérerait qu'un taux d'erreur supérieur à 2% sur des commandes B2B est inacceptable. À 12,5%, le processus n'est pas industrialisable.</p>
+      <p><strong>Coût moyen d'incident</strong> : <code>6 000 / 1 = 6 000 €</code>. Mais ce chiffre est trompeur car il n'intègre pas le coût d'image (perte de confiance du restaurant 1 étoile, possible bouche-à-oreille négatif chez les sommeliers allemands). Le coût indirect peut être 5 à 10 fois plus élevé.</p>
+    </div>
+  </div>
+
+  <!-- 3.2 DYSFONCTIONNEMENTS -->
+  <div class="subsection">
+    <div class="subsection-eyebrow">Section 3.2 - Identification des défaillances</div>
+    <div class="subsection-title">Repérer les dysfonctionnements dans le D.E.R.</div>
+  </div>
+
+  <p>Le D.E.R. ci-dessus contient plusieurs points de fragilité qui expliquent l'incident Hambourg. À chaque opération suspecte, identifie le type de dysfonctionnement.</p>
+
+  <div class="exercise">
+    <div class="exercise-title">Exercice - Classifier 6 dysfonctionnements</div>
+    <div class="dysf-grid" id="dysf-grid"></div>
+    <button class="btn-primary" onclick="validateDysf()">Vérifier mon classement</button>
+    <div id="dysf-result" style="margin-top:1rem;"></div>
+
+    <button class="detail-toggle" onclick="toggleDetail('dysf-detail')">Voir les corrections détaillées</button>
+    <div class="detail-content" id="dysf-detail">
+      <h5>Lecture critique du D.E.R.</h5>
+      <p>L'analyse d'un D.E.R. consiste à examiner chaque opération en se posant trois questions : <em>(1) qui la réalise ?</em>, <em>(2) avec quel outil ?</em>, <em>(3) que se passe-t-il si elle échoue ou si l'acteur est absent ?</em></p>
+      <p>Pour le processus d'Olivier &amp; Filles, les principales catégories de dysfonctionnements sont :</p>
+      <ul>
+        <li><strong>Absence de validation hiérarchique</strong> : Sophie envoie le devis sans validation de Lucas, alors que Lucas est responsable commercial.</li>
+        <li><strong>Transmission orale</strong> : la commande passe de Sophie à Antoine verbalement, sans trace écrite. Risque d'oubli ou d'erreur de transcription. <em>C'est précisément ce qui est arrivé pour Hambourg.</em></li>
+        <li><strong>Support papier non sécurisé</strong> : Antoine note sur un papier collé. Risque de perte ou d'effacement.</li>
+        <li><strong>Données dupliquées et non synchronisées</strong> : le stock dans Excel n'est pas connecté à la production. La saisie manuelle dans Sage 50 dédouble la donnée.</li>
+        <li><strong>Absence de contrôle final</strong> : aucun rapprochement entre la commande initiale et le bon de livraison émis.</li>
+        <li><strong>Pas de traçabilité numérique</strong> : pour l'export, c'est un risque douanier réel (la traçabilité est exigée).</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Synthèse des indicateurs et alertes</h3>
+
+  <div class="kpi-grid">
+    <div class="kpi-card alert"><div class="kpi-label">Lead time</div><div class="kpi-value">21 j</div><div class="kpi-comment">Norme marché : 10 à 14 jours</div></div>
+    <div class="kpi-card alert"><div class="kpi-label">Taux d'erreur</div><div class="kpi-value">12,5%</div><div class="kpi-comment">Norme acceptable : moins de 2%</div></div>
+    <div class="kpi-card alert"><div class="kpi-label">Coût d'incident</div><div class="kpi-value">6 000 €</div><div class="kpi-comment">Hors coût d'image</div></div>
+    <div class="kpi-card alert"><div class="kpi-label">Validation hiérarchique</div><div class="kpi-value">Aucune</div><div class="kpi-comment">Risque commercial</div></div>
+  </div>
+
+  <div class="phase-nav-btns">
+    <button class="btn-secondary" onclick="goToPhase(2)">Retour phase 2</button>
+    <button class="btn-primary" onclick="goToPhase(4)">Passer à la phase 4 - Recommandations</button>
+  </div>
+</section>
+
+<!-- ===================== PHASE 4 ===================== -->
+<section class="phase" id="phase-4">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 4 - Durée indicative 45 minutes</div>
+    <h2>Recommandations SI et processus cible</h2>
+  </div>
+
+  <p>Tu vas maintenant rédiger un <strong>tableau de recommandations structuré</strong> qui couple chaque dysfonctionnement identifié à une solution combinant l'évolution du SI et l'amélioration du processus.</p>
+
+  <div class="encadre encadre-important">
+    <div class="encadre-header">Important - Le format attendu en E6</div>
+    <p>Une bonne recommandation comporte trois dimensions : <strong>(1)</strong> ce qu'on propose concrètement (outil ou procédure), <strong>(2)</strong> le bénéfice attendu (qualitatif et quantitatif), <strong>(3)</strong> les conditions de mise en œuvre (coût, délai, formation). Une recommandation sans coût estimé reste théorique.</p>
+  </div>
+
+  <h3>Tableau structuré de recommandations</h3>
+
+  <p>Complète le tableau ci-dessous. Chaque ligne traite un dysfonctionnement. Une grille de notation auto-corrigée évalue ensuite la qualité de tes recommandations.</p>
+
+  <div class="exercise">
+    <div class="exercise-title">Production - 5 recommandations</div>
+    <table class="cadp-table">
+      <thead>
+        <tr><th style="width:25%;">Dysfonctionnement</th><th style="width:35%;">Recommandation (outil ou procédure)</th><th style="width:25%;">Bénéfice attendu</th><th style="width:15%;">Coût / délai estimé</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. Stocks non à jour dans Excel partagé</strong></td>
+          <td><textarea rows="3" id="rec1a" style="width:100%;border:1.5px solid var(--border);padding:.5rem;font-family:inherit;font-size:.9rem;" placeholder="Ex : Mettre en place un module de gestion des stocks dans un ERP intégré..."></textarea></td>
+          <td><textarea rows="3" id="rec1b" style="width:100%;border:1.5px solid var(--border);padding:.5rem;font-family:inherit;font-size:.9rem;" placeholder="Ex : Stocks fiables en temps réel, suppression du risque de rupture..."></textarea></td>
+          <td><textarea rows="3" id="rec1c" style="width:100%;border:1.5px solid var(--border);padding:.5rem;font-family:inherit;font-size:.9rem;" placeholder="Ex : 8 à 15 k€ + 2 mois..."></textarea></td>
+        </tr>
+        <tr>
+          <td><strong>2. Pas de validation hiérarchique des devis</strong></td>
+          <td><textarea rows="3" id="rec2a" style="width:100%;border:1.5px solid var(--border);padding:.5rem;font-family:inherit;font-size:.9rem;"></textarea></td>
+          <td><textarea rows="3" id="rec2b" style="width:100%;border:1.5px solid var(--border);padding:.5rem;font-family:inherit;font-size:.9rem;"></textarea></td>
+          <td><textarea rows="3" id="rec2c" style="width:100%;border:1.5px solid var(--border);padding:.5rem;font-family:inherit;font-size:.9rem;"></textarea></td>
+        </tr>
+        <tr>
+          <td><strong>3. Transmission orale Sophie → Antoine</strong></td>
+          <td><textarea rows="3" id="rec3a" style="width:100%;border:1.5px solid var(--border);padding:.5rem;font-family:inherit;font-size:.9rem;"></textarea></td>
+          <td><textarea rows="3" id="rec3b" style="width:100%;border:1.5px solid var(--border);padding:.5rem;font-family:inherit;font-size:.9rem;"></textarea></td>
+          <td><textarea rows="3" id="rec3c" style="width:100%;border:1.5px solid var(--border);padding:.5rem;font-family:inherit;font-size:.9rem;"></textarea></td>
+        </tr>
+        <tr>
+          <td><strong>4. Sécurité informatique faible (mots de passe, sauvegardes, wifi)</strong></td>
+          <td><textarea rows="3" id="rec4a" style="width:100%;border:1.5px solid var(--border);padding:.5rem;font-family:inherit;font-size:.9rem;"></textarea></td>
+          <td><textarea rows="3" id="rec4b" style="width:100%;border:1.5px solid var(--border);padding:.5rem;font-family:inherit;font-size:.9rem;"></textarea></td>
+          <td><textarea rows="3" id="rec4c" style="width:100%;border:1.5px solid var(--border);padding:.5rem;font-family:inherit;font-size:.9rem;"></textarea></td>
+        </tr>
+        <tr>
+          <td><strong>5. Aucun contrôle final commande / bon de livraison</strong></td>
+          <td><textarea rows="3" id="rec5a" style="width:100%;border:1.5px solid var(--border);padding:.5rem;font-family:inherit;font-size:.9rem;"></textarea></td>
+          <td><textarea rows="3" id="rec5b" style="width:100%;border:1.5px solid var(--border);padding:.5rem;font-family:inherit;font-size:.9rem;"></textarea></td>
+          <td><textarea rows="3" id="rec5c" style="width:100%;border:1.5px solid var(--border);padding:.5rem;font-family:inherit;font-size:.9rem;"></textarea></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button class="detail-toggle" onclick="toggleDetail('rec-corr')">Voir un corrigé indicatif</button>
+    <div class="detail-content" id="rec-corr">
+      <h5>Corrigé indicatif (recommandations attendues)</h5>
+      <table class="cadp-table" style="font-size:.85rem;">
+        <thead><tr><th>Dysfonctionnement</th><th>Recommandation</th><th>Bénéfice</th><th>Coût/délai</th></tr></thead>
+        <tbody>
+          <tr><td>Stocks non à jour</td><td>Module de gestion des stocks intégré dans un ERP cloud (Sage Business Cloud, Cegid Loop ou solution équivalente). Saisie temps réel par la production, consultation par le commercial.</td><td>Visibilité stocks en temps réel, suppression du risque de rupture commerciale, fiabilité des devis.</td><td>8 à 15 k€ + 2 mois de mise en œuvre</td></tr>
+          <tr><td>Pas de validation hiérarchique</td><td>Procédure formalisée : tout devis export supérieur à un seuil (ex : 3 000 €) requiert validation par Lucas avant envoi. Mise en place d'un workflow d'approbation dans le CRM.</td><td>Maîtrise commerciale, cohérence tarifaire, prévention des engagements non maîtrisés.</td><td>Coût quasi nul (procédure) + module CRM 2 à 5 k€</td></tr>
+          <tr><td>Transmission orale</td><td>Toute commande validée déclenche automatiquement un bon de production numérique transmis à Antoine via le SI. Suppression du circuit oral.</td><td>Traçabilité, suppression de l'incident type Hambourg, gain de temps pour Sophie.</td><td>Inclus dans l'ERP/CRM mentionné ci-dessus</td></tr>
+          <tr><td>Sécurité faible</td><td>Politique de mots de passe (12 caractères, renouvellement 6 mois), authentification à double facteur sur Sage et boîte mail, charte informatique signée par tous, sauvegarde quotidienne automatisée hors site, séparation wifi invités/employés.</td><td>Conformité RGPD, réduction du risque cyberattaque, sécurisation des données clients export.</td><td>1 à 3 k€ + 1 mois (formation comprise)</td></tr>
+          <tr><td>Pas de contrôle final</td><td>Procédure de double contrôle : à l'expédition, le bon de livraison est rapproché de la commande initiale par un acteur différent du producteur (Sophie ou Lucas). Document de traçabilité signé.</td><td>Suppression des erreurs d'expédition, conformité douanière export, fiabilité auprès du client gastronomique.</td><td>Coût quasi nul (procédure)</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Coût total estimé du plan d'évolution SI :</strong> entre 11 et 23 k€ environ, à mettre en regard des 6 000 € de coût direct de l'incident Hambourg (sans compter les coûts d'image). Le retour sur investissement est rapide dès lors que le volume des commandes export augmente, ce qui est précisément l'objectif stratégique 2026.</p>
+    </div>
+  </div>
+
+  <h3>Auto-évaluation de tes recommandations</h3>
+
+  <div class="grille-evaluation" id="grille-eval-rec">
+    <h4>Grille d'auto-évaluation sur 50 points</h4>
+    <div class="critere-row">
+      <div class="critere-libelle">Pertinence des outils SI proposés (cohérence avec les dysfonctionnements)</div>
+      <div class="critere-points">/ 15 pts</div>
+      <div class="critere-input"><input type="number" id="cr-rec1" min="0" max="15" data-max="15"> <span>/ 15</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Pertinence des procédures organisationnelles proposées</div>
+      <div class="critere-points">/ 10 pts</div>
+      <div class="critere-input"><input type="number" id="cr-rec2" min="0" max="10" data-max="10"> <span>/ 10</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Articulation entre dysfonctionnement et recommandation (chaîne logique)</div>
+      <div class="critere-points">/ 10 pts</div>
+      <div class="critere-input"><input type="number" id="cr-rec3" min="0" max="10" data-max="10"> <span>/ 10</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Estimations chiffrées (coût et délai) plausibles et présentes</div>
+      <div class="critere-points">/ 10 pts</div>
+      <div class="critere-input"><input type="number" id="cr-rec4" min="0" max="10" data-max="10"> <span>/ 10</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Qualité rédactionnelle (concision, registre professionnel)</div>
+      <div class="critere-points">/ 5 pts</div>
+      <div class="critere-input"><input type="number" id="cr-rec5" min="0" max="5" data-max="5"> <span>/ 5</span></div>
+    </div>
+    <div class="critere-total">
+      <span>Total auto-évaluation</span>
+      <span><span id="grille-rec-total">0</span> / 50</span>
+    </div>
+    <button class="btn-secondary" onclick="calculerGrilleRec()" style="margin-top:1rem;">Calculer mon score</button>
+  </div>
+
+  <div class="phase-nav-btns">
+    <button class="btn-secondary" onclick="goToPhase(3)">Retour phase 3</button>
+    <button class="btn-primary" onclick="goToPhase(5)">Passer à la phase 5 - Note de synthèse</button>
+  </div>
+</section>
+
+<!-- ===================== PHASE 5 ===================== -->
+<section class="phase" id="phase-5">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 5 - Durée indicative 15 minutes</div>
+    <h2>Note de synthèse à Marie Olivier</h2>
+  </div>
+
+  <p>Tu rédiges maintenant une <strong>note courte (300-500 mots)</strong> qui résume le diagnostic et présente tes recommandations principales. Cette note sera lue en 5 minutes par Marie avant son entretien avec son banquier et son expert-comptable.</p>
+
+  <div class="encadre encadre-note">
+    <div class="encadre-header">Format attendu</div>
+    <ul style="margin-left:1.5rem;">
+      <li>En-tête : objet, expéditeur, destinataire, date</li>
+      <li>Constat (3-5 lignes)</li>
+      <li>Trois ou quatre recommandations principales hiérarchisées</li>
+      <li>Estimation budgétaire globale et planning indicatif</li>
+      <li>Conclusion / invitation à la décision</li>
+    </ul>
+  </div>
+
+  <div class="production-area">
+    <textarea id="note-synthese" placeholder="Note de synthèse - Diagnostic SI et amélioration du processus commande export
+
+À l'attention de : Marie Olivier, dirigeante
+De : Camille Roux, apprentie GPME
+Date : ...
+Objet : ...
+
+Constat
+...
+
+Recommandations
+...
+
+Budget et planning
+...
+
+Conclusion
+..."></textarea>
+    <div class="production-counter"><span id="note-count">0</span> caractères - <span id="note-mots">0</span> mots</div>
+  </div>
+
+  <button class="detail-toggle" onclick="toggleDetail('note-corr-rec')" style="margin-top:1rem;">Voir un exemple de note synthétique (350 mots)</button>
+  <div class="detail-content" id="note-corr-rec">
+    <h5>Exemple de note de synthèse</h5>
+
+    <p><strong>Note de synthèse - Diagnostic SI et amélioration du processus commande export</strong></p>
+    <p>À l'attention de : Marie Olivier, dirigeante<br>
+    De : Camille Roux, apprentie GPME<br>
+    Date : 12 mai 2026<br>
+    Objet : Diagnostic du système d'information et plan d'évolution pour fiabiliser le processus de traitement des commandes export.</p>
+
+    <p><strong>Constat</strong></p>
+    <p>L'incident Hanseatic Gastronomy n'est pas une faute individuelle. Notre processus de traitement des commandes export est fragile : transmission orale entre services, support papier, absence de validation commerciale, données dupliquées entre Excel et Sage 50. Le système d'information ne supporte pas la croissance attendue de l'activité export 2026. Le taux d'erreur actuel (12,5%) est incompatible avec une clientèle gastronomique premium.</p>
+
+    <p><strong>Recommandations principales</strong></p>
+    <p>Je propose un plan d'évolution articulé en quatre axes, par ordre de priorité décroissante.</p>
+    <p><em>Axe 1 - Outil intégré ERP/CRM cloud</em>. Mettre en place une solution intégrée (type Sage Business Cloud ou Cegid Loop) couplant gestion commerciale, stocks et passerelle vers Sage 50. Bénéfice : suppression du circuit oral, traçabilité complète, stocks fiables.</p>
+    <p><em>Axe 2 - Procédures de validation et de contrôle</em>. Formaliser une procédure de validation des devis export par Lucas (au-dessus d'un seuil), et une procédure de double contrôle commande/expédition. Coût quasi nul, impact immédiat.</p>
+    <p><em>Axe 3 - Sécurité informatique et conformité RGPD</em>. Politique de mots de passe, authentification à double facteur sur les outils sensibles, sauvegardes automatisées hors site, charte informatique. Mise en conformité RGPD avec registre des traitements.</p>
+    <p><em>Axe 4 - Formation des équipes</em>. Une demi-journée de formation par utilisateur, plus un référent informatique interne désigné parmi l'équipe.</p>
+
+    <p><strong>Budget et planning</strong></p>
+    <p>Investissement total estimé : entre 11 et 23 k€ tout compris (logiciels, paramétrage, formation). Mise en œuvre sur 3 mois : axes 2 et 3 dès juin, axes 1 et 4 sur juillet-août pour un démarrage opérationnel à la rentrée. Cet investissement est largement amortissable au regard du coût d'un seul incident type Hambourg (6 000 €) et de l'enjeu de crédibilité sur le marché export.</p>
+
+    <p><strong>Conclusion</strong></p>
+    <p>Ce plan est une condition de réussite du projet export Europe 2026. Je te propose d'en discuter dès cette semaine et de solliciter trois devis de prestataires informatiques de la région pour la solution intégrée.</p>
+    <p>Camille Roux, apprentie GPME, Olivier &amp; Filles SARL.</p>
+  </div>
+
+  <div class="fiche-methode">
+    <h3>Fiche-mémo - À retenir pour l'épreuve E6</h3>
+    <ol>
+      <li><strong>Diagnostic du SI</strong> : observe l'architecture (matériel, logiciels, données, procédures, acteurs), identifie les forces et les faiblesses, classe les risques (technique, organisationnel, conformité, humain).</li>
+      <li><strong>D.E.R.</strong> : trois symboles structurants (événement, opération, résultat). Les colonnes représentent les acteurs internes et externes. La lecture se fait du haut vers le bas.</li>
+      <li><strong>Lecture critique d'un D.E.R.</strong> : pour chaque opération, demande-toi qui la fait, avec quel outil, et ce qui se passe en cas d'erreur ou d'absence de l'acteur.</li>
+      <li><strong>Indicateurs de processus</strong> : lead time (efficacité), taux d'erreur (qualité), coût d'incident (efficience). Toujours comparer à une norme du marché ou interne.</li>
+      <li><strong>Recommandation = outil + procédure</strong>. Une bonne recommandation combine évolution technique et changement organisationnel, et précise le coût et le délai.</li>
+      <li><strong>Sécurité du SI</strong> : politique de mots de passe, authentification à double facteur, sauvegardes hors site, charte informatique, formation des utilisateurs. Le maillon faible est presque toujours humain.</li>
+      <li><strong>RGPD</strong> : applicable à toute PME qui traite des données personnelles (clients, salariés, prospects). Obligations principales : registre des traitements, information des personnes, droit d'accès et de rectification, sécurisation.</li>
+    </ol>
+  </div>
+
+  <h3>Ton score sur la capsule</h3>
+  <div class="score-final" id="score-final">
+    <h3>Capsule mardi 13h-16h - SI et amélioration de processus</h3>
+    <div class="score-big" id="score-big-display">- / -</div>
+    <p>Score consolidé sur les exercices auto-corrigés (toutes phases)</p>
+    <div class="score-detail" id="score-detail-display"></div>
+  </div>
+
+  <div class="email-cta">
+    <h3>Transmettre le récapitulatif</h3>
+    <p>Génère le courriel pré-rédigé incluant tes scores, ta classification des risques et dysfonctionnements, et ta note de synthèse. Envoie-le à ton responsable pédagogique.</p>
+    <a href="#" id="mailto-link" onclick="genererMailto(event)">Envoyer mon récapitulatif</a>
+  </div>
+
+  <div class="phase-nav-btns">
+    <button class="btn-secondary" onclick="goToPhase(4)">Retour phase 4</button>
+    <span></span>
+  </div>
+</section>
+
+</main>
+
+<footer class="cadp-footer">
+  <p class="cadp-name">Campus Alternance Drôme Provence</p>
+  <p>Capsule de révision E6 SFPME - Session 2026 - BTS GPME 2A</p>
+</footer>
+
+<script>
+/* MOTEUR CADP - Capsule mardi 13-16h - A4.1 + A4.2 */
+
+const QCM_SI = [
+  {
+    stem: "Que désigne précisément l'acronyme ERP ?",
+    options: [
+      { txt: "Enterprise Risk Protection : un logiciel de cybersécurité", correct: false },
+      { txt: "Enterprise Resource Planning : un logiciel intégré couvrant plusieurs fonctions de l'entreprise (PGI en français)", correct: true },
+      { txt: "External Reporting Platform : une plateforme de reporting externe", correct: false },
+      { txt: "Electronic Records Processing : un logiciel d'archivage", correct: false }
+    ],
+    feedback: "ERP = Enterprise Resource Planning, traduit en français par PGI (Progiciel de Gestion Intégré). C'est un logiciel intégré qui couvre plusieurs fonctions sur une base de données unique."
+  },
+  {
+    stem: "Quelle est la principale différence entre un ERP et un CRM ?",
+    options: [
+      { txt: "L'ERP est gratuit, le CRM est payant", correct: false },
+      { txt: "L'ERP couvre plusieurs fonctions de l'entreprise (compta, prod, RH...) tandis que le CRM se concentre sur la relation client", correct: true },
+      { txt: "L'ERP est en ligne, le CRM est sur site", correct: false },
+      { txt: "Il n'y a pas de différence, ce sont deux noms pour la même chose", correct: false }
+    ],
+    feedback: "L'ERP a un périmètre fonctionnel large (production, achats, comptabilité, RH...). Le CRM se concentre sur la gestion de la relation client : prospects, opportunités, historique des échanges."
+  },
+  {
+    stem: "Une PME a stocké le fichier client sur le poste local de l'assistante commerciale, sans sauvegarde automatisée. Quel risque principal ?",
+    options: [
+      { txt: "Risque RGPD pur", correct: false },
+      { txt: "Risque organisationnel et risque technique combinés (perte d'information en cas de panne ou de départ)", correct: true },
+      { txt: "Aucun risque tant que le poste fonctionne", correct: false },
+      { txt: "Risque humain uniquement", correct: false }
+    ],
+    feedback: "Deux risques se combinent : organisationnel (donnée non partagée, dépendance à une personne) et technique (perte de données si le poste tombe en panne, sans sauvegarde)."
+  },
+  {
+    stem: "Le RGPD est applicable à :",
+    options: [
+      { txt: "Uniquement les entreprises de plus de 250 salariés", correct: false },
+      { txt: "Toute organisation, publique ou privée, qui traite des données à caractère personnel, quel que soit son effectif", correct: true },
+      { txt: "Uniquement les entreprises qui vendent en ligne", correct: false },
+      { txt: "Uniquement les entreprises basées dans l'Union Européenne", correct: false }
+    ],
+    feedback: "Le RGPD s'applique à toute organisation qui traite des données à caractère personnel de résidents européens, quel que soit l'effectif et y compris si l'organisation est hors UE."
+  },
+  {
+    stem: "Que signifie l'authentification à double facteur (2FA) ?",
+    options: [
+      { txt: "Avoir deux antivirus installés sur son poste", correct: false },
+      { txt: "Saisir deux mots de passe différents successivement", correct: false },
+      { txt: "Combiner deux éléments d'authentification de natures différentes (ex : mot de passe + code SMS)", correct: true },
+      { txt: "Faire valider sa connexion par un collègue", correct: false }
+    ],
+    feedback: "La double authentification combine deux facteurs de natures différentes : ce qu'on connaît (mot de passe), ce qu'on possède (téléphone), ce qu'on est (empreinte). Cela rend une compromission beaucoup plus difficile."
+  },
+  {
+    stem: "Une politique de sauvegarde efficace en PME repose sur le principe '3-2-1'. Que recouvre-t-il ?",
+    options: [
+      { txt: "3 sauvegardes quotidiennes, 2 hebdomadaires, 1 mensuelle", correct: false },
+      { txt: "3 copies des données, sur 2 supports différents, dont 1 hors site", correct: true },
+      { txt: "3 personnes responsables, 2 outils, 1 procédure", correct: false },
+      { txt: "3 niveaux de chiffrement, 2 antivirus, 1 firewall", correct: false }
+    ],
+    feedback: "Le principe 3-2-1 est la règle de référence en cybersécurité PME : 3 copies des données, sur 2 supports physiques différents, dont 1 conservée hors site (cloud ou bureau distant) pour résister à un sinistre local."
+  },
+  {
+    stem: "Qu'est-ce que la dématérialisation d'un processus ?",
+    options: [
+      { txt: "La suppression complète du processus", correct: false },
+      { txt: "Le remplacement de supports papier par des supports numériques (PDF, formulaires en ligne, signatures électroniques...)", correct: true },
+      { txt: "L'externalisation du processus à un prestataire", correct: false },
+      { txt: "L'ajout d'étapes pour le sécuriser", correct: false }
+    ],
+    feedback: "La dématérialisation consiste à substituer un support numérique au support papier. Elle apporte traçabilité, partage immédiat et archivage simplifié, mais exige une vigilance particulière sur la sécurité et la conformité."
+  },
+  {
+    stem: "Parmi ces risques, lequel est principalement un risque de NATURE HUMAINE ?",
+    options: [
+      { txt: "Une coupure d'électricité qui efface des fichiers non sauvegardés", correct: false },
+      { txt: "Un employé qui clique sur une pièce jointe d'un mail de phishing", correct: true },
+      { txt: "Une mise à jour Windows qui rend Sage 50 inopérant temporairement", correct: false },
+      { txt: "Un incendie dans le local serveur", correct: false }
+    ],
+    feedback: "Le phishing exploite la vigilance humaine. C'est l'un des principaux vecteurs d'attaque en PME. La sensibilisation et la formation des utilisateurs sont essentielles, l'antivirus seul ne suffit pas."
+  },
+  {
+    stem: "Quel est l'objet d'un registre des traitements (RGPD) ?",
+    options: [
+      { txt: "Lister toutes les opérations comptables de l'année", correct: false },
+      { txt: "Documenter les traitements de données personnelles effectués par l'organisation (finalité, données traitées, destinataires, durée de conservation)", correct: true },
+      { txt: "Recenser les courriels reçus", correct: false },
+      { txt: "Enregistrer les licences logicielles installées", correct: false }
+    ],
+    feedback: "Le registre des traitements est un document obligatoire pour la plupart des organisations. Il décrit chaque traitement de données personnelles : finalité, catégories de données et de personnes, destinataires, durée de conservation, mesures de sécurité."
+  },
+  {
+    stem: "L'amélioration d'un processus suit généralement la démarche PDCA. Que signifie cet acronyme ?",
+    options: [
+      { txt: "Plan, Do, Check, Act (Planifier, Faire, Vérifier, Agir)", correct: true },
+      { txt: "Process, Data, Control, Audit", correct: false },
+      { txt: "Project, Design, Coding, Application", correct: false },
+      { txt: "Plan, Documentation, Communication, Action", correct: false }
+    ],
+    feedback: "PDCA, ou roue de Deming, est la démarche cyclique d'amélioration continue : Planifier l'action, la mettre en oeuvre, vérifier les résultats, ajuster (Act). C'est le cadre de référence en démarche qualité."
+  }
+];
+
+const RISQUES = [
+  { situation: "Le mot de passe wifi est affiché sur un papier dans la salle de pause", bonne: "technique" },
+  { situation: "Le fichier client est uniquement sur le poste local de Sophie, sans sauvegarde", bonne: "organisationnel" },
+  { situation: "Aucun registre des traitements de données personnelles n'a été établi", bonne: "conformite" },
+  { situation: "Aucune politique de complexité ni de renouvellement des mots de passe", bonne: "technique" },
+  { situation: "Théa est la seule à savoir manipuler Sage 50 ; aucune procédure écrite", bonne: "humain" },
+  { situation: "Pas de sauvegarde hors site (tout est sur le serveur local et un disque externe au bureau)", bonne: "technique" }
+];
+
+const TYPES_RISQUE = [
+  { val: "technique", lib: "Sécurité technique" },
+  { val: "organisationnel", lib: "Organisationnel" },
+  { val: "conformite", lib: "Conformité (RGPD)" },
+  { val: "humain", lib: "Humain (formation, dépendance)" }
+];
+
+const DYSFONCTIONNEMENTS = [
+  { situation: "Sophie envoie le devis sans copie ni validation de Lucas (resp. commercial)", bonne: "validation" },
+  { situation: "Sophie transmet la commande oralement à Antoine en passant à l'atelier", bonne: "tracabilite" },
+  { situation: "Antoine note la commande sur un papier collé sur son bureau", bonne: "support" },
+  { situation: "Antoine établit le bon de livraison à partir de ses notes papier, sans rapprochement avec la commande initiale", bonne: "controle" },
+  { situation: "Le stock dans Excel n'est pas connecté à la production : information non synchronisée", bonne: "donnees" },
+  { situation: "La saisie de la facture dans Sage 50 redouble la donnée déjà saisie ailleurs", bonne: "donnees" }
+];
+
+const TYPES_DYSF = [
+  { val: "validation", lib: "Absence de validation hiérarchique" },
+  { val: "tracabilite", lib: "Absence de traçabilité (oral, sans trace)" },
+  { val: "support", lib: "Support non fiable (papier non sécurisé)" },
+  { val: "controle", lib: "Absence de contrôle final" },
+  { val: "donnees", lib: "Données dupliquées ou non synchronisées" }
+];
+
+let etudiant = { nom: '', prenom: '', classe: '' };
+let scores = {};
+let phasesCompletes = new Set();
+let currentPhase = 1;
+
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('cadp-gpme-id');
+  if (saved) {
+    etudiant = JSON.parse(saved);
+    document.getElementById('id-nom').value = etudiant.nom;
+    document.getElementById('id-prenom').value = etudiant.prenom;
+  }
+  document.getElementById('btn-id-valid').addEventListener('click', validerIdentification);
+
+  construireQCM('si', QCM_SI, 'qcm-si');
+  construireRisques();
+  construireDysf();
+
+  initCompteurNote('note-synthese');
+  document.querySelectorAll('textarea[id^="rec"]').forEach(ta => ta.addEventListener('input', sauvegarderTextes));
+
+  document.querySelectorAll('.phase-tab').forEach(tab => {
+    tab.addEventListener('click', () => goToPhase(parseInt(tab.dataset.phase)));
+  });
+
+  restaurerProgression();
+});
+
+function validerIdentification() {
+  const nom = document.getElementById('id-nom').value.trim();
+  const prenom = document.getElementById('id-prenom').value.trim();
+  if (!nom || !prenom) { alert("Renseigne ton nom et ton prénom pour continuer."); return; }
+  etudiant = { nom: nom.toUpperCase(), prenom: prenom, classe: 'BTS GPME 2A - Promo 2426' };
+  localStorage.setItem('cadp-gpme-id', JSON.stringify(etudiant));
+  document.getElementById('header-name').textContent = etudiant.prenom + ' ' + etudiant.nom;
+  document.getElementById('modal-id').style.display = 'none';
+}
+
+function construireQCM(phaseId, questions, containerId) {
+  const container = document.getElementById(containerId);
+  let html = '';
+  questions.forEach((q, idx) => {
+    const inputType = q.multi ? 'checkbox' : 'radio';
+    const name = phaseId + '-q' + idx;
+    html += '<div class="qcm-question" data-q="' + idx + '">';
+    html += '<div class="qcm-stem">Question ' + (idx + 1) + ' - ' + q.stem + '</div>';
+    html += '<div class="qcm-options">';
+    q.options.forEach((opt, i) => {
+      html += '<label class="qcm-option">';
+      html += '<input type="' + inputType + '" name="' + name + '" value="' + i + '">';
+      html += '<span>' + opt.txt + '</span>';
+      html += '</label>';
+    });
+    html += '</div>';
+    html += '<div class="qcm-feedback" id="' + phaseId + '-fb-' + idx + '"></div>';
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function construireRisques() {
+  const container = document.getElementById('risques-grid');
+  let html = '';
+  RISQUES.forEach((r, idx) => {
+    html += '<div class="dysf-row" data-idx="' + idx + '">';
+    html += '<div class="dysf-num">' + (idx + 1) + '</div>';
+    html += '<label>' + r.situation + '</label>';
+    html += '<select id="risque-' + idx + '" data-bonne="' + r.bonne + '">';
+    html += '<option value="">-- Choisis --</option>';
+    TYPES_RISQUE.forEach(t => { html += '<option value="' + t.val + '">' + t.lib + '</option>'; });
+    html += '</select>';
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function construireDysf() {
+  const container = document.getElementById('dysf-grid');
+  let html = '';
+  DYSFONCTIONNEMENTS.forEach((d, idx) => {
+    html += '<div class="dysf-row" data-idx="' + idx + '">';
+    html += '<div class="dysf-num">' + (idx + 1) + '</div>';
+    html += '<label>' + d.situation + '</label>';
+    html += '<select id="dysf-' + idx + '" data-bonne="' + d.bonne + '">';
+    html += '<option value="">-- Choisis --</option>';
+    TYPES_DYSF.forEach(t => { html += '<option value="' + t.val + '">' + t.lib + '</option>'; });
+    html += '</select>';
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function validateQCM(phaseId) {
+  const questions = phaseId === 'si' ? QCM_SI : [];
+  const containerId = 'qcm-' + phaseId;
+  const resultId = 'qcm-result-' + phaseId;
+  const container = document.getElementById(containerId);
+  let bonnesReponses = 0;
+  const totalQuestions = questions.length;
+
+  questions.forEach((q, idx) => {
+    const name = phaseId + '-q' + idx;
+    const checkedInputs = document.querySelectorAll('input[name="' + name + '"]:checked');
+    const checkedValues = Array.from(checkedInputs).map(i => parseInt(i.value));
+    const correctIndices = q.options.map((opt, i) => opt.correct ? i : -1).filter(i => i !== -1);
+    const questionDiv = container.querySelector('[data-q="' + idx + '"]');
+    const optionLabels = questionDiv.querySelectorAll('.qcm-option');
+    const isCorrect = checkedValues.length === correctIndices.length && checkedValues.every(v => correctIndices.includes(v));
+    if (isCorrect) bonnesReponses++;
+    optionLabels.forEach((lbl, i) => {
+      lbl.classList.remove('correct', 'incorrect', 'expected');
+      if (correctIndices.includes(i)) {
+        if (checkedValues.includes(i)) lbl.classList.add('correct');
+        else lbl.classList.add('expected');
+      } else if (checkedValues.includes(i)) lbl.classList.add('incorrect');
+    });
+    const fb = document.getElementById(phaseId + '-fb-' + idx);
+    fb.classList.add('shown');
+    fb.classList.remove('success', 'error');
+    if (isCorrect) { fb.classList.add('success'); fb.innerHTML = '<strong>Correct.</strong> ' + q.feedback; }
+    else { fb.classList.add('error'); fb.innerHTML = '<strong>À revoir.</strong> ' + q.feedback; }
+  });
+
+  const note20 = Math.round((bonnesReponses / totalQuestions) * 20 * 10) / 10;
+  scores['qcm-' + phaseId] = { bonnes: bonnesReponses, total: totalQuestions, note20: note20 };
+
+  document.getElementById(resultId).innerHTML =
+    '<div class="encadre encadre-' + (note20 >= 14 ? 'note' : note20 >= 10 ? 'important' : 'attention') + '">' +
+    '<div class="encadre-header">Score</div>' +
+    '<p><strong>' + bonnesReponses + ' / ' + totalQuestions + '</strong>, soit <strong>' + note20.toFixed(1) + ' / 20</strong>.</p></div>';
+
+  phasesCompletes.add('qcm-' + phaseId);
+  sauvegarderProgression();
+  miseAJourScoreFinal();
+}
+
+function validateRisques() {
+  let bonnes = 0;
+  RISQUES.forEach((r, idx) => {
+    const sel = document.getElementById('risque-' + idx);
+    sel.classList.remove('correct', 'incorrect');
+    if (sel.value === r.bonne) { sel.classList.add('correct'); bonnes++; }
+    else if (sel.value !== '') sel.classList.add('incorrect');
+  });
+  const note20 = Math.round((bonnes / RISQUES.length) * 20 * 10) / 10;
+  scores['risques'] = { bonnes: bonnes, total: RISQUES.length, note20: note20 };
+  document.getElementById('risques-result').innerHTML =
+    '<div class="encadre encadre-' + (note20 >= 14 ? 'note' : note20 >= 10 ? 'important' : 'attention') + '">' +
+    '<div class="encadre-header">Score classification des risques</div>' +
+    '<p><strong>' + bonnes + ' / ' + RISQUES.length + '</strong>, soit <strong>' + note20.toFixed(1) + ' / 20</strong>.</p></div>';
+  phasesCompletes.add('risques');
+  sauvegarderProgression();
+  miseAJourScoreFinal();
+}
+
+function validateDysf() {
+  let bonnes = 0;
+  DYSFONCTIONNEMENTS.forEach((d, idx) => {
+    const sel = document.getElementById('dysf-' + idx);
+    sel.classList.remove('correct', 'incorrect');
+    if (sel.value === d.bonne) { sel.classList.add('correct'); bonnes++; }
+    else if (sel.value !== '') sel.classList.add('incorrect');
+  });
+  const note20 = Math.round((bonnes / DYSFONCTIONNEMENTS.length) * 20 * 10) / 10;
+  scores['dysf'] = { bonnes: bonnes, total: DYSFONCTIONNEMENTS.length, note20: note20 };
+  document.getElementById('dysf-result').innerHTML =
+    '<div class="encadre encadre-' + (note20 >= 14 ? 'note' : note20 >= 10 ? 'important' : 'attention') + '">' +
+    '<div class="encadre-header">Score identification des dysfonctionnements</div>' +
+    '<p><strong>' + bonnes + ' / ' + DYSFONCTIONNEMENTS.length + '</strong>, soit <strong>' + note20.toFixed(1) + ' / 20</strong>.</p></div>';
+  phasesCompletes.add('dysf');
+  sauvegarderProgression();
+  miseAJourScoreFinal();
+}
+
+function validateSaisie(blocId) {
+  const inputs = document.querySelectorAll('[id^="' + blocId + '-"]');
+  let bonnes = 0, total = 0;
+  inputs.forEach(inp => {
+    if (inp.tagName !== 'INPUT' || (inp.type !== 'number' && inp.type !== 'text')) return;
+    const bonneRaw = inp.dataset.bonne;
+    if (bonneRaw === undefined) return;
+    const valeurRaw = inp.value.trim().replace(',', '.');
+    const valeur = parseFloat(valeurRaw);
+    const bonne = parseFloat(bonneRaw);
+    const tol = parseFloat(inp.dataset.tol || '0');
+    inp.classList.remove('correct', 'incorrect');
+    if (!isNaN(valeur) && valeurRaw !== '') {
+      total++;
+      if (Math.abs(valeur - bonne) <= tol) { inp.classList.add('correct'); bonnes++; }
+      else inp.classList.add('incorrect');
+    }
+  });
+  const note20 = total > 0 ? Math.round((bonnes / total) * 20 * 10) / 10 : 0;
+  scores[blocId] = { bonnes: bonnes, total: total, note20: note20 };
+  let html = '';
+  if (total === 0) html = '<div class="encadre encadre-attention"><div class="encadre-header">Saisie incomplète</div><p>Renseigne au moins une valeur avant de valider.</p></div>';
+  else if (bonnes === total) html = '<div class="encadre encadre-note"><div class="encadre-header">Excellent</div><p>Toutes tes réponses sont correctes (' + bonnes + ' / ' + total + ').</p></div>';
+  else html = '<div class="encadre encadre-attention"><div class="encadre-header">Réponses partielles</div><p>' + bonnes + ' bonne(s) réponse(s) sur ' + total + '. Les saisies en rouge sont à revoir.</p></div>';
+  document.getElementById(blocId + '-result').innerHTML = html;
+  if (bonnes === total && total > 0) { phasesCompletes.add(blocId); sauvegarderProgression(); miseAJourScoreFinal(); }
+}
+
+function toggleDetail(id) { document.getElementById(id).classList.toggle('shown'); }
+
+function initCompteurNote(id) {
+  const ta = document.getElementById(id);
+  const counterC = document.getElementById('note-count');
+  const counterM = document.getElementById('note-mots');
+  if (ta && counterC && counterM) {
+    ta.addEventListener('input', () => {
+      counterC.textContent = ta.value.length;
+      counterM.textContent = ta.value.trim().split(/\s+/).filter(w => w.length > 0).length;
+      sauvegarderTextes();
+    });
+  }
+}
+
+function sauvegarderTextes() {
+  const data = {
+    note: document.getElementById('note-synthese').value,
+    rec: {}
+  };
+  for (let i = 1; i <= 5; i++) {
+    ['a', 'b', 'c'].forEach(suffix => {
+      const ta = document.getElementById('rec' + i + suffix);
+      if (ta) data.rec['rec' + i + suffix] = ta.value;
+    });
+  }
+  localStorage.setItem('cadp-gpme-textes-mardipm', JSON.stringify(data));
+}
+
+function calculerGrilleRec() {
+  let total = 0, valide = true;
+  for (let i = 1; i <= 5; i++) {
+    const inp = document.getElementById('cr-rec' + i);
+    const v = parseFloat(inp.value);
+    const max = parseFloat(inp.dataset.max);
+    if (isNaN(v) || v < 0 || v > max) { inp.style.borderColor = 'var(--error)'; valide = false; }
+    else { inp.style.borderColor = 'var(--border)'; total += v; }
+  }
+  if (!valide) { alert('Vérifie que toutes les notes sont remplies et qu\'aucune ne dépasse le maximum autorisé.'); document.getElementById('grille-rec-total').textContent = '0'; return; }
+  document.getElementById('grille-rec-total').textContent = total;
+  scores.grilleRec = total;
+  sauvegarderProgression();
+  miseAJourScoreFinal();
+}
+
+function goToPhase(num) {
+  document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+  document.getElementById('phase-' + num).classList.add('active');
+  document.querySelectorAll('.phase-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('.phase-tab[data-phase="' + num + '"]').classList.add('active');
+  currentPhase = num;
+  if (num > 1) { phasesCompletes.add('phase' + (num - 1)); marquerPhaseCompletee(num - 1); }
+  miseAJourProgression();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function marquerPhaseCompletee(num) { document.querySelector('.phase-tab[data-phase="' + num + '"]').classList.add('completed'); }
+
+function miseAJourProgression() {
+  const pct = Math.round((Math.max(currentPhase - 1, 0) / 5) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = pct + '%';
+}
+
+function miseAJourScoreFinal() {
+  const labelMap = {
+    'qcm-si': 'QCM SI (Phase 2)',
+    'risques': 'Risques (Phase 2)',
+    'ind': 'Indicateurs (Phase 3)',
+    'dysf': 'Dysfonctionnements (Phase 3)'
+  };
+  const scoresList = [];
+  Object.keys(labelMap).forEach(key => {
+    if (scores[key] && scores[key].total > 0) scoresList.push({ label: labelMap[key], val: scores[key].note20 });
+  });
+  if (scoresList.length === 0) {
+    document.getElementById('score-big-display').textContent = '- / 20';
+    document.getElementById('score-detail-display').innerHTML = '<p style="color:var(--text-mute);">Réalise les exercices auto-corrigés pour afficher ton score.</p>';
+    return;
+  }
+  const moyenne = scoresList.reduce((sum, s) => sum + s.val, 0) / scoresList.length;
+  document.getElementById('score-big-display').textContent = moyenne.toFixed(1) + ' / 20';
+  let detailHtml = '';
+  scoresList.forEach(s => { detailHtml += '<div class="score-cell"><div class="score-cell-label">' + s.label + '</div><div class="score-cell-value">' + s.val.toFixed(1) + ' / 20</div></div>'; });
+  if (scores.grilleRec !== undefined) detailHtml += '<div class="score-cell"><div class="score-cell-label">Auto-éval recommandations</div><div class="score-cell-value">' + scores.grilleRec + ' / 50</div></div>';
+  document.getElementById('score-detail-display').innerHTML = detailHtml;
+}
+
+function sauvegarderProgression() {
+  localStorage.setItem('cadp-gpme-prog-mardipm', JSON.stringify({ scores: scores, phasesCompletes: Array.from(phasesCompletes) }));
+}
+
+function restaurerProgression() {
+  const saved = localStorage.getItem('cadp-gpme-prog-mardipm');
+  if (saved) {
+    const data = JSON.parse(saved);
+    scores = data.scores || {};
+    phasesCompletes = new Set(data.phasesCompletes || []);
+    miseAJourScoreFinal();
+  }
+  const textes = localStorage.getItem('cadp-gpme-textes-mardipm');
+  if (textes) {
+    const data = JSON.parse(textes);
+    if (data.note) document.getElementById('note-synthese').value = data.note;
+    if (data.rec) {
+      Object.keys(data.rec).forEach(key => {
+        const ta = document.getElementById(key);
+        if (ta) ta.value = data.rec[key];
+      });
+    }
+  }
+  if (etudiant.nom) {
+    document.getElementById('header-name').textContent = etudiant.prenom + ' ' + etudiant.nom;
+    document.getElementById('modal-id').style.display = 'none';
+  }
+}
+
+function genererMailto(e) {
+  e.preventDefault();
+  const sujet = '[CADP - GPME] Capsule mardi PM - SI et processus - ' + (etudiant.prenom || '?') + ' ' + (etudiant.nom || '?');
+  let corps = 'Bonjour,\n\nVoici le récapitulatif de ma capsule de révision sur le SI et l\'amélioration de processus.\n\n';
+  corps += '=== Identification ===\n';
+  corps += 'Nom : ' + (etudiant.nom || '-') + '\nPrénom : ' + (etudiant.prenom || '-') + '\nClasse : ' + (etudiant.classe || '-') + '\nDate : ' + new Date().toLocaleString('fr-FR') + '\n\n';
+  corps += '=== Scores aux exercices auto-corrigés ===\n';
+  const labelMap = {
+    'qcm-si': 'QCM SI',
+    'risques': 'Classification risques',
+    'ind': 'Indicateurs processus',
+    'dysf': 'Identification dysfonctionnements'
+  };
+  Object.keys(labelMap).forEach(key => {
+    if (scores[key] && scores[key].total > 0) corps += labelMap[key] + ' : ' + scores[key].bonnes + '/' + scores[key].total + ' soit ' + scores[key].note20.toFixed(1) + '/20\n';
+  });
+  if (scores.grilleRec !== undefined) corps += '\n=== Auto-évaluation tableau de recommandations ===\nScore auto-déclaré : ' + scores.grilleRec + '/50\n';
+  corps += '\n=== Mes recommandations ===\n';
+  for (let i = 1; i <= 5; i++) {
+    const a = document.getElementById('rec' + i + 'a').value.trim();
+    const b = document.getElementById('rec' + i + 'b').value.trim();
+    const c = document.getElementById('rec' + i + 'c').value.trim();
+    if (a || b || c) {
+      corps += '\n--- Dysfonctionnement ' + i + ' ---\n';
+      corps += 'Recommandation : ' + (a || '(non renseignée)') + '\n';
+      corps += 'Bénéfice : ' + (b || '(non renseigné)') + '\n';
+      corps += 'Coût/délai : ' + (c || '(non renseigné)') + '\n';
+    }
+  }
+  const note = document.getElementById('note-synthese').value.trim();
+  if (note) corps += '\n=== Ma note de synthèse à Marie Olivier ===\n\n' + note + '\n';
+  corps += '\n---\nCapsule de révision E6 SFPME - Activités A4.1 et A4.2 - BTS GPME 2A - Promo 2426\nCampus Alternance Drôme Provence';
+  const url = 'mailto:kevin.vidard@cadp.pro?subject=' + encodeURIComponent(sujet) + '&body=' + encodeURIComponent(corps);
+  window.location.href = url;
+}
+</script>
+</body>
+</html>

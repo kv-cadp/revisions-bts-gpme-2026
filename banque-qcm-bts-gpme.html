@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banque QCM - BTS GPME E6 - CADP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0B1929;--navy-light:#1a2c45;--navy-soft:#243b5c;--or:#C9A84C;--or-light:#d4b76a;--or-soft:#e6d29c;--bg:#f7f4ee;--bg-light:#fdfbf6;--text:#1a1a1a;--text-soft:#4a4a4a;--text-mute:#757575;--border:#d8d2c1;--border-light:#e8e3d4;--success:#2d6b3f;--success-bg:#e8f3eb;--error:#b13a3a;--error-bg:#f9eaea;--warning:#8a5a00;--warning-bg:#fcf3dc;--info:#1f4a7a;--info-bg:#e6eef7;--shadow:0 2px 12px rgba(11,25,41,0.08);--shadow-lg:0 8px 32px rgba(11,25,41,0.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',system-ui,sans-serif;font-size:16px;line-height:1.6;color:var(--text);background:var(--bg);min-height:100vh}
+h1,h2,h3,h4{font-family:'Playfair Display',serif;color:var(--navy);line-height:1.25}
+h1{font-size:2.4rem;font-weight:700}
+h2{font-size:1.6rem;font-weight:600;margin-bottom:1rem}
+h3{font-size:1.2rem;font-weight:600;margin:1.2rem 0 .6rem}
+p{margin-bottom:1rem}
+strong{font-weight:600;color:var(--navy)}
+header.cadp-header{background:var(--navy);color:var(--bg-light);padding:1.5rem 2rem;border-bottom:4px solid var(--or);box-shadow:var(--shadow);position:sticky;top:0;z-index:100}
+.header-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.brand-name{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--or);letter-spacing:.5px}
+.brand-tag{font-size:.85rem;color:var(--bg-light);opacity:.8;letter-spacing:.5px;text-transform:uppercase}
+.header-info{display:flex;gap:2rem;font-size:.9rem;color:var(--bg-light)}
+.header-info span{display:flex;flex-direction:column}
+.header-info .label{font-size:.75rem;color:var(--or-soft);text-transform:uppercase;letter-spacing:.5px}
+.modal-overlay{position:fixed;inset:0;background:rgba(11,25,41,.85);display:flex;align-items:center;justify-content:center;z-index:1000;padding:1rem}
+.modal{background:var(--bg-light);max-width:540px;width:100%;border-top:6px solid var(--or);box-shadow:var(--shadow-lg);padding:2rem}
+.modal h2{color:var(--navy);margin-bottom:.5rem}
+.modal p{color:var(--text-soft);margin-bottom:1.5rem}
+.modal-form{display:flex;flex-direction:column;gap:1rem}
+.form-row{display:flex;flex-direction:column;gap:.35rem}
+.form-row label{font-weight:600;font-size:.9rem;color:var(--navy)}
+.form-row input{padding:.7rem .9rem;border:1.5px solid var(--border);background:white;font-family:inherit;font-size:1rem}
+.btn-primary{background:var(--navy);color:var(--or);border:2px solid var(--navy);padding:.85rem 1.5rem;font-family:inherit;font-size:1rem;font-weight:600;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;transition:all .2s}
+.btn-primary:hover{background:var(--or);color:var(--navy);border-color:var(--or)}
+.btn-secondary{background:transparent;color:var(--navy);border:2px solid var(--navy);padding:.7rem 1.3rem;font-family:inherit;font-size:.95rem;font-weight:600;cursor:pointer;letter-spacing:.3px;transition:all .2s}
+.btn-secondary:hover{background:var(--navy);color:var(--or)}
+.main-container{max-width:1100px;margin:2rem auto;padding:0 1.5rem}
+.intro-card{background:white;padding:2.5rem;border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:2rem}
+.intro-card h1{margin-bottom:.5rem}
+.intro-card .subtitle{font-size:1.1rem;color:var(--text-soft);margin-top:.3rem}
+.intro-meta{display:flex;gap:2rem;flex-wrap:wrap;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border);font-size:.9rem}
+.intro-meta strong{display:block;color:var(--navy);font-size:1rem}
+.intro-meta .meta-label{color:var(--text-mute);text-transform:uppercase;letter-spacing:.5px;font-size:.75rem;margin-bottom:.2rem}
+.modes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin:1.5rem 0}
+.mode-card{background:white;border:2px solid var(--border);padding:1.5rem;cursor:pointer;transition:all .2s}
+.mode-card:hover{border-color:var(--or);transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.mode-card.selected{border-color:var(--or);background:var(--bg-light)}
+.mode-card h3{font-family:'Playfair Display',serif;color:var(--navy);margin:0 0 .5rem 0;font-size:1.2rem}
+.mode-card .mode-tag{font-size:.78rem;text-transform:uppercase;letter-spacing:1px;color:var(--or);font-weight:600;margin-bottom:.4rem}
+.mode-card p{font-size:.92rem;color:var(--text-soft);margin-bottom:0;line-height:1.5}
+.activity-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.7rem;margin:1.5rem 0}
+.activity-btn{background:white;border:2px solid var(--border);padding:1rem .8rem;cursor:pointer;text-align:left;transition:all .2s;font-family:inherit}
+.activity-btn:hover{border-color:var(--or)}
+.activity-btn.selected{border-color:var(--or);background:var(--bg-light)}
+.activity-btn .act-code{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--or);display:block}
+.activity-btn .act-label{font-size:.8rem;color:var(--text-soft);display:block;margin-top:.2rem;line-height:1.3}
+.activity-btn .act-count{font-size:.72rem;color:var(--text-mute);display:block;margin-top:.4rem;letter-spacing:.5px}
+.start-section{background:var(--bg-light);padding:1.5rem;border-left:4px solid var(--or);margin:1.5rem 0}
+.start-section h3{margin-top:0;color:var(--navy)}
+.start-info{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-top:1rem}
+.start-info .config-summary{font-size:.95rem}
+.config-summary strong{color:var(--navy)}
+.timer-display{display:none;background:var(--navy);color:var(--or);padding:.5rem 1rem;font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;text-align:center;margin:1rem 0;letter-spacing:1px}
+.timer-display.shown{display:block}
+.timer-display.warning{background:var(--warning);color:white}
+.timer-display.critical{background:var(--error);color:white;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
+.quiz-progress{height:6px;background:var(--border-light);margin:1rem 0 1.5rem}
+.quiz-progress-fill{height:100%;background:var(--or);width:0%;transition:width .3s}
+.question-card{background:white;border:1px solid var(--border);box-shadow:var(--shadow);padding:2rem;margin-bottom:1.5rem}
+.question-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;font-size:.85rem;color:var(--text-mute)}
+.question-meta .q-num{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:600;color:var(--navy)}
+.question-meta .q-act{background:var(--or-soft);color:var(--navy);padding:.2rem .6rem;font-weight:600;letter-spacing:.5px;font-size:.78rem;text-transform:uppercase}
+.question-stem{font-size:1.05rem;font-weight:500;color:var(--navy);margin-bottom:1.2rem;line-height:1.5}
+.question-options{display:flex;flex-direction:column;gap:.6rem}
+.q-option{display:flex;align-items:flex-start;padding:.8rem 1rem;background:white;border:1.5px solid var(--border);cursor:pointer;transition:all .15s;gap:.7rem}
+.q-option:hover{border-color:var(--or);background:var(--bg-light)}
+.q-option input{margin-top:.25rem;flex-shrink:0;accent-color:var(--navy)}
+.q-option.selected{border-color:var(--navy);background:var(--bg-light)}
+.q-option.correct{background:var(--success-bg);border-color:var(--success)}
+.q-option.incorrect{background:var(--error-bg);border-color:var(--error)}
+.q-option.expected{background:var(--success-bg);border-color:var(--success);border-style:dashed}
+.q-feedback{margin-top:1rem;padding:.8rem 1.2rem;font-size:.92rem;line-height:1.5}
+.q-feedback.success{background:var(--success-bg);color:var(--success);border-left:3px solid var(--success)}
+.q-feedback.error{background:var(--error-bg);color:var(--error);border-left:3px solid var(--error)}
+.q-feedback strong{color:inherit}
+.quiz-controls{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;gap:1rem}
+.results-card{background:white;padding:2.5rem;border:2px solid var(--or);text-align:center;margin:2rem 0;box-shadow:var(--shadow-lg)}
+.results-score{font-family:'Playfair Display',serif;font-size:4rem;font-weight:700;color:var(--or);line-height:1;margin:1rem 0}
+.results-pct{font-size:1.3rem;color:var(--text-soft);margin-bottom:1.5rem}
+.results-detail{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.8rem;margin:1.5rem 0;text-align:left}
+.results-cell{background:var(--bg);padding:.8rem 1rem;border-left:3px solid var(--or)}
+.results-cell .cell-label{font-size:.78rem;color:var(--text-mute);text-transform:uppercase;letter-spacing:.5px}
+.results-cell .cell-value{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:600;color:var(--navy);margin-top:.2rem}
+.review-section{background:var(--bg-light);padding:1.5rem;margin-top:1.5rem;text-align:left}
+.review-section h3{margin-top:0;color:var(--navy)}
+.review-q{padding:1rem;background:white;border-left:3px solid;margin-bottom:.7rem;font-size:.92rem}
+.review-q.r-correct{border-color:var(--success)}
+.review-q.r-incorrect{border-color:var(--error)}
+.review-q .r-stem{font-weight:600;color:var(--navy);margin-bottom:.4rem}
+.review-q .r-given{color:var(--text-soft)}
+.review-q .r-correct-ans{color:var(--success);font-weight:600}
+.review-q .r-explain{color:var(--text-mute);font-style:italic;margin-top:.4rem;font-size:.88rem}
+.email-cta{background:var(--navy);color:var(--bg-light);padding:2rem;margin:2rem 0;border-left:6px solid var(--or);text-align:center}
+.email-cta h3{color:var(--or);margin-top:0}
+.email-cta a{display:inline-block;background:var(--or);color:var(--navy);padding:.85rem 2rem;text-decoration:none;font-weight:700;font-size:1rem;letter-spacing:.5px;text-transform:uppercase;border:2px solid var(--or)}
+.email-cta a:hover{background:transparent;color:var(--or)}
+.history-section{margin-top:2rem;background:white;padding:1.5rem;border:1px solid var(--border)}
+.history-section h3{margin-top:0;color:var(--navy)}
+.history-table{width:100%;border-collapse:collapse;margin-top:.8rem;font-size:.9rem}
+.history-table th{background:var(--navy);color:var(--or);padding:.5rem;text-align:left;font-weight:600;font-size:.78rem;text-transform:uppercase}
+.history-table td{padding:.5rem;border-bottom:1px solid var(--border-light)}
+.history-table tr:hover{background:var(--bg)}
+footer.cadp-footer{background:var(--navy);color:var(--bg-light);padding:2rem;text-align:center;margin-top:3rem;border-top:4px solid var(--or)}
+footer.cadp-footer p{margin-bottom:.5rem;opacity:.85;font-size:.9rem}
+footer.cadp-footer .cadp-name{color:var(--or);font-family:'Playfair Display',serif;font-weight:700;font-size:1.1rem}
+.hidden{display:none!important}
+@media (max-width:768px){h1{font-size:1.8rem}.main-container{padding:0 1rem}.intro-card,.question-card,.results-card{padding:1.5rem}.modes-grid,.activity-grid{grid-template-columns:1fr}.header-info{flex-direction:column;gap:.5rem}.results-score{font-size:3rem}}
+</style>
+</head>
+<body>
+
+<div class="modal-overlay" id="modal-id">
+  <div class="modal">
+    <h2>Identification</h2>
+    <p>Avant de démarrer, identifie-toi pour suivre tes scores et envoyer tes résultats à ton responsable pédagogique.</p>
+    <div class="modal-form">
+      <div class="form-row"><label for="id-nom">Nom</label><input type="text" id="id-nom" placeholder="DUPONT"></div>
+      <div class="form-row"><label for="id-prenom">Prénom</label><input type="text" id="id-prenom" placeholder="Marie"></div>
+      <div class="form-row"><label for="id-classe">Classe</label><input type="text" id="id-classe" value="BTS GPME 2A - Promo 2426" readonly></div>
+      <button class="btn-primary" id="btn-id-valid">Accéder à la banque</button>
+    </div>
+  </div>
+</div>
+
+<header class="cadp-header">
+  <div class="header-inner">
+    <div>
+      <div class="brand-name">CADP</div>
+      <div class="brand-tag">Campus Alternance Drôme Provence</div>
+    </div>
+    <div class="header-info">
+      <span><span class="label">Étudiant</span><strong id="header-name">-</strong></span>
+      <span><span class="label">Banque QCM</span><strong>BTS GPME E6 - 2026</strong></span>
+    </div>
+  </div>
+</header>
+
+<main class="main-container">
+
+<!-- ECRAN 1 - ACCUEIL -->
+<section id="ecran-accueil">
+  <div class="intro-card">
+    <div style="font-size:.85rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--or);font-weight:600;margin-bottom:.5rem;">Banque de questions - E6 SFPME</div>
+    <h1>350 QCM pour réviser l'épreuve E6</h1>
+    <p class="subtitle">Toutes les activités du référentiel GPME, trois modes d'entraînement, correction automatique et explications.</p>
+    <div class="intro-meta">
+      <div><span class="meta-label">Activités couvertes</span><strong>A4.1 à A4.7 (7 domaines)</strong></div>
+      <div><span class="meta-label">Volume</span><strong>50 questions par activité</strong></div>
+      <div><span class="meta-label">Total</span><strong id="intro-total-q">350 questions</strong></div>
+    </div>
+  </div>
+
+  <h2>Choisis ton mode d'entraînement</h2>
+
+  <div class="modes-grid">
+    <div class="mode-card" data-mode="thematique">
+      <div class="mode-tag">Mode 1</div>
+      <h3>Thématique</h3>
+      <p>Tu choisis une activité (A4.1, A4.5, etc.). 30 questions tirées au sort dans cette activité, dans un ordre aléatoire. Idéal pour réviser un domaine précis.</p>
+    </div>
+    <div class="mode-card" data-mode="mixte">
+      <div class="mode-tag">Mode 2</div>
+      <h3>Mixte</h3>
+      <p>50 questions tirées au sort dans les 7 activités, mélangées. Pour entraîner ta réactivité sur tout le programme.</p>
+    </div>
+    <div class="mode-card" data-mode="examen">
+      <div class="mode-tag">Mode 3</div>
+      <h3>Examen blanc</h3>
+      <p>70 questions (10 par activité), chronométrées sur 60 minutes. Score final agrégé. Conditions proches de l'examen.</p>
+    </div>
+  </div>
+
+  <div id="bloc-thematique" class="hidden">
+    <h2>Choisis l'activité à réviser</h2>
+    <div class="activity-grid" id="activity-grid"></div>
+  </div>
+
+  <div class="start-section" id="start-section" style="display:none;">
+    <h3>Prêt à commencer ?</h3>
+    <div class="start-info">
+      <div class="config-summary" id="config-summary">-</div>
+      <button class="btn-primary" id="btn-start">Démarrer le quiz</button>
+    </div>
+  </div>
+
+  <div class="history-section" id="history-section" style="display:none;">
+    <h3>Tes derniers résultats</h3>
+    <table class="history-table">
+      <thead><tr><th>Date</th><th>Mode</th><th>Score</th><th>Sur</th></tr></thead>
+      <tbody id="history-body"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ECRAN 2 - QUIZ EN COURS -->
+<section id="ecran-quiz" class="hidden">
+  <div class="timer-display" id="timer-display">60:00</div>
+  <div class="quiz-progress"><div class="quiz-progress-fill" id="quiz-progress-fill"></div></div>
+  <div id="quiz-questions"></div>
+  <div class="quiz-controls">
+    <button class="btn-secondary" id="btn-quit">Abandonner</button>
+    <button class="btn-primary" id="btn-submit">Terminer et corriger</button>
+  </div>
+</section>
+
+<!-- ECRAN 3 - RESULTATS -->
+<section id="ecran-resultats" class="hidden">
+  <div class="results-card">
+    <h2>Résultats du quiz</h2>
+    <div class="results-score" id="results-score">- / -</div>
+    <div class="results-pct" id="results-pct">-</div>
+    <div class="results-detail" id="results-detail"></div>
+  </div>
+  <div class="review-section">
+    <h3>Revue détaillée des questions</h3>
+    <p style="font-size:.9rem;color:var(--text-soft);">Examine chaque question pour comprendre les bonnes réponses et consolider tes acquis.</p>
+    <div id="review-list"></div>
+  </div>
+  <div class="email-cta">
+    <h3>Transmettre le récapitulatif</h3>
+    <p>Génère le courriel pré-rédigé avec ton score et le détail des erreurs.</p>
+    <a href="#" id="mailto-link" onclick="genererMailto(event)">Envoyer mon récapitulatif</a>
+  </div>
+  <div style="text-align:center;margin-top:2rem;">
+    <button class="btn-primary" onclick="retourAccueil()">Retour à l'accueil</button>
+  </div>
+</section>
+
+</main>
+
+<footer class="cadp-footer">
+  <p class="cadp-name">Campus Alternance Drôme Provence</p>
+  <p>Banque QCM E6 SFPME - Session 2026 - BTS GPME 2A</p>
+</footer>
+
+<script>
+/* ============================================================
+   BANQUE QCM CADP - 350 QUESTIONS - 7 ACTIVITES
+   Format question : {i:N, a:"4.X", q:"...", o:[...], c:N(0-indexé), e:"explication"}
+   ============================================================ */
+
+const ACTIVITES = {
+  "4.1": { code: "A4.1", label: "Recherche de clientèle et contact" },
+  "4.2": { code: "A4.2", label: "Administration des ventes et communication interne" },
+  "4.3": { code: "A4.3", label: "Administration du personnel" },
+  "4.4": { code: "A4.4", label: "Communication institutionnelle" },
+  "4.5": { code: "A4.5", label: "Analyse de l'activité" },
+  "4.6": { code: "A4.6", label: "Diagnostic financier" },
+  "4.7": { code: "A4.7", label: "Tableaux de bord et reporting" }
+};
+
+const QUESTIONS = [
+  /* === A4.1 (50 questions) === */
+{i:1,a:"4.1",q:"Que signifie l'acronyme CRM ?",o:["Conseil de Relation Marketing","Centre de Référence Marketing","Customer Relationship Management"],c:2,e:"Le CRM est l'outil qui centralise toutes les interactions avec les clients et prospects."},
+{i:2,a:"4.1",q:"Qu'est-ce qu'un prospect chaud ?",o:["Un prospect qui a manifesté un intérêt récent et concret pour l'offre","Un client qui n'a pas commandé depuis longtemps","Un client qui paye en retard"],c:0,e:"Un prospect chaud est en phase active de réflexion, à prioriser dans les relances."},
+{i:3,a:"4.1",q:"À quoi sert la méthode SONCAS ?",o:["Calculer le seuil de rentabilité d'un produit","Identifier les motivations d'achat du prospect","Suivre les commandes en cours"],c:1,e:"SONCAS = Sécurité, Orgueil, Nouveauté, Confort, Argent, Sympathie. Elle aide à adapter l'argumentaire."},
+{i:4,a:"4.1",q:"Qu'est-ce qu'un persona en marketing ?",o:["Un client réel sélectionné comme référence","Un commercial responsable d'un portefeuille","Un profil-type fictif représentant un segment de clientèle cible"],c:2,e:"Le persona aide à concevoir des messages adaptés à chaque segment cible."},
+{i:5,a:"4.1",q:"Que signifie BANT en qualification commerciale ?",o:["Budget, Authority, Need, Timing","Banque, Activité, Négociation, Tarif","Bonjour, Argument, Négociation, Test"],c:0,e:"BANT vérifie si le prospect a le budget, le pouvoir de décision, le besoin et un horizon de décision."},
+{i:6,a:"4.1",q:"Qu'est-ce que la segmentation client RFM ?",o:["Région, Fonction, Métier","Récence, Fréquence, Montant des achats","Référence, Famille, Marque"],c:1,e:"La segmentation RFM hiérarchise les clients selon leur date de dernier achat, leur fréquence et le montant cumulé."},
+{i:7,a:"4.1",q:"Que représente le pipeline commercial ?",o:["Le canal de distribution physique","Le tuyau d'arrivée des matières premières","L'ensemble des opportunités en cours, classées par étape de cycle de vente"],c:2,e:"Le pipeline visualise le portefeuille d'opportunités et permet de prévoir le CA futur."},
+{i:8,a:"4.1",q:"Quelle est la méthode CAB en argumentation commerciale ?",o:["Caractéristique, Avantage, Bénéfice","Client, Article, Banque","Coût, Achat, Bénéfice"],c:0,e:"La méthode CAB structure l'argumentaire : caractéristique du produit, avantage qu'elle procure, bénéfice pour le client."},
+{i:9,a:"4.1",q:"Qu'est-ce que le NPS (Net Promoter Score) ?",o:["Un indicateur de rentabilité par client","Un indicateur de recommandation client (de -100 à +100)","Le nombre de prospects à contacter"],c:1,e:"Le NPS mesure la propension des clients à recommander l'entreprise sur la base d'une question unique."},
+{i:10,a:"4.1",q:"Quel est l'objectif principal de la prospection commerciale ?",o:["Fidéliser les clients existants","Calculer la marge des produits","Identifier et contacter de nouveaux clients potentiels"],c:2,e:"La prospection alimente le portefeuille de prospects pour compenser l'attrition naturelle."},
+{i:11,a:"4.1",q:"Que signifie le terme 'lead' ?",o:["Un contact identifié susceptible de devenir client","Un client mécontent","Le directeur commercial"],c:0,e:"Un lead est un prospect dont on dispose d'au moins un point de contact (mail, téléphone)."},
+{i:12,a:"4.1",q:"Qu'est-ce qu'un fichier prospects qualifié ?",o:["Une liste de personnes triée par ordre alphabétique","Une base contenant des informations vérifiées sur le besoin et le budget des contacts","Un fichier client à jour"],c:1,e:"Un fichier qualifié évite la perte de temps et augmente le taux de conversion."},
+{i:13,a:"4.1",q:"Que signifie le taux de transformation (ou conversion) ?",o:["Le ratio clients fidèles / clients perdus","Le coût d'acquisition d'un client","Le pourcentage de prospects devenus clients"],c:2,e:"Taux de conversion = nombre de signatures / nombre de prospects contactés × 100."},
+{i:14,a:"4.1",q:"Quelle règle s'applique en BtoC pour la prospection par mail (RGPD) ?",o:["Le consentement explicite préalable (opt-in) est obligatoire","On peut prospecter librement si l'adresse est publique","Aucune règle particulière"],c:0,e:"En BtoC, le RGPD impose le consentement explicite (opt-in) avant tout envoi commercial."},
+{i:15,a:"4.1",q:"Qu'est-ce que la base Bloctel ?",o:["Un fichier client entreprise","La liste d'opposition au démarchage téléphonique en France","Une plateforme de visioconférence"],c:1,e:"Toute entreprise pratiquant le démarchage téléphonique BtoC doit consulter Bloctel pour exclure les inscrits."},
+{i:16,a:"4.1",q:"Quelle est la durée maximale de validité d'un devis selon les CGV usuelles ?",o:["7 jours obligatoirement","Aucune durée n'est requise","Variable, à mentionner explicitement (souvent 30, 60 ou 90 jours)"],c:2,e:"La durée de validité doit figurer explicitement sur le devis et engage le vendeur sur ce délai."},
+{i:17,a:"4.1",q:"Quel est l'avantage principal d'un salon professionnel pour la prospection ?",o:["La rencontre physique de prospects qualifiés en grand nombre sur un temps court","Le faible coût d'acquisition par contact","La gratuité totale pour l'exposant"],c:0,e:"Un salon professionnel concentre une cible qualifiée en quelques jours, malgré un coût d'inscription souvent élevé."},
+{i:18,a:"4.1",q:"Qu'est-ce que le funnel de conversion (entonnoir) ?",o:["Un indicateur unique de performance commerciale","Une représentation des étapes du parcours prospect-client avec taux de passage","Un outil de tri du courrier entrant"],c:1,e:"L'entonnoir illustre la déperdition à chaque étape : du contact initial à la signature finale."},
+{i:19,a:"4.1",q:"Quelle est la durée légale maximale de conservation des données prospects en BtoC après le dernier contact ?",o:["10 ans","6 mois","3 ans"],c:2,e:"Au-delà de 3 ans sans interaction, les données prospects BtoC doivent être supprimées (recommandation CNIL)."},
+{i:20,a:"4.1",q:"Que signifie 'qualifier un prospect' ?",o:["Recueillir et vérifier les informations clés sur son besoin et sa capacité à acheter","Le former à utiliser le produit","Le promouvoir au statut de client"],c:0,e:"La qualification évite d'investir du temps commercial sur des prospects qui ne deviendront jamais clients."},
+{i:21,a:"4.1",q:"Quel canal de prospection a généralement le coût d'acquisition le plus bas ?",o:["Le démarchage téléphonique","La recommandation client","La publicité presse"],c:1,e:"Une recommandation client convertit en moyenne 4 fois mieux qu'un cold call, à coût quasi nul."},
+{i:22,a:"4.1",q:"Que veut dire 'prospect froid' ?",o:["Un prospect insatisfait","Un prospect identifié par temps d'hiver","Un prospect non qualifié, qui n'a pas encore manifesté d'intérêt"],c:2,e:"Le prospect froid demande un effort de qualification et un cycle de vente plus long."},
+{i:23,a:"4.1",q:"Que signifie la méthode CRAC face à une objection client ?",o:["Creuser, Reformuler, Argumenter, Contrôler","Crier, Reposer, Annuler, Continuer","Calculer, Réviser, Annoncer, Confirmer"],c:0,e:"CRAC permet de traiter calmement une objection en quatre étapes structurées."},
+{i:24,a:"4.1",q:"Quel est le principe de la phase de découverte du besoin ?",o:["Présenter le maximum d'arguments commerciaux","Pratiquer l'écoute active et poser des questions ouvertes pour cerner le besoin","Annoncer le tarif rapidement"],c:1,e:"L'écoute active évite de proposer une solution inadaptée et instaure la confiance."},
+{i:25,a:"4.1",q:"Le scoring d'un lead consiste à :",o:["Lui attribuer un commercial dédié","Le classer alphabétiquement","Affecter une note selon sa probabilité de conversion"],c:2,e:"Le lead scoring priorise les leads les plus chauds et permet d'allouer le temps commercial aux meilleures opportunités."},
+{i:26,a:"4.1",q:"En CRM, qu'est-ce qu'une 'opportunité' ?",o:["Une affaire identifiée chez un prospect avec un montant et une probabilité de signature","Un client perdu","Un nouveau produit"],c:0,e:"L'opportunité est l'unité de pilotage du pipeline commercial."},
+{i:27,a:"4.1",q:"Quel document légal cadre la relation commerciale BtoB ?",o:["Le règlement intérieur","Les Conditions Générales de Vente (CGV)","La fiche de paie"],c:1,e:"Les CGV doivent être communiquées au client professionnel qui en fait la demande."},
+{i:28,a:"4.1",q:"Que signifie 'taux d'attrition' ou 'churn' ?",o:["Le ratio coût/CA","Le taux de retard de paiement","Le pourcentage de clients perdus sur une période"],c:2,e:"L'attrition mesure la perte naturelle de clientèle. La compenser passe par la prospection ou la fidélisation."},
+{i:29,a:"4.1",q:"Quel est le coût comparatif d'acquisition d'un nouveau client par rapport à la fidélisation d'un client existant ?",o:["Acquisition généralement 5 à 7 fois plus chère","Acquisition 2 fois moins chère","Coûts identiques"],c:0,e:"Ce ratio justifie l'importance d'investir dans la fidélisation et la satisfaction."},
+{i:30,a:"4.1",q:"Comment s'appelle l'événement organisé pour réunir prospects et clients autour d'un nouveau produit ?",o:["Une assemblée générale","Un lancement / événement client","Un audit interne"],c:1,e:"L'événement client peut prendre la forme d'une démonstration, d'une soirée VIP ou d'un webinaire."},
+{i:31,a:"4.1",q:"Sur LinkedIn, quel est l'outil principal de social selling ?",o:["LinkedIn Live","LinkedIn Recruiter","LinkedIn Sales Navigator"],c:2,e:"Sales Navigator permet de cibler, suivre et engager des prospects BtoB de manière qualifiée."},
+{i:32,a:"4.1",q:"Quel indicateur mesure la satisfaction immédiate après une interaction client ?",o:["Le CSAT (Customer Satisfaction Score)","Le NPS","Le ROI"],c:0,e:"Le CSAT pose la question Êtes-vous satisfait de cette interaction ?, généralement noté de 1 à 5."},
+{i:33,a:"4.1",q:"Qu'est-ce qu'un appel à froid (cold call) ?",o:["Un appel de relance d'un client mécontent","Un premier appel sans contact préalable avec le prospect","Un appel passé en hiver"],c:1,e:"Le cold call demande une accroche solide pour ne pas être perçu comme intrusif."},
+{i:34,a:"4.1",q:"Quel est le rôle d'une lettre de relance commerciale ?",o:["Recouvrer une facture impayée","Notifier la fin d'un contrat","Réveiller l'intérêt d'un prospect ou client inactif"],c:2,e:"La relance commerciale rappelle l'offre, propose une nouveauté ou un avantage pour réactiver."},
+{i:35,a:"4.1",q:"En BtoB, le RGPD permet la prospection par mail si :",o:["Le contact est un professionnel et que l'envoi a un lien avec sa fonction (intérêt légitime)","Le contact est en lien LinkedIn","Une autorisation préfectorale a été obtenue"],c:0,e:"En BtoB, l'intérêt légitime peut justifier une prospection par mail à un professionnel sur sa fonction, avec opposition possible."},
+{i:36,a:"4.1",q:"Qu'est-ce qu'une matrice ABC en gestion du portefeuille clients ?",o:["Un référentiel de codes produits","Une classification A (gros clients), B (moyens), C (petits) selon le CA","Un outil RH"],c:1,e:"La matrice ABC alloue le temps commercial selon le poids des clients (loi de Pareto : 20% des clients = 80% du CA)."},
+{i:37,a:"4.1",q:"Quel est l'élément central d'une fiche prospect ?",o:["La couleur de l'entreprise","Le numéro SIRET uniquement","Les informations de contact, le besoin identifié et le contexte de la relation"],c:2,e:"Une fiche complète permet à n'importe quel collaborateur de reprendre la relation à tout moment."},
+{i:38,a:"4.1",q:"Que désigne le terme 'closing' en cycle de vente ?",o:["La phase de conclusion / signature de la vente","La fermeture du magasin","La clôture comptable"],c:0,e:"Le closing est l'aboutissement du processus commercial : engagement écrit du client."},
+{i:39,a:"4.1",q:"Quelle est la fréquence recommandée de mise à jour d'un fichier prospect ?",o:["Une fois par an","Au minimum trimestrielle, et après chaque interaction","Jamais, c'est inutile"],c:1,e:"Un fichier non mis à jour perd vite sa fiabilité (changements de poste, déménagements, etc.)."},
+{i:40,a:"4.1",q:"En CRM, qu'est-ce qu'un 'tunnel de vente' multicanal ?",o:["Un seul canal exclusif","Un tunnel routier réservé aux commerciaux","Un parcours qui combine plusieurs canaux (téléphone, mail, RS, présentiel)"],c:2,e:"Le multicanal augmente les points de contact et les chances de conversion."},
+{i:41,a:"4.1",q:"Quelle est la principale obligation légale lors d'un envoi commercial par e-mail ?",o:["Permettre une désinscription simple et gratuite (opt-out)","Mentionner le poids du fichier","Joindre une copie des CGV"],c:0,e:"Le lien de désinscription est une obligation RGPD et e-Privacy."},
+{i:42,a:"4.1",q:"Qu'est-ce que la phase de découverte commerciale ?",o:["La présentation du produit","L'identification du besoin, du contexte et des contraintes du prospect","La signature du contrat"],c:1,e:"La découverte précède l'argumentation : on n'argumente bien que ce qu'on a bien diagnostiqué."},
+{i:43,a:"4.1",q:"Quel est le principe d'un programme de fidélisation par points ?",o:["Le client devient actionnaire","Le client paie une cotisation annuelle","Le client cumule des points convertibles en avantages"],c:2,e:"Le programme à points (cartes de fidélité, miles aériens) reste le plus répandu en BtoC."},
+{i:44,a:"4.1",q:"Quelle est la différence entre prospect et suspect ?",o:["Le suspect est un contact non qualifié, le prospect est qualifié comme cible potentielle","Aucune","Le prospect est plus vieux"],c:0,e:"Le suspect entre dans le pipeline, le prospect est validé comme cible commerciale active."},
+{i:45,a:"4.1",q:"Que signifie 'cross-selling' ?",o:["Vendre à perte","Proposer un produit complémentaire à un client (ventes additionnelles)","Vendre uniquement à l'export"],c:1,e:"Cross-selling = ventes croisées. Up-selling = monter en gamme."},
+{i:46,a:"4.1",q:"Quelle commission est généralement la plus motivante pour un commercial ?",o:["Une commission fixe en valeur absolue","Aucune commission","Une commission progressive selon les paliers de CA atteints"],c:2,e:"Le système à paliers récompense les dépassements et incite à atteindre les objectifs élevés."},
+{i:47,a:"4.1",q:"Qu'est-ce qu'un account manager ?",o:["Un commercial responsable d'un portefeuille clients identifiés","Un comptable","Un auditeur interne"],c:0,e:"L'account manager fidélise et développe les comptes clés sur le long terme."},
+{i:48,a:"4.1",q:"Quelle question type relève d'une qualification BANT - 'Need' ?",o:["Quel est votre budget pour ce projet ?","Quels problèmes cherchez-vous précisément à résoudre ?","Qui prend la décision finale ?"],c:1,e:"La question 'Need' explore la nature et l'importance du besoin pour le prospect."},
+{i:49,a:"4.1",q:"Quelle métrique mesure la rentabilité d'une action de prospection ?",o:["La marge brute","Le seuil de rentabilité","Le ROI (Return on Investment)"],c:2,e:"ROI = (gains - coûts) / coûts. Mesure clé pour piloter les budgets de prospection."},
+{i:50,a:"4.1",q:"Qu'est-ce que la matrice de priorisation Eisenhower appliquée au commercial ?",o:["Un classement urgent/important pour prioriser les actions","Une grille tarifaire","Un outil de fidélisation"],c:0,e:"Cette matrice permet d'arbitrer entre les leads à traiter en priorité (urgents et importants)."},
+  /* === A4.2 (50 questions) === */
+{i:51,a:"4.2",q:"Quel est l'objectif principal d'un Tableau de Répartition des Tâches (TRT) ?",o:["Calculer la rémunération des salariés selon leur poste","Analyser la répartition actuelle des tâches en tenant compte des compétences et de la charge de chacun, pour vérifier sa pertinence","Décider des augmentations annuelles"],c:1,e:"Le TRT analyse l'organisation existante pour vérifier si elle est cohérente avec les compétences disponibles et les charges réelles. Il s'élabore après une feuille d'analyse des tâches par salarié."},
+{i:52,a:"4.2",q:"Comment se calcule le taux d'engagement d'un poste de travail dans un TRT ?",o:["Nombre de tâches / Heures travaillées","Charge estimée / Heures travaillées × 100","Charge nette / Temps de travail théorique × 100"],c:2,e:"Le taux d'engagement compare la charge nette (charge estimée majorée de 15% pour pauses, aléas et vitesse d'exécution) au temps théorique du poste."},
+{i:53,a:"4.2",q:"Quel taux d'engagement caractérise un poste surchargé selon la méthode TRT ?",o:["Plus de 100%","Entre 95 et 99%","Inférieur à 95%"],c:0,e:"Selon la méthode CADP : taux > 100% poste surchargé / 95-99% poste saturé / < 95% poste non saturé."},
+{i:54,a:"4.2",q:"Qu'est-ce qu'un doublon de tâche ?",o:["Une tâche réalisée deux fois par la même personne","Une tâche réalisée à la fois par deux collaborateurs sans coordination","Une tâche très longue"],c:1,e:"Le doublon génère des heures perdues. Il faut clarifier les rôles via une fiche de poste ou un RACI."},
+{i:55,a:"4.2",q:"Que signifie l'acronyme RACI dans la répartition des responsabilités ?",o:["Recettes, Achats, Comptes, Inventaire","Réseau, Activité, Comité, Information","Responsable, Approbateur, Consulté, Informé"],c:2,e:"La matrice RACI clarifie qui fait, qui valide, qui est consulté et qui est tenu informé pour chaque tâche."},
+{i:56,a:"4.2",q:"Quel est le rôle d'un bon de commande ?",o:["Engager le client à recevoir la marchandise sous conditions définies","Régler la facture","Solder un litige"],c:0,e:"Le bon de commande formalise l'accord du client : produit, quantité, prix, délai, conditions."},
+{i:57,a:"4.2",q:"Qu'est-ce qu'un bon de livraison (BL) ?",o:["Le synonyme de la facture","Un document accompagnant la marchandise et listant ce qui est livré","Un document interne uniquement"],c:1,e:"Le BL signé fait foi de la livraison effective. Il sert de référence en cas de litige."},
+{i:58,a:"4.2",q:"Quelle est la différence principale entre devis et facture ?",o:["Le devis est plus cher","Aucune différence","Le devis engage le vendeur, la facture engage le client"],c:2,e:"Le devis propose, la facture constate la transaction réalisée et engage le paiement."},
+{i:59,a:"4.2",q:"Combien de temps doit-on conserver une facture en France ?",o:["10 ans pour les comptes, 6 ans en pratique fiscale","1 an","30 ans"],c:0,e:"Les pièces comptables se conservent 10 ans. La prescription fiscale est de 3+3 ans."},
+{i:60,a:"4.2",q:"Que signifie l'acronyme ADV ?",o:["Achats De Vente","Administration des Ventes","Aide à la Direction"],c:1,e:"L'ADV gère le cycle commande-livraison-facturation et l'interface entre commercial et logistique."},
+{i:61,a:"4.2",q:"Qu'est-ce qu'un avoir commercial ?",o:["Une commande spéciale","Un compte bancaire de l'entreprise","Un document constatant un crédit en faveur du client (annulation, retour, geste commercial)"],c:2,e:"L'avoir vient en déduction d'une facture ou se rembourse. Il doit être numéroté et tracé comme une facture."},
+{i:62,a:"4.2",q:"Quelle est la mention obligatoire d'une facture ?",o:["Le numéro SIREN, la date, le montant HT et TVA, le numéro de facture","Le code couleur du produit","La couleur du véhicule de livraison"],c:0,e:"Les mentions obligatoires sont définies par le Code de commerce (art. L441-9)."},
+{i:63,a:"4.2",q:"Que signifie l'acronyme SLA dans la relation fournisseur ?",o:["Système de Livraison Automatisé","Service Level Agreement (engagement de niveau de service)","Salaire Légal Annuel"],c:1,e:"Le SLA fixe contractuellement les engagements : délais, taux de service, indemnités en cas de manquement."},
+{i:64,a:"4.2",q:"Qu'est-ce qu'un D.E.R. (Diagramme Événement-Résultat) ?",o:["Un tableau de bord financier","Un graphique de ventes","Un schéma représentant les événements déclencheurs et résultats produits par les acteurs d'un processus"],c:2,e:"Le D.E.R. cartographie les flux entre acteurs et permet d'analyser un processus pour l'améliorer."},
+{i:65,a:"4.2",q:"Quel est l'objectif d'un logigramme ?",o:["Documenter visuellement les étapes et décisions d'un processus","Calculer les coûts","Tenir la comptabilité"],c:0,e:"Le logigramme utilise des symboles normalisés pour représenter actions, décisions et flux."},
+{i:66,a:"4.2",q:"Qu'est-ce qu'un système d'information (SI) ?",o:["Le seul logiciel comptable","L'ensemble des moyens (humains, matériels, logiciels, procédures) qui collectent, stockent et diffusent l'information","Le serveur informatique de l'entreprise"],c:1,e:"Le SI dépasse la simple infrastructure technique : il englobe les processus et les acteurs."},
+{i:67,a:"4.2",q:"Quel indicateur mesure la performance d'une chaîne logistique export ?",o:["Le taux de marque","Le PIB","Le lead time (délai entre commande et livraison)"],c:2,e:"Le lead time est un indicateur clé : plus il est court, plus le client est satisfait et la trésorerie tourne vite."},
+{i:68,a:"4.2",q:"Quelle est la norme acceptable du taux d'erreur de livraison dans la logistique export premium ?",o:["Inférieur à 2%","Entre 5 et 10%","Supérieur à 15%"],c:0,e:"Au-delà de 2%, la qualité de service devient problématique pour des clients haut de gamme."},
+{i:69,a:"4.2",q:"Qu'est-ce qu'un ERP ?",o:["Un Établissement Recevant du Public","Un Enterprise Resource Planning, logiciel de gestion intégrée","Un Échelon de Rémunération Professionnelle"],c:1,e:"L'ERP intègre comptabilité, gestion commerciale, stocks, RH dans une base de données unique."},
+{i:70,a:"4.2",q:"Quel outil collaboratif partage agendas, documents et messageries ?",o:["Un tableur","Un fax","Une suite collaborative type Microsoft 365 ou Google Workspace"],c:2,e:"Les suites collaboratives intègrent agenda, mail, drive partagé, visio et messagerie."},
+{i:71,a:"4.2",q:"Que signifie 'workflow' ?",o:["Un flux de travail automatisé selon des règles définies","Un travail manuel","Un poste de travail"],c:0,e:"Le workflow assure le passage automatique d'un document ou d'une tâche d'une étape à la suivante."},
+{i:72,a:"4.2",q:"Qu'est-ce qu'un compte rendu de réunion (CR) ?",o:["Une transcription mot à mot","Un document synthétique reprenant ordre du jour, décisions et actions à mener","Une convocation"],c:1,e:"Le CR fixe les décisions et engage les acteurs sur les actions à mener (qui fait quoi pour quand)."},
+{i:73,a:"4.2",q:"Que doit contenir une convocation à une réunion ?",o:["Le PV du dernier exercice","Uniquement la date","Date, heure, lieu, ordre du jour, participants attendus"],c:2,e:"La convocation doit permettre aux participants de se préparer en amont."},
+{i:74,a:"4.2",q:"Quel est le rôle de l'ordre du jour ?",o:["Lister les sujets à traiter et leur durée prévue","Désigner le président","Faire le point sur les ventes"],c:0,e:"L'ordre du jour cadre la réunion et évite les digressions."},
+{i:75,a:"4.2",q:"Qu'est-ce qu'une note de service ?",o:["Une note du patron à son comptable","Une communication interne formelle adressée à un groupe de salariés","Un document RH personnel"],c:1,e:"La note de service informe ou prescrit (ex. nouvelle procédure, organisation interne)."},
+{i:76,a:"4.2",q:"Quelle distinction entre note interne et note de service ?",o:["Pas de différence en pratique","Aucune","La note de service a une portée prescriptive, la note interne est plutôt informative"],c:2,e:"La note de service peut être assimilée à une décision unilatérale de l'employeur. La note interne informe simplement."},
+{i:77,a:"4.2",q:"Qu'est-ce qu'un mailing groupé pour la communication interne ?",o:["Un envoi simultané d'un même message à plusieurs destinataires","Une liste de courses","Un publipostage commercial"],c:0,e:"En interne, on utilise des listes de diffusion pour toucher rapidement plusieurs collaborateurs."},
+{i:78,a:"4.2",q:"Qu'est-ce qu'un planning de production de type Gantt ?",o:["Un graphique en camembert","Un diagramme à barres représentant les tâches dans le temps","Un nuage de points"],c:1,e:"Le diagramme de Gantt visualise la durée et l'enchaînement des tâches d'un projet."},
+{i:79,a:"4.2",q:"Quel intérêt présente un fichier client centralisé ?",o:["Multiplier les saisies","Économiser du papier","Éviter les doublons et garantir l'unicité de l'information"],c:2,e:"Un fichier centralisé évite que plusieurs collaborateurs créent des fiches concurrentes pour le même client."},
+{i:80,a:"4.2",q:"Que signifie l'acronyme EDI ?",o:["Échange de Données Informatisé entre systèmes informatiques","Étude de Données Internes","Enregistrement Détaillé Individuel"],c:0,e:"L'EDI automatise la transmission de documents commerciaux (commandes, factures) entre systèmes."},
+{i:81,a:"4.2",q:"Que représente la charge nette dans un Tableau de Répartition des Tâches ?",o:["La somme de toutes les heures travaillées dans le mois","La charge estimée majorée de 15% pour intégrer les temps non productifs (pauses, aléas, vitesse d'exécution)","Les heures supplémentaires non rémunérées"],c:1,e:"La majoration de 15% évite de surévaluer la capacité réelle d'un collaborateur en intégrant pauses et aléas."},
+{i:82,a:"4.2",q:"Quel est l'enjeu de la double validation des commandes export ?",o:["Économiser l'encre","Doubler le temps de traitement","Sécuriser des opérations à fort enjeu (montants élevés, contraintes douanières)"],c:2,e:"La double validation prévient les erreurs sur des commandes critiques (export, gros montants, clients sensibles)."},
+{i:83,a:"4.2",q:"Qu'est-ce qu'un Incoterm ?",o:["Un terme commercial international qui définit la répartition des frais et risques entre vendeur et acheteur (ex. EXW, DAP, DDP)","Un mot de passe","Un type de TVA"],c:0,e:"Les Incoterms 2020 sont édités par la Chambre de Commerce Internationale et structurent les contrats à l'export."},
+{i:84,a:"4.2",q:"Que signifie 'lean management' ?",o:["Un management souple et amical","Une méthode visant à éliminer les gaspillages et à fluidifier les processus","Un management strict"],c:1,e:"Le lean (issu du Toyota Production System) traque les sept gaspillages : surproduction, attente, transport, stocks, mouvements, défauts, sur-traitement."},
+{i:85,a:"4.2",q:"Quelle méthode permet d'identifier les causes profondes d'un dysfonctionnement ?",o:["Un sondage clientèle","Un tirage au sort","Le diagramme d'Ishikawa (5M ou 6M)"],c:2,e:"Ishikawa décompose les causes en Matières, Méthode, Main d'œuvre, Milieu, Matériel, Mesure."},
+{i:86,a:"4.2",q:"Qu'est-ce que la méthode des 5 Pourquoi ?",o:["Poser successivement 5 fois la question 'pourquoi ?' pour remonter à la cause racine","Lister 5 raisons d'agir","Cinq questions à poser à un client"],c:0,e:"Cette méthode évite de s'arrêter à la cause apparente d'un problème."},
+{i:87,a:"4.2",q:"Qu'est-ce qu'une procédure ?",o:["Un texte juridique","Un mode opératoire formalisé décrivant qui fait quoi, comment et quand","Un règlement administratif"],c:1,e:"Les procédures harmonisent les pratiques et facilitent l'intégration des nouveaux collaborateurs."},
+{i:88,a:"4.2",q:"Qu'est-ce qu'une feuille d'analyse des tâches dans la méthode TRT ?",o:["Un tableau de bord financier mensuel","Le contrat de travail du salarié","Un document recueillant pour chaque salarié la liste de ses tâches, les documents associés et le temps consacré par semaine"],c:2,e:"La feuille d'analyse des tâches est l'étape préalable à l'élaboration du TRT. Elle s'appuie sur un questionnement du salarié, complété éventuellement par observation."},
+{i:89,a:"4.2",q:"Qu'est-ce qu'un cahier des charges ?",o:["Un document définissant les besoins et contraintes d'un projet","Un livre de comptes","Un planning"],c:0,e:"Le cahier des charges sert de référence à un fournisseur ou prestataire pour répondre à une demande."},
+{i:90,a:"4.2",q:"Quel est l'objet d'une fiche de poste ?",o:["Calculer le salaire","Décrire les missions, responsabilités et compétences attendues d'un poste","Demander une promotion"],c:1,e:"La fiche de poste cadre le rôle et facilite l'évaluation et le recrutement."},
+{i:91,a:"4.2",q:"Que signifie 'priorisation par criticité' ?",o:["Travailler dans l'ordre alphabétique","Mettre tout sur le même plan","Hiérarchiser les actions selon leur impact et leur urgence"],c:2,e:"La criticité combine impact (gravité si non traité) et urgence (délai)."},
+{i:92,a:"4.2",q:"Qu'est-ce qu'une réunion de pilotage (COPIL) ?",o:["Un comité régulier qui suit l'avancement d'un projet et tranche les arbitrages","Une réunion festive","Une assemblée générale"],c:0,e:"Le COPIL réunit le sponsor du projet, le chef de projet et les responsables-clés."},
+{i:93,a:"4.2",q:"Quel est le rôle d'un sponsor de projet ?",o:["Sponsoriser financièrement à titre privé","Apporter le soutien hiérarchique et arbitrer les ressources","Diffuser la communication"],c:1,e:"Le sponsor est généralement un membre du comité de direction qui porte politiquement le projet."},
+{i:94,a:"4.2",q:"Que désigne le terme 'goulot d'étranglement' dans un processus ?",o:["La prime de fin d'année","Le poste le mieux payé","L'étape qui limite le débit global du processus"],c:2,e:"Le goulot impose son rythme à tout le processus. L'optimiser, c'est gagner sur l'ensemble."},
+{i:95,a:"4.2",q:"À quoi sert le tableau des compétences dans une démarche TRT ?",o:["Déterminer le degré de compétence et de formation de chaque employé sur l'ensemble des tâches du service ou processus","Calculer la rémunération des salariés","Suivre les heures de présence"],c:0,e:"Le tableau des compétences complète l'analyse quantitative du TRT et oriente la nouvelle répartition des tâches selon les compétences disponibles."},
+{i:96,a:"4.2",q:"Que signifie un taux d'engagement compris entre 95 et 99% selon la méthode TRT ?",o:["Le poste est sous-occupé","Le poste est saturé (à pleine charge sans marge)","Le poste est surchargé"],c:1,e:"Méthode CADP : 95-99% poste saturé (sans marge mais soutenable). < 95% sous-occupé. > 100% surchargé."},
+{i:97,a:"4.2",q:"Quelle est la première étape pour améliorer un processus ?",o:["Recruter de nouveaux collaborateurs","Acheter un nouveau logiciel","Le cartographier dans l'état actuel (AS IS)"],c:2,e:"On ne peut améliorer qu'un processus qu'on a d'abord compris dans le détail."},
+{i:98,a:"4.2",q:"Qu'est-ce qu'un retour d'expérience (REX) ?",o:["Une analyse a posteriori d'un événement, projet ou crise pour en tirer des enseignements","Un témoignage publicitaire","Un retour produit défectueux"],c:0,e:"Le REX permet de capitaliser et d'éviter la répétition des erreurs."},
+{i:99,a:"4.2",q:"Quel principe veut qu'une tâche soit affectée à une seule personne identifiée ?",o:["Le principe de Pareto","Le principe de responsabilité unique","Le principe de Peter"],c:1,e:"Plus une tâche est partagée sans coordination, moins elle est traitée. Un responsable unique facilite le suivi."},
+{i:100,a:"4.2",q:"Que signifie l'acronyme PME ?",o:["Plate-forme Mutualisée d'Échanges","Programme de Management Efficace","Petite et Moyenne Entreprise (moins de 250 salariés)"],c:2,e:"En France, la PME est définie par moins de 250 salariés et un CA inférieur à 50 M€ ou un bilan inférieur à 43 M€."},
+  /* === A4.3 (50 questions) === */
+{i:101,a:"4.3",q:"Que signifie l'acronyme DPAE ?",o:["Déclaration Préalable À l'Embauche","Document de Prévention en Activité Encadrée","Déclaration Périodique des Activités Externes"],c:0,e:"La DPAE doit être effectuée à l'URSSAF dans les 8 jours précédant l'embauche."},
+{i:102,a:"4.3",q:"Quel est le délai maximum pour transmettre une DPAE ?",o:["Dans le mois suivant","Le jour même, au plus tard avant l'embauche","Dans la semaine"],c:1,e:"La DPAE doit obligatoirement être effectuée avant la prise de poste, sous peine de sanction."},
+{i:103,a:"4.3",q:"Quel contrat de travail est la norme en France ?",o:["Le contrat de chantier","Le CDD","Le CDI"],c:2,e:"Le CDI à temps plein constitue la forme normale et générale de la relation de travail."},
+{i:104,a:"4.3",q:"Quelle est la durée maximale d'un CDD à terme précis (cas général) ?",o:["18 mois renouvellement compris","6 mois","36 mois"],c:0,e:"Sauf cas particuliers (chantier, remplacement long, surcroît exceptionnel), le CDD ne peut pas excéder 18 mois."},
+{i:105,a:"4.3",q:"Quel document remet-on obligatoirement à un salarié à son départ ?",o:["Une lettre de remerciements","Solde de tout compte, certificat de travail, attestation France Travail","Un T-shirt souvenir"],c:1,e:"Ces trois documents sont obligatoires pour permettre au salarié de faire valoir ses droits (chômage, embauche suivante)."},
+{i:106,a:"4.3",q:"Que signifie 'période d'essai' ?",o:["Un congé spécifique","Une formation initiale obligatoire","Période permettant à l'employeur et au salarié de rompre le contrat sans préavis ni indemnité"],c:2,e:"La période d'essai doit être prévue par écrit dans le contrat et respecter les durées légales (2 mois ouvriers/employés, 4 mois cadres)."},
+{i:107,a:"4.3",q:"Que désigne la 'paie' ?",o:["Le calcul du salaire brut, des cotisations et du net à verser au salarié","La caisse de l'entreprise","Le compte bancaire de l'entreprise"],c:0,e:"La paie suit un cycle mensuel et donne lieu à un bulletin de paie remis au salarié."},
+{i:108,a:"4.3",q:"Quelles cotisations apparaissent sur le bulletin de paie ?",o:["Uniquement la TVA","Cotisations salariales et patronales (Sécurité sociale, retraite, chômage, etc.)","Uniquement l'impôt sur le revenu"],c:1,e:"Le bulletin distingue brut, cotisations, net imposable, prélèvement à la source et net à payer."},
+{i:109,a:"4.3",q:"Que signifie le prélèvement à la source ?",o:["Une retenue sur ventes","Une cotisation chômage","L'impôt sur le revenu prélevé directement par l'employeur sur le salaire"],c:2,e:"Depuis 2019, l'employeur prélève l'impôt sur le revenu et le reverse à l'administration fiscale."},
+{i:110,a:"4.3",q:"Qu'est-ce que la DSN ?",o:["Déclaration Sociale Nominative, déclaration mensuelle dématérialisée","Déclaration Spécifique de Naissance","Document de Suivi Numérique"],c:0,e:"La DSN regroupe en une seule déclaration toutes les obligations sociales mensuelles de l'employeur."},
+{i:111,a:"4.3",q:"Quelle est la durée légale du travail en France (temps plein) ?",o:["40 heures par semaine","35 heures par semaine","30 heures par semaine"],c:1,e:"Au-delà de 35h s'appliquent les heures supplémentaires, majorées (généralement 25% jusqu'à 8h, 50% au-delà)."},
+{i:112,a:"4.3",q:"Combien de jours de congés payés acquièrent les salariés par année ?",o:["45 jours","20 jours","30 jours ouvrables (5 semaines)"],c:2,e:"L'acquisition se fait au rythme de 2,5 jours ouvrables par mois travaillé."},
+{i:113,a:"4.3",q:"Que signifie un 'arrêt maladie' pour l'employeur ?",o:["Suspension du contrat avec maintien partiel du salaire selon ancienneté","Rupture automatique du contrat","Une rémunération doublée"],c:0,e:"Pendant l'arrêt, l'employeur peut être tenu de maintenir tout ou partie du salaire en complément des IJSS."},
+{i:114,a:"4.3",q:"Qu'est-ce que les IJSS ?",o:["Une cotisation employeur","Indemnités Journalières de Sécurité Sociale versées en cas d'arrêt maladie","Un crédit d'impôt"],c:1,e:"Les IJSS compensent partiellement la perte de salaire pendant un arrêt de travail."},
+{i:115,a:"4.3",q:"Que signifie GPEC ?",o:["Gestion Pratique des Effectifs Cadres","Garantie de Préservation de l'Économie Collective","Gestion Prévisionnelle des Emplois et des Compétences"],c:2,e:"La GPEC anticipe les besoins en compétences et organise leur acquisition (formation, recrutement, mobilité)."},
+{i:116,a:"4.3",q:"Qu'est-ce que le CPF ?",o:["Compte Personnel de Formation, attaché au salarié tout au long de sa vie professionnelle","Caisse de Prévoyance Familiale","Comité Permanent de Formation"],c:0,e:"Le CPF est crédité chaque année et permet au salarié de financer des formations qualifiantes."},
+{i:117,a:"4.3",q:"Quelle est l'obligation de formation pour les employeurs en France ?",o:["Aucune obligation","Plan de développement des compétences et entretien professionnel obligatoire tous les 2 ans","Une formation par mois et par salarié"],c:1,e:"L'employeur doit assurer l'adaptation au poste et veiller au maintien de l'employabilité."},
+{i:118,a:"4.3",q:"Qu'est-ce qu'un entretien professionnel ?",o:["Un entretien d'embauche","Un entretien d'évaluation annuel des performances","Un entretien obligatoire tous les 2 ans pour évoquer évolution de carrière et formation"],c:2,e:"L'entretien professionnel n'évalue pas la performance, il anticipe les perspectives professionnelles."},
+{i:119,a:"4.3",q:"Quelle est la durée maximale légale de travail journalière ?",o:["10 heures","12 heures","8 heures"],c:0,e:"Sauf dérogation conventionnelle, la durée maximale journalière est de 10 heures."},
+{i:120,a:"4.3",q:"Quelle pause minimum est imposée pour 6 heures de travail consécutif ?",o:["5 minutes","20 minutes","Pas de pause obligatoire"],c:1,e:"La pause de 20 minutes est obligatoire après 6h de travail consécutif (article L3121-33)."},
+{i:121,a:"4.3",q:"Qu'est-ce que la convention collective ?",o:["Un contrat individuel","Un règlement intérieur","Accord collectif de branche professionnelle qui complète et adapte le Code du travail"],c:2,e:"La convention collective fixe des règles applicables aux entreprises d'un secteur (durée du travail, salaires minima, primes)."},
+{i:122,a:"4.3",q:"Qu'est-ce que la mutuelle d'entreprise ?",o:["Une complémentaire santé obligatoire à proposer à tous les salariés depuis 2016","Une assurance facultative","Un compte épargne"],c:0,e:"L'employeur prend en charge au minimum 50% de la cotisation."},
+{i:123,a:"4.3",q:"Que signifie la portabilité de la mutuelle ?",o:["La possibilité de la transférer à un autre employeur","Le maintien des garanties santé au profit du salarié après rupture du contrat (jusqu'à 12 mois)","Le téléchargement de l'application mobile"],c:1,e:"La portabilité s'applique aux ruptures ouvrant droit au chômage, sans surcoût pour l'ancien salarié."},
+{i:124,a:"4.3",q:"Qu'est-ce que la médecine du travail ?",o:["Une formation en santé","Une mutuelle","Service obligatoire de prévention santé pour tous les salariés"],c:2,e:"La visite d'information et de prévention (VIP) est obligatoire à l'embauche et périodiquement."},
+{i:125,a:"4.3",q:"Que signifie 'congé maternité' ?",o:["Suspension du contrat de 16 semaines (cas général) avec indemnités, à l'occasion de la naissance","Un congé sans solde","Un mois de vacances"],c:0,e:"Le congé maternité comprend généralement 6 semaines avant et 10 semaines après l'accouchement."},
+{i:126,a:"4.3",q:"Quelle protection bénéficie une salariée enceinte ?",o:["Aucune","Interdiction de licencier pendant la grossesse et 10 semaines après le congé maternité","Doublement du salaire"],c:1,e:"Le licenciement n'est possible que pour faute grave non liée à la grossesse ou impossibilité de maintenir le contrat."},
+{i:127,a:"4.3",q:"Que signifie 'rupture conventionnelle' ?",o:["Une démission classique","Un licenciement abusif","Mode amiable de rupture du CDI avec indemnité et homologation"],c:2,e:"La rupture conventionnelle ouvre droit à l'indemnité légale et aux allocations chômage."},
+{i:128,a:"4.3",q:"Quelle est l'indemnité minimale légale de licenciement (cas général) ?",o:["1/4 de mois par année jusqu'à 10 ans, 1/3 au-delà","1 mois par année","3 mois par année"],c:0,e:"Hors faute grave, l'indemnité légale est calculée selon l'ancienneté."},
+{i:129,a:"4.3",q:"Qu'est-ce que les RTT ?",o:["Régime de Travail Temporaire","Réduction du Temps de Travail, jours de repos liés aux 35 heures","Reprise de Travail à Temps plein"],c:1,e:"Les RTT compensent les heures travaillées au-delà de 35h sur l'année dans certains accords."},
+{i:130,a:"4.3",q:"Comment se calcule le SMIC en 2026 ?",o:["Un salaire fixé par chaque employeur","Un salaire libre","Salaire horaire minimum revalorisé annuellement, applicable à toute entreprise"],c:2,e:"Le SMIC est indexé sur l'inflation et garantit un minimum légal applicable à tous."},
+{i:131,a:"4.3",q:"Qu'est-ce qu'un PV de CSE ?",o:["Procès-verbal du Comité Social et Économique, instance représentative du personnel","Permis de Vente Spécifique","Programme de Vente d'Entreprise"],c:0,e:"Le CSE est obligatoire dans les entreprises de 11 salariés et plus."},
+{i:132,a:"4.3",q:"À partir de quel effectif le CSE devient-il obligatoire ?",o:["50 salariés","11 salariés","100 salariés"],c:1,e:"Au-delà de 50 salariés, le CSE prend en charge des attributions élargies (santé, conditions de travail, économique)."},
+{i:133,a:"4.3",q:"Que désigne la 'fiche de poste' en RH ?",o:["Un document fiscal","Le bulletin de paie","Description formalisée des missions, compétences et responsabilités attachées à un poste"],c:2,e:"La fiche de poste éclaire le recrutement, l'évaluation et les actions de formation."},
+{i:134,a:"4.3",q:"Quelle obligation RGPD s'applique aux données salariées ?",o:["Confidentialité, finalité, durée de conservation, droit d'accès et de rectification","Aucune","Publication obligatoire au registre du commerce"],c:0,e:"Le RGPD impose un traitement licite, transparent et limité à la finalité initiale."},
+{i:135,a:"4.3",q:"Combien de temps faut-il conserver les bulletins de paie ?",o:["1 an","5 ans pour l'employeur, à vie pour le salarié (recommandé)","30 ans"],c:1,e:"Le salarié conserve à vie ses bulletins (preuve pour la retraite). L'employeur a une obligation de 5 ans."},
+{i:136,a:"4.3",q:"Qu'est-ce qu'une déclaration AT (accident du travail) ?",o:["Un audit interne","Une formation sécurité","Déclaration auprès de la CPAM dans les 48h suivant un accident"],c:2,e:"L'employeur doit déclarer tout accident dans les 48h, même si le salarié n'est pas arrêté."},
+{i:137,a:"4.3",q:"Que signifie 'visite médicale d'embauche' ?",o:["Visite d'Information et de Prévention (VIP) avant ou peu après la prise de poste","Une visite à domicile","Un examen pour gym d'entreprise"],c:0,e:"La VIP a remplacé la visite d'embauche depuis 2017."},
+{i:138,a:"4.3",q:"Qu'est-ce qu'un livret d'accueil pour un nouveau salarié ?",o:["Le contrat de travail","Document remis à l'embauche présentant l'entreprise, ses règles et son organisation","Le bulletin de paie"],c:1,e:"Le livret d'accueil n'est pas obligatoire mais facilite l'intégration et donne une image professionnelle."},
+{i:139,a:"4.3",q:"À quoi sert le registre unique du personnel ?",o:["Suivre les ventes","Lister les clients","Recenser toutes les embauches, départs et événements de chaque salarié"],c:2,e:"Ce registre obligatoire (article L1221-13) doit être tenu à jour et accessible aux contrôles."},
+{i:140,a:"4.3",q:"Que signifie 'titres restaurant' ?",o:["Avantage en nature partiellement financé par l'employeur, exonéré de charges sous conditions","Une réservation au restaurant","Un titre de propriété"],c:0,e:"L'employeur prend en charge 50 à 60% du titre, exonéré de cotisations dans la limite légale."},
+{i:141,a:"4.3",q:"Que signifie l'acronyme URSSAF ?",o:["Union Régionale des Salariés et Agents de la Fonction publique","Union de Recouvrement des cotisations de Sécurité Sociale et d'Allocations Familiales","Union Réservée aux Salariés Sans Activité Fixe"],c:1,e:"L'URSSAF collecte la majorité des cotisations sociales des entreprises."},
+{i:142,a:"4.3",q:"Comment se calcule le solde de tout compte ?",o:["Le solde du compte courant de l'entreprise","Le total du chiffre d'affaires","Sommes dues au salarié au moment de la rupture (salaire, congés payés, indemnités)"],c:2,e:"Le solde est remis avec le certificat de travail et l'attestation France Travail."},
+{i:143,a:"4.3",q:"Qu'est-ce que la prime de précarité (CDD) ?",o:["10% de la rémunération brute totale, versée en fin de CDD","Une prime obligatoire pour tous les CDI","Une prime annuelle"],c:0,e:"Sauf cas particuliers (CDD étudiant, refus du CDI proposé), la prime de précarité est due."},
+{i:144,a:"4.3",q:"Qu'est-ce qu'une déclaration TR ?",o:["Tableau de bord RH","Déclaration de Taxe sur les salaires due par les non-assujettis à la TVA","Tarif de Référence"],c:1,e:"La taxe sur les salaires concerne les employeurs non assujettis à la TVA (associations, professions libérales)."},
+{i:145,a:"4.3",q:"Que désigne le 'temps partiel' ?",o:["Un mi-temps obligatoire","Un travail à plein temps","Durée de travail inférieure à la durée légale (35h) ou conventionnelle"],c:2,e:"Le contrat à temps partiel doit préciser durée hebdomadaire/mensuelle et répartition des heures."},
+{i:146,a:"4.3",q:"Qu'est-ce que la qualification professionnelle ?",o:["Niveau de compétences attesté par diplôme, expérience ou validation des acquis","La fiche de paie","Un titre de propriété"],c:0,e:"La qualification détermine le coefficient et le salaire minimum conventionnel."},
+{i:147,a:"4.3",q:"Que signifie 'apprentissage' ?",o:["Un stage non rémunéré","Formation en alternance avec contrat de travail spécifique pour les 16-29 ans","Un cours par correspondance"],c:1,e:"Le contrat d'apprentissage allie formation pratique en entreprise et formation théorique en CFA."},
+{i:148,a:"4.3",q:"Qu'est-ce que la mobilité interne ?",o:["Une démission","Un voyage professionnel","Changement de poste, d'établissement ou de fonction au sein de la même entreprise"],c:2,e:"La mobilité interne fidélise les salariés et permet de pourvoir des postes sans recrutement externe."},
+{i:149,a:"4.3",q:"Quel document confirme la fin d'un contrat de travail au regard de Pôle Emploi (France Travail) ?",o:["L'attestation France Travail (anciennement Pôle Emploi)","Le bulletin de paie","Le contrat de travail"],c:0,e:"Cette attestation est nécessaire pour percevoir les allocations chômage."},
+{i:150,a:"4.3",q:"Quelle obligation de confidentialité s'impose au gestionnaire RH ?",o:["Aucune","Secret professionnel sur les données personnelles, salariales et médicales","Affichage public des informations RH"],c:1,e:"Le gestionnaire RH manipule des données sensibles (santé, salaires) protégées par le RGPD et le Code du travail."},
+  /* === A4.4 (50 questions) === */
+{i:151,a:"4.4",q:"Qu'est-ce que la communication institutionnelle ?",o:["Communication interne aux salariés uniquement","Communication produit-prix-promotion","Communication qui exprime l'identité, les valeurs et la stratégie de l'entreprise"],c:2,e:"La communication institutionnelle bâtit la réputation et la légitimité de l'organisation auprès de ses parties prenantes."},
+{i:152,a:"4.4",q:"Qu'est-ce qu'une partie prenante (stakeholder) ?",o:["Tout acteur affecté par l'activité de l'entreprise (salariés, clients, fournisseurs, riverains, autorités)","Uniquement les actionnaires","Les concurrents directs"],c:0,e:"La cartographie des parties prenantes oriente la stratégie de communication."},
+{i:153,a:"4.4",q:"Quelle est la première règle d'une communication de crise ?",o:["Communiquer immédiatement, même sans information","Vérifier les faits avant de communiquer","Garder le silence"],c:1,e:"Communiquer trop vite avec de fausses informations aggrave la crise. Le silence aussi (interprété comme un aveu)."},
+{i:154,a:"4.4",q:"Quel est l'ordre de priorité en communication de crise ?",o:["Tout simultanément","Communauté digitale d'abord","Interne, puis client direct, puis presse, puis communauté digitale"],c:2,e:"Les salariés doivent toujours être informés avant le grand public, sous peine de découvrir la crise par les RS."},
+{i:155,a:"4.4",q:"Qu'est-ce qu'un communiqué de presse ?",o:["Document court, factuel et structuré, transmis aux médias pour diffusion","Une publicité payante","Un mail commercial"],c:0,e:"Le communiqué suit un format normé : titre, chapeau, corps en 3 paragraphes, contact presse."},
+{i:156,a:"4.4",q:"Combien de mots fait généralement un communiqué de presse ?",o:["2 000 mots minimum","250 à 400 mots","30 mots maximum"],c:1,e:"Le communiqué doit aller à l'essentiel pour être repris facilement par les journalistes."},
+{i:157,a:"4.4",q:"Quel est le rôle du chapeau dans un communiqué ?",o:["Annoncer la date","Lister les contacts","Synthétiser en 2-3 lignes le contenu et donner envie de lire la suite"],c:2,e:"Le chapeau est lu en premier et conditionne l'envie de poursuivre la lecture."},
+{i:158,a:"4.4",q:"Qui doit signer un communiqué pour une PME ?",o:["La dirigeante (porte-parole naturel)","Tous les salariés","Le service comptable"],c:0,e:"En PME, la dirigeante incarne l'entreprise et porte la parole publique."},
+{i:159,a:"4.4",q:"Que signifie 'e-réputation' ?",o:["Un mail spécial","Image en ligne d'une marque ou d'une personne, perception véhiculée par le contenu numérique","Une réputation auprès des fournisseurs"],c:1,e:"L'e-réputation est mesurée et pilotée à l'aide d'outils de monitoring (Mention, Hootsuite, Brand24)."},
+{i:160,a:"4.4",q:"Sur LinkedIn, comment répondre à un post critique très partagé ?",o:["Ignorer le post","Attaquer publiquement l'auteur","Reconnaître les faits, exprimer de l'empathie, proposer un échange direct"],c:2,e:"Le désamorçage suppose nominatif, courtois, factuel, et propose une suite hors de la sphère publique."},
+{i:161,a:"4.4",q:"Faut-il répondre aux avis Google négatifs ?",o:["Oui systématiquement, par une réponse courte et professionnelle proposant un contact","Non, cela donne de la visibilité","Uniquement aux avis très négatifs"],c:0,e:"Répondre montre que l'entreprise est attentive et soucieuse de progresser."},
+{i:162,a:"4.4",q:"Quel délai est recommandé pour réagir à une crise digitale ?",o:["Sous 7 jours minimum","Sous 24 heures, après vérification des faits","Pas de réaction nécessaire"],c:1,e:"Le silence prolongé est interprété négativement. 24h est le délai de référence."},
+{i:163,a:"4.4",q:"Qu'est-ce qu'un élément de langage ?",o:["Une phrase de communication interne secrète","Un cours de français","Message synthétique préparé en amont pour homogénéiser les prises de parole"],c:2,e:"Les éléments de langage sont partagés en interne pour éviter les versions divergentes."},
+{i:164,a:"4.4",q:"Qu'est-ce qu'une note interne ?",o:["Communication écrite formelle adressée aux collaborateurs","Une note manuscrite personnelle","Un message commercial"],c:0,e:"La note interne informe ou prescrit. Elle a un en-tête (de, à, objet, date) et une signature."},
+{i:165,a:"4.4",q:"Quelle tonalité adopter dans une note interne de crise ?",o:["Solennelle et inquiète","Factuelle, rassurante, mobilisatrice","Joyeuse et désinvolte"],c:1,e:"Le ton doit informer sans alarmer, et donner aux équipes les moyens d'agir."},
+{i:166,a:"4.4",q:"Que faut-il éviter dans un communiqué de presse de crise ?",o:["Présenter des actions correctives","Reconnaître les faits","Attaquer le client, minimiser les faits, accuser un tiers sans preuve"],c:2,e:"Ces postures sont les principales causes d'aggravation des crises."},
+{i:167,a:"4.4",q:"Qu'est-ce qu'un porte-parole ?",o:["Personne autorisée à représenter l'entreprise auprès des médias et du public","Un commercial","Un délégué syndical"],c:0,e:"En PME, le porte-parole est généralement le ou la dirigeante. Il faut éviter les voix multiples."},
+{i:168,a:"4.4",q:"Que désigne la 'communication événementielle' ?",o:["Communication imprévue","Communication organisée autour d'un événement (salon, anniversaire, lancement)","Communication par email"],c:1,e:"Les événements créent des occasions de rencontre et amplifient les messages institutionnels."},
+{i:169,a:"4.4",q:"Quelle est la fonction principale d'une plaquette d'entreprise ?",o:["Recruter des stagiaires","Vendre directement un produit","Présenter l'identité, l'offre et les valeurs de l'entreprise sur un support synthétique"],c:2,e:"La plaquette est remise lors de rendez-vous, salons ou réceptions."},
+{i:170,a:"4.4",q:"Qu'est-ce qu'un site institutionnel ?",o:["Site présentant l'entreprise, son histoire, sa mission, sans visée e-commerce directe","Site marchand","Plateforme RH"],c:0,e:"Le site institutionnel construit la légitimité et la confiance dans la marque."},
+{i:171,a:"4.4",q:"Que signifie 'storytelling' ?",o:["Histoire racontée aux enfants","Art de raconter l'histoire d'une marque pour créer un attachement émotionnel","Comptabilité narrative"],c:1,e:"Le storytelling humanise la marque et facilite la mémorisation des messages."},
+{i:172,a:"4.4",q:"Qu'est-ce que la charte graphique ?",o:["Un règlement intérieur","Une signature manuscrite","Document définissant les règles d'usage des couleurs, logos et typographies"],c:2,e:"La charte garantit la cohérence visuelle de tous les supports de communication."},
+{i:173,a:"4.4",q:"Que signifie 'brief créatif' ?",o:["Document cadrant les attentes pour une production de communication (objectifs, cible, ton, livrable)","Une réunion express","Un emballage"],c:0,e:"Le brief est l'outil de dialogue entre commanditaire et créateurs (agence, freelance)."},
+{i:174,a:"4.4",q:"Qu'est-ce que le RP en communication ?",o:["Réseau Personnel","Relations Presse, ensemble des actions visant les médias","Restauration Privée"],c:1,e:"Les RP construisent la notoriété par la couverture médiatique non-payante."},
+{i:175,a:"4.4",q:"Quelle pratique est typique des relations presse ?",o:["Vente de produits","Achat d'espace publicitaire","Envoi de communiqués, organisation de conférences de presse, réponse aux journalistes"],c:2,e:"Les RP construisent une couverture media gagnée (earned media), distinguée du paid media."},
+{i:176,a:"4.4",q:"Que signifie 'réseaux sociaux corporate' ?",o:["Comptes officiels de l'entreprise sur LinkedIn, Facebook, Instagram, etc.","Comptes personnels des salariés","Réseaux Wifi internes"],c:0,e:"Le corporate social media diffuse l'identité et l'actualité de l'entreprise auprès des audiences."},
+{i:177,a:"4.4",q:"Quel est le format type d'un post LinkedIn corporate efficace ?",o:["30 caractères maximum","1 200 à 1 500 caractères, ton professionnel, hashtags ciblés","5 000 caractères minimum"],c:1,e:"Ce format favorise l'engagement et le reach (visibilité dans le fil)."},
+{i:178,a:"4.4",q:"Qu'est-ce qu'un hashtag (#) ?",o:["Une signature numérique","Une faute d'orthographe","Mot-clé précédé du symbole # qui regroupe les contenus sur les réseaux"],c:2,e:"Les hashtags facilitent la découverte et l'indexation des posts par thématique."},
+{i:179,a:"4.4",q:"Que signifie 'engagement' sur les réseaux sociaux ?",o:["Mesure des interactions (likes, commentaires, partages) sur un contenu","Promesse contractuelle","Engagement à l'embauche"],c:0,e:"L'engagement est un KPI clé : il indique la qualité de la relation marque-audience."},
+{i:180,a:"4.4",q:"Qu'est-ce qu'une campagne de communication ?",o:["Un voyage commercial","Ensemble cohérent d'actions limitées dans le temps autour d'un objectif","Une saison entière"],c:1,e:"Une campagne combine plusieurs supports (presse, web, RS, événement) pour amplifier le message."},
+{i:181,a:"4.4",q:"Que signifie 'reach' (portée) ?",o:["Coût total de la campagne","Nombre de likes","Nombre de personnes uniques exposées à un contenu"],c:2,e:"Le reach mesure l'audience touchée. À distinguer des impressions (qui peuvent être multiples par personne)."},
+{i:182,a:"4.4",q:"Qu'est-ce qu'une newsletter ?",o:["Bulletin d'information périodique envoyé par email à des abonnés volontaires","Une publicité presse","Un rapport interne"],c:0,e:"La newsletter fidélise une audience qualifiée et nourrit la relation institutionnelle."},
+{i:183,a:"4.4",q:"Quel est l'objectif d'un publi-rédactionnel ?",o:["Article gratuit","Article publicitaire qui prend la forme d'un contenu rédactionnel, identifié comme tel","Tract syndical"],c:1,e:"Le publi-rédactionnel doit être signalé comme contenu sponsorisé pour respecter la déontologie."},
+{i:184,a:"4.4",q:"Qu'est-ce que le mécénat ?",o:["Un sponsor commercial","Une publicité classique","Soutien financier ou matériel à une cause d'intérêt général sans contrepartie publicitaire directe"],c:2,e:"Le mécénat ouvre droit à une réduction d'impôt de 60% (loi Aillagon)."},
+{i:185,a:"4.4",q:"Quelle différence entre mécénat et sponsoring (parrainage) ?",o:["Le sponsoring inclut une contrepartie publicitaire visible, le mécénat non","Aucune","Le sponsoring est gratuit"],c:0,e:"Fiscalement, le sponsoring est une charge déductible classique, le mécénat ouvre droit à réduction d'impôt."},
+{i:186,a:"4.4",q:"Qu'est-ce qu'une marque-employeur ?",o:["Logo de l'entreprise","Image de l'entreprise comme lieu de travail, attractive pour les candidats","Un type de contrat"],c:1,e:"La marque-employeur conditionne le recrutement et la fidélisation des talents."},
+{i:187,a:"4.4",q:"Quel est l'objectif de la communication interne ?",o:["Surveiller les salariés","Vendre aux salariés","Informer, mobiliser et fédérer les salariés autour des projets et valeurs"],c:2,e:"La communication interne est un levier de cohésion et d'engagement."},
+{i:188,a:"4.4",q:"Quel support combine information descendante et remontée terrain ?",o:["Le journal interne ou intranet collaboratif","La fiche de paie","Le contrat de travail"],c:0,e:"Les médias internes participatifs renforcent l'engagement."},
+{i:189,a:"4.4",q:"Que signifie 'top-down' en communication interne ?",o:["Communication de bas en haut","Communication descendante de la direction vers les équipes","Communication horizontale"],c:1,e:"Top-down complète bottom-up (remontée terrain). Les organisations performantes équilibrent les deux."},
+{i:190,a:"4.4",q:"Quelle réunion réunit l'ensemble des collaborateurs autour de la stratégie ?",o:["Le COCO commercial","Le comité de pilotage","L'assemblée générale ou réunion plénière"],c:2,e:"La plénière est un moment fort de la communication interne, généralement annuelle ou semestrielle."},
+{i:191,a:"4.4",q:"Quel est l'objectif d'une vidéo corporate ?",o:["Présenter l'entreprise, ses métiers ou un projet sous forme audiovisuelle","Filmer un anniversaire","Vendre directement"],c:0,e:"La vidéo a un fort taux de mémorisation et est privilégiée sur les RS."},
+{i:192,a:"4.4",q:"Qu'est-ce qu'un témoignage client en communication ?",o:["Une plainte","Récit authentique d'un client utilisant le produit ou service, supportant le storytelling","Un mail interne"],c:1,e:"Le témoignage est un levier de preuve sociale puissant."},
+{i:193,a:"4.4",q:"Quel format de témoignage est privilégié sur LinkedIn ?",o:["Tract papier","Long pavé de 5 000 mots","Court (300-500 mots) ou vidéo de 60 à 90 secondes"],c:2,e:"Le format court favorise l'engagement et le partage."},
+{i:194,a:"4.4",q:"Qu'est-ce que la veille communication ?",o:["Surveillance des contenus et conversations en ligne autour de la marque et du secteur","Surveillance physique","Une garde de nuit"],c:0,e:"La veille permet de détecter les signaux faibles et d'anticiper les crises."},
+{i:195,a:"4.4",q:"Quel outil mesure les retombées presse d'une campagne ?",o:["Le bilan comptable","L'analyse de retombées (clipping) et l'équivalent publicitaire","La paie"],c:1,e:"L'équivalent publicitaire valorise les retombées non payantes en équivalent budget pub."},
+{i:196,a:"4.4",q:"Qu'est-ce qu'un kit média ?",o:["Un pack RH","Un kit informatique","Document remis aux journalistes (communiqué, photos, biographies, chiffres-clés)"],c:2,e:"Le kit facilite le travail des journalistes et favorise la qualité de la couverture."},
+{i:197,a:"4.4",q:"Quelle posture adopter face à une rumeur infondée ?",o:["Rectifier rapidement par les canaux officiels avec preuves","Ignorer totalement","Amplifier par humour"],c:0,e:"Une rumeur non rectifiée gagne en crédit auprès du public. La rectification doit être courtoise et factuelle."},
+{i:198,a:"4.4",q:"Qu'est-ce qu'un FAQ public ?",o:["Une question privée","Foire Aux Questions, document anticipant les questions fréquentes du public sur un sujet","Un débat public"],c:1,e:"La FAQ est mise à jour en temps réel pendant une crise pour offrir des réponses cohérentes."},
+{i:199,a:"4.4",q:"Quel principe oblige à signaler les contenus sponsorisés sur les RS ?",o:["Une obligation purement technique","Aucun principe","La transparence (#sponsorisé, #ad)"],c:2,e:"La loi consommation et la DGCCRF imposent la transparence des contenus payés."},
+{i:200,a:"4.4",q:"Quelle leçon principale après une crise digitale traitée ?",o:["Faire un retour d'expérience formalisé et mettre en place un dispositif anti-récurrence","Oublier au plus vite","Licencier le coupable"],c:0,e:"Le REX transforme la crise en apprentissage organisationnel."},
+  /* === A4.5 (50 questions) === */
+{i:201,a:"4.5",q:"Que sont les charges variables ?",o:["Charges qui restent constantes","Charges qui varient proportionnellement avec le niveau d'activité","Charges fiscales"],c:1,e:"Exemples : matières premières, contenants, transport, commissions sur ventes."},
+{i:202,a:"4.5",q:"Qu'est-ce qu'une charge fixe ?",o:["Charge calculée sur le résultat","Charge proportionnelle aux ventes","Charge qui ne varie pas dans une plage donnée d'activité"],c:2,e:"Exemples : loyers, salaires des permanents, amortissements, marketing budgété."},
+{i:203,a:"4.5",q:"Comment se calcule la marge sur coût variable (MCV) globale ?",o:["MCV = Chiffre d'affaires - Charges variables","MCV = Charges fixes - Charges variables","MCV = Résultat + Charges fixes"],c:0,e:"La MCV représente ce qui reste pour absorber les charges fixes et générer du résultat."},
+{i:204,a:"4.5",q:"Comment se calcule le taux de MCV ?",o:["Taux MCV = CV / CA × 100","Taux MCV = MCV globale / Chiffre d'affaires × 100","Taux MCV = Résultat / CA × 100"],c:1,e:"Plus le taux est élevé, plus le produit absorbe vite ses charges fixes."},
+{i:205,a:"4.5",q:"Comment se calcule la MCV unitaire ?",o:["MCV unitaire = Résultat / Volume","MCV unitaire = Volume × Prix","MCV unitaire = Prix de vente HT - Coût variable unitaire"],c:2,e:"La MCV unitaire mesure la marge dégagée par chaque unité vendue."},
+{i:206,a:"4.5",q:"Comment se calcule le seuil de rentabilité (SR) en valeur ?",o:["SR valeur = Charges fixes / Taux de MCV","SR valeur = CA × Taux MCV","SR valeur = MCV - CF"],c:0,e:"Le SR en valeur indique le CA minimal pour atteindre l'équilibre (résultat nul)."},
+{i:207,a:"4.5",q:"Comment se calcule le seuil de rentabilité (SR) en quantité ?",o:["SR quantité = Volume × Prix","SR quantité = Charges fixes / MCV unitaire","SR quantité = CA / Prix"],c:1,e:"Le SR en quantité indique le nombre minimal d'unités à vendre pour ne pas perdre d'argent."},
+{i:208,a:"4.5",q:"Que représente le point mort ?",o:["Le résultat net","Le seuil de rentabilité en valeur","Date à laquelle le seuil de rentabilité est atteint dans l'année"],c:2,e:"Point mort = SR / CA × 360 jours, en supposant une activité uniforme."},
+{i:209,a:"4.5",q:"Comment se calcule la marge de sécurité ?",o:["MS = CA prévisionnel - SR valeur","MS = CA × Taux MCV","MS = CF - CV"],c:0,e:"La marge de sécurité indique combien le CA peut chuter avant de tomber en perte."},
+{i:210,a:"4.5",q:"Comment se calcule l'indice de sécurité ?",o:["IS = SR / CA × 100","IS = MS / CA × 100","IS = CF / CA × 100"],c:1,e:"L'indice de sécurité exprime la marge de sécurité en pourcentage du CA."},
+{i:211,a:"4.5",q:"Comment se calcule le résultat d'exploitation prévisionnel ?",o:["Résultat = SR + MS","Résultat = CA - CV","Résultat = MCV globale - Charges fixes"],c:2,e:"Cette formule simple conclut le compte de résultat différentiel."},
+{i:212,a:"4.5",q:"Si le prix de vente baisse, comment évolue le seuil de rentabilité ?",o:["Le SR augmente (en valeur et en quantité)","Le SR diminue","Le SR reste identique"],c:0,e:"Une baisse de prix réduit la MCV unitaire et le taux de MCV, donc augmente le SR."},
+{i:213,a:"4.5",q:"Si les charges fixes augmentent, comment évolue le seuil de rentabilité ?",o:["Le SR diminue","Le SR augmente","Aucun impact"],c:1,e:"Plus les CF sont élevées, plus il faut générer de MCV pour les couvrir."},
+{i:214,a:"4.5",q:"Une entreprise vend 6 000 unités à 28 € avec un CV unitaire de 12,50 € et 48 000 € de CF. Quelle est sa MCV globale ?",o:["75 000 €","45 000 €","93 000 €"],c:2,e:"MCV globale = (28 - 12,50) × 6 000 = 15,50 × 6 000 = 93 000 €."},
+{i:215,a:"4.5",q:"Avec les mêmes données (PV 28 €, CV unit 12,50 €, CF 48 000 €), quel est le résultat ?",o:["45 000 €","93 000 €","48 000 €"],c:0,e:"Résultat = MCV - CF = 93 000 - 48 000 = 45 000 €."},
+{i:216,a:"4.5",q:"Avec les mêmes données, quel est le SR en quantité ?",o:["6 000 bouteilles","3 097 bouteilles (entier supérieur)","2 000 bouteilles"],c:1,e:"SR quantité = 48 000 / 15,50 = 3 096,77 → arrondi entier sup. : 3 097."},
+{i:217,a:"4.5",q:"Avec les mêmes données, quel est le taux de MCV ?",o:["26,8%","44,64%","55,36%"],c:2,e:"Taux MCV = 93 000 / 168 000 × 100 = 55,36%."},
+{i:218,a:"4.5",q:"Qu'est-ce qu'un budget de trésorerie ?",o:["Prévision mensuelle des encaissements et décaissements","Le bilan annuel","Le compte de résultat"],c:0,e:"Le budget de trésorerie anticipe les besoins ou excédents de cash mois par mois."},
+{i:219,a:"4.5",q:"Que représente le solde mensuel d'un budget de trésorerie ?",o:["CA total mensuel","Encaissements du mois - Décaissements du mois","Résultat net mensuel"],c:1,e:"Le solde mensuel peut être positif (excédent) ou négatif (déficit du mois)."},
+{i:220,a:"4.5",q:"Que représente le solde cumulé d'un budget de trésorerie ?",o:["La trésorerie de l'an dernier","La somme du CA","Solde cumulé du mois précédent + solde mensuel du mois en cours"],c:2,e:"Le solde cumulé indique la trésorerie disponible à la fin de chaque mois."},
+{i:221,a:"4.5",q:"Pourquoi les amortissements ne figurent pas dans un budget de trésorerie ?",o:["Ce ne sont pas des décaissements (charges calculées non monétaires)","Ils sont oubliés volontairement","Ils sont déjà comptés dans le CA"],c:0,e:"L'amortissement est une charge dans le compte de résultat mais ne provoque aucun mouvement bancaire."},
+{i:222,a:"4.5",q:"Comment intègre-t-on un délai de paiement clients de 30 jours dans un budget ?",o:["Aucun délai à appliquer","Les ventes du mois M sont encaissées en M+1","Les ventes sont encaissées en M-1"],c:1,e:"Le délai client crée un décalage entre vente et encaissement, à modéliser."},
+{i:223,a:"4.5",q:"Comment se traite la TVA dans un budget de trésorerie ?",o:["TVA reversée immédiatement","TVA non prise en compte","TVA collectée moins TVA déductible reversée le mois suivant"],c:2,e:"La TVA M est généralement payée en M+1, ce qui crée un décalage à intégrer."},
+{i:224,a:"4.5",q:"Pourquoi un projet rentable peut-il connaître une trésorerie négative ?",o:["À cause du décalage entre encaissements (à 30j) et décaissements (cash + TVA)","Parce qu'il est mal géré","C'est impossible"],c:0,e:"C'est le paradoxe rentabilité/trésorerie : la rentabilité est annuelle, la trésorerie est mensuelle et sensible aux décalages."},
+{i:225,a:"4.5",q:"Quelle solution pour pallier un creux de trésorerie temporaire ?",o:["Augmenter les CF","Ligne de crédit court terme (concours bancaires)","Baisser le prix de vente"],c:1,e:"La ligne de crédit ou le découvert autorisé couvrent les besoins ponctuels."},
+{i:226,a:"4.5",q:"Qu'est-ce que l'effet ciseau (sensibilité au prix) ?",o:["Une hausse de coût stabilise le résultat","Une baisse de prix augmente le résultat","Une baisse de prix provoque une baisse plus que proportionnelle du résultat"],c:2,e:"-1% sur le prix peut entraîner -3% à -5% sur le résultat selon le taux de MCV."},
+{i:227,a:"4.5",q:"Pour 6 000 unités, prix passant de 28 € à 27 € avec CV 12,50 € et CF 48 000, quel est le nouveau résultat ?",o:["39 000 €","45 000 €","30 000 €"],c:0,e:"Nouvelle MCV unit = 14,50, MCV globale = 87 000, Résultat = 87 000 - 48 000 = 39 000 €."},
+{i:228,a:"4.5",q:"Quelle est la finalité de l'analyse en direct costing ?",o:["Calculer le bilan","Évaluer la contribution des ventes à l'absorption des CF et au résultat","Faire la paie"],c:1,e:"Le direct costing met en lumière la marge sur coût variable comme indicateur clé de pilotage."},
+{i:229,a:"4.5",q:"Quelle décision peut-on prendre sur la base d'un calcul de SR ?",o:["Recruter du personnel","Calculer la TVA","Lancer ou non un produit, fixer un objectif commercial minimum"],c:2,e:"Le SR informe la décision stratégique de lancement et le pilotage commercial."},
+{i:230,a:"4.5",q:"Quelle est la formule du coût de revient unitaire ?",o:["Coût d'achat + coût de production + coût de distribution, ramené à l'unité","Prix de vente","CV unitaire"],c:0,e:"Le coût de revient inclut tous les coûts (variables + fixes alloués) supportés pour produire et vendre une unité."},
+{i:231,a:"4.5",q:"Que signifie 'coût marginal' ?",o:["Coût total","Coût supplémentaire pour produire une unité de plus","Coût fixe"],c:1,e:"Le coût marginal est central dans la décision d'accepter une commande supplémentaire à prix réduit."},
+{i:232,a:"4.5",q:"Quelle distinction entre coûts variables et coûts fixes ?",o:["Les CF sont mensuels","Les CV sont plus élevés","Les CV varient avec le volume, les CF non (dans une plage donnée)"],c:2,e:"Cette distinction est la base du direct costing et du calcul du SR."},
+{i:233,a:"4.5",q:"Qu'est-ce qu'un coût semi-variable ?",o:["Coût qui combine une partie fixe et une partie variable (ex. : abonnement avec consommation)","Un coût annuel","Un coût hebdomadaire"],c:0,e:"Le coût semi-variable doit être décomposé pour être correctement intégré au modèle."},
+{i:234,a:"4.5",q:"Comment se traduit graphiquement le seuil de rentabilité ?",o:["La hauteur de la droite des CV","Point d'intersection entre la droite des CT (coûts totaux) et la droite du CA","L'aire sous la courbe"],c:1,e:"Le SR est le point où CA = CT. À gauche : perte. À droite : bénéfice."},
+{i:235,a:"4.5",q:"Que signifie 'seuil de rentabilité différentiel' ?",o:["Méthode du coût marginal","Méthode des coûts complets","Méthode utilisant le compte de résultat différentiel (MCV - CF)"],c:2,e:"L'approche différentielle est la plus utilisée en pilotage opérationnel."},
+{i:236,a:"4.5",q:"Si le coût variable unitaire augmente, comment évolue le SR ?",o:["Le SR augmente (la MCV unitaire baisse)","Le SR diminue","Aucun impact"],c:0,e:"Une hausse des CV unitaires écrase la marge unitaire et augmente mécaniquement le SR."},
+{i:237,a:"4.5",q:"Quelle est l'utilité d'un budget des ventes mensuel ?",o:["Calculer la TVA","Prévoir l'activité, alimenter la production et le budget de trésorerie","Faire la paie"],c:1,e:"Le budget des ventes saisonnalise l'activité et conditionne tous les autres budgets."},
+{i:238,a:"4.5",q:"Que signifie 'saisonnalité' ?",o:["Les vacances scolaires","Le climat économique","Variation systématique de l'activité selon le moment de l'année"],c:2,e:"Pour un produit comme un Génépi, les fêtes de fin d'année concentrent une part importante des ventes."},
+{i:239,a:"4.5",q:"Pour un projet à fort BFR de croissance, que faut-il sécuriser ?",o:["Une ligne de crédit court terme pour passer la phase de montée en puissance","Un nouveau site web","Un déménagement"],c:0,e:"La croissance consomme du cash : il faut anticiper le besoin avant qu'il ne survienne."},
+{i:240,a:"4.5",q:"Que sont les charges directes ?",o:["Charges payées en direct","Charges directement affectables à un produit ou une activité","Charges du dirigeant"],c:1,e:"Les charges directes s'opposent aux charges indirectes, qu'il faut répartir via des clés."},
+{i:241,a:"4.5",q:"Que sont les charges indirectes ?",o:["Charges du fournisseur","Charges payées par chèque","Charges communes à plusieurs produits, à répartir via des clés"],c:2,e:"Exemples : loyer du bâtiment, salaires de l'administration. Elles sont allouées par des unités d'œuvre."},
+{i:242,a:"4.5",q:"Que signifie 'unité d'œuvre' ?",o:["Indicateur de mesure utilisé pour répartir les charges indirectes (heures, m², kg)","Une heure travaillée","Un produit fini"],c:0,e:"L'unité d'œuvre permet d'imputer rationnellement les charges indirectes aux produits."},
+{i:243,a:"4.5",q:"Qu'est-ce qu'un compte de résultat différentiel ?",o:["Le bilan annuel","Présentation du résultat distinguant CV, MCV et CF","Un budget de trésorerie"],c:1,e:"Le CR différentiel facilite l'analyse de la contribution de chaque activité."},
+{i:244,a:"4.5",q:"Quel indicateur exprime le poids des CF dans la structure de coûts ?",o:["CA mensuel","Taux de marge","Levier d'exploitation (CF / CT) ou ratio CF / MCV"],c:2,e:"Plus le levier est élevé, plus la rentabilité est volatile face aux variations de CA."},
+{i:245,a:"4.5",q:"Quel est l'intérêt d'un calcul de seuil par produit dans une PME multi-produits ?",o:["Identifier les produits qui contribuent le mieux à l'absorption des CF","Calculer la TVA","Faire la paie par produit"],c:0,e:"Le SR par produit éclaire les arbitrages de portefeuille (favoriser, abandonner)."},
+{i:246,a:"4.5",q:"Que signifie 'analyse de sensibilité' ?",o:["Une mesure RH","Étude de l'impact d'une variation d'un paramètre (prix, coût, volume) sur le résultat","Une étude qualitative"],c:1,e:"L'analyse de sensibilité aide à anticiper les scenarios défavorables."},
+{i:247,a:"4.5",q:"Quel est l'intérêt d'un budget de trésorerie sur 6 mois plutôt que sur 12 ?",o:["Aucun","Économiser du papier","Gérer plus finement la phase critique de lancement ou de saisonnalité"],c:2,e:"Un horizon court (6 mois) est plus précis et utile en phase de tension de trésorerie."},
+{i:248,a:"4.5",q:"Que désigne le 'coût de production' ?",o:["Coût d'achat des matières + coût de transformation","CA total","Salaire du dirigeant"],c:0,e:"Le coût de production est une étape du calcul du coût de revient."},
+{i:249,a:"4.5",q:"Pourquoi distinguer SR en valeur et SR en quantité ?",o:["Aucune utilité","Le SR valeur sert au pilotage CA, le SR quantité au pilotage de production","Pour faire long"],c:1,e:"Selon le contexte (commercial ou industriel), une seule des deux unités a du sens opérationnel."},
+{i:250,a:"4.5",q:"Quelle est la conséquence d'un SR très élevé par rapport au CA prévisionnel ?",o:["Aucune conséquence","Le projet est très rentable","Le projet est risqué : peu de marge de manœuvre"],c:2,e:"Si SR/CA > 80%, l'indice de sécurité est faible (<20%) : le projet supporte mal une baisse d'activité."},
+  /* === A4.6 (50 questions) === */
+{i:251,a:"4.6",q:"Que représente le bilan fonctionnel ?",o:["Reclassement du bilan comptable selon la fonction des emplois et des ressources","Le compte de résultat retraité","Un tableau de trésorerie"],c:0,e:"Le bilan fonctionnel distingue cycle d'investissement, cycle d'exploitation et cycle de trésorerie."},
+{i:252,a:"4.6",q:"Quels sont les ressources stables d'un bilan fonctionnel ?",o:["Stocks + créances","Capitaux propres + amortissements + dettes financières","Disponibilités + VMP"],c:1,e:"Les ressources stables financent les emplois stables (immobilisations brutes)."},
+{i:253,a:"4.6",q:"Comment se calcule le Fonds de Roulement Net Global (FRNG) ?",o:["FRNG = Stocks + Créances","FRNG = CA - CV","FRNG = Ressources stables - Emplois stables (immobilisations brutes)"],c:2,e:"Le FRNG mesure l'excédent de ressources stables après financement des immobilisations."},
+{i:254,a:"4.6",q:"Comment se calcule le Besoin en Fonds de Roulement (BFR) d'exploitation ?",o:["BFR = Stocks + Créances clients - Dettes fournisseurs (et fiscales/sociales)","BFR = CA × Taux marge","BFR = FRNG - Trésorerie"],c:0,e:"Le BFR mesure le décalage de trésorerie généré par le cycle d'exploitation."},
+{i:255,a:"4.6",q:"Comment se calcule la Trésorerie Nette (TN) ?",o:["TN = CA - Charges","TN = FRNG - BFR","TN = Capitaux propres - Dettes"],c:1,e:"Si FRNG > BFR, la trésorerie est positive. Si FRNG < BFR, l'entreprise utilise du crédit court terme."},
+{i:256,a:"4.6",q:"Que signifie un FRNG positif ?",o:["Le BFR est négatif","L'entreprise est en faillite","Les ressources stables couvrent les emplois stables et dégagent un excédent"],c:2,e:"Un FRNG positif est nécessaire pour financer le BFR sans recours excessif au crédit court terme."},
+{i:257,a:"4.6",q:"Que signifie un BFR négatif ?",o:["Les dettes fournisseurs financent stocks et créances (cas grande distribution)","Une perte d'exploitation","Une faillite imminente"],c:0,e:"Un BFR négatif est typique des activités à rotation rapide avec délais fournisseurs longs (grande distribution)."},
+{i:258,a:"4.6",q:"Que signifie une trésorerie nette négative ?",o:["L'entreprise est rentable","L'entreprise utilise des crédits court terme pour boucler son cycle","Aucun problème particulier"],c:1,e:"Une trésorerie négative chronique est un signal d'alerte fort sur la solvabilité."},
+{i:259,a:"4.6",q:"Que représentent les SIG (Soldes Intermédiaires de Gestion) ?",o:["Un type de provisions","Les SIG bancaires","Cascade d'indicateurs analysant la formation du résultat (marge commerciale, VA, EBE, RE)"],c:2,e:"Les SIG décomposent la formation du résultat pour analyser la performance par étape."},
+{i:260,a:"4.6",q:"Comment se calcule la Valeur Ajoutée (VA) ?",o:["VA = CA + Production stockée - Consommations en provenance des tiers","VA = CA - Salaires","VA = Bénéfice avant impôt"],c:0,e:"La VA mesure la richesse créée par l'entreprise. Elle se répartit entre salaires, État, prêteurs et entreprise."},
+{i:261,a:"4.6",q:"Comment se calcule l'Excédent Brut d'Exploitation (EBE) ?",o:["EBE = CA - Charges totales","EBE = VA + Subventions d'exploitation - Impôts et taxes - Charges de personnel","EBE = Résultat net + Amortissements"],c:1,e:"L'EBE est le résultat de l'exploitation indépendant des amortissements et de la fiscalité."},
+{i:262,a:"4.6",q:"Que mesure l'EBE ?",o:["La trésorerie disponible","Le résultat net","La performance économique brute de l'exploitation, indépendamment du financement et des amortissements"],c:2,e:"L'EBE est l'indicateur central de la performance opérationnelle, comparable entre entreprises."},
+{i:263,a:"4.6",q:"Comment se calcule la Capacité d'AutoFinancement (CAF) à partir de l'EBE ?",o:["CAF = EBE + autres produits encaissables - autres charges décaissables - charges financières - IS","CAF = Bénéfice net","CAF = CA - Charges"],c:0,e:"La CAF par méthode soustractive part de l'EBE et n'intègre que les flux susceptibles de générer un mouvement de trésorerie."},
+{i:264,a:"4.6",q:"Comment se calcule la CAF par méthode additive ?",o:["CAF = Résultat net + IS","CAF = Résultat net + Dotations aux amortissements et provisions - Reprises - PCEA","CAF = EBE - IS"],c:1,e:"La méthode additive part du résultat net et neutralise les charges/produits non décaissables."},
+{i:265,a:"4.6",q:"Que représente la CAF ?",o:["Le chiffre d'affaires","Le bénéfice net","Trésorerie potentielle dégagée par l'activité, avant distribution de dividendes"],c:2,e:"La CAF mesure la capacité à autofinancer les investissements et rembourser les emprunts."},
+{i:266,a:"4.6",q:"À quoi sert l'autofinancement ?",o:["Financer les investissements et rembourser les emprunts sans recours externe","Distribuer des dividendes","Payer les salaires"],c:0,e:"Autofinancement = CAF - Dividendes versés. C'est la part de cash réellement disponible pour l'entreprise."},
+{i:267,a:"4.6",q:"Que mesure le ratio d'autonomie financière ?",o:["Dettes / CA","Capitaux propres / Total bilan, expression du poids des fonds propres","Bénéfice / CA"],c:1,e:"Un ratio supérieur à 30-40% est généralement considéré comme satisfaisant."},
+{i:268,a:"4.6",q:"Que mesure le ratio d'endettement ?",o:["Résultat / CA","CA / Total bilan","Dettes financières / Capitaux propres, mesure de l'effet de levier"],c:2,e:"Un ratio inférieur à 1 est sain. Au-delà, l'entreprise est très exposée au risque financier."},
+{i:269,a:"4.6",q:"Comment se calcule la rentabilité économique ?",o:["Rentabilité éco = Résultat d'exploitation / Capitaux investis","Bénéfice / CA","CA / Effectif"],c:0,e:"La rentabilité économique mesure l'efficacité du capital employé indépendamment du mode de financement."},
+{i:270,a:"4.6",q:"Comment se calcule la rentabilité financière ?",o:["Résultat / CA","Rentabilité fin = Résultat net / Capitaux propres","Bénéfice / Effectif"],c:1,e:"La rentabilité financière mesure le rendement pour les actionnaires."},
+{i:271,a:"4.6",q:"Quel est l'effet de levier financier ?",o:["Un emprunt à taux variable","Une dette excessive","Mécanisme par lequel l'endettement augmente la rentabilité financière (si rentabilité éco > coût de la dette)"],c:2,e:"L'effet de levier joue positivement tant que la rentabilité éco dépasse le coût après impôt de la dette."},
+{i:272,a:"4.6",q:"Qu'est-ce qu'un plan de financement ?",o:["Tableau prévisionnel équilibrant emplois (investissements, BFR, dividendes) et ressources (CAF, emprunts, augmentation de capital)","Un budget mensuel","Le compte de résultat"],c:0,e:"Le plan de financement vise à valider la faisabilité financière d'un projet pluriannuel."},
+{i:273,a:"4.6",q:"Sur combien d'années construit-on généralement un plan de financement ?",o:["1 mois","3 à 5 ans","20 ans"],c:1,e:"3 à 5 ans est l'horizon usuel pour suivre un investissement et son retour."},
+{i:274,a:"4.6",q:"Quels sont les emplois principaux d'un plan de financement ?",o:["Loyers","Salaires uniquement","Investissements, variations de BFR, remboursements d'emprunts, dividendes"],c:2,e:"Ces postes consomment du cash et doivent être couverts par les ressources prévues."},
+{i:275,a:"4.6",q:"Quelles sont les ressources principales d'un plan de financement ?",o:["CAF prévisionnelles, nouveaux emprunts, augmentations de capital, subventions","CA","Charges variables"],c:0,e:"Les ressources doivent couvrir les emplois et dégager un solde positif chaque année."},
+{i:276,a:"4.6",q:"Que signifie la VAN (Valeur Actuelle Nette) ?",o:["Valeur d'achat nette","Somme des flux de trésorerie futurs actualisés à un taux donné, moins l'investissement initial","Valeur ajoutée nationale"],c:1,e:"Si VAN > 0, le projet est rentable au taux d'actualisation retenu."},
+{i:277,a:"4.6",q:"Quelle décision prendre face à deux projets ayant des VAN différentes ?",o:["Choisir le moins cher","Choisir au hasard","Choisir le projet à VAN la plus élevée"],c:2,e:"À risque comparable, on retient la VAN maximale qui maximise la création de valeur."},
+{i:278,a:"4.6",q:"Que signifie le taux d'actualisation ?",o:["Taux exprimant la préférence pour le présent (1 € aujourd'hui > 1 € demain)","Taux d'inflation","Taux de TVA"],c:0,e:"Le taux d'actualisation correspond souvent au coût moyen pondéré du capital (CMPC)."},
+{i:279,a:"4.6",q:"Que représente le délai de récupération (payback) ?",o:["Durée du contrat de travail","Durée nécessaire pour récupérer l'investissement initial via les flux générés","Délai de garantie"],c:1,e:"Le payback est un critère de risque (plus court = moins risqué) mais ne mesure pas la rentabilité globale."},
+{i:280,a:"4.6",q:"Que mesure le TIR (Taux Interne de Rentabilité) ?",o:["Le taux d'imposition","Le taux de TVA","Taux d'actualisation qui annule la VAN"],c:2,e:"Si TIR > coût du capital, le projet est rentable."},
+{i:281,a:"4.6",q:"Comment se calcule le délai moyen de paiement clients (en jours) ?",o:["(Créances clients TTC / CA TTC) × 360","CA / Créances","Créances × 360"],c:0,e:"Plus le délai est long, plus le BFR est élevé. À comparer aux conditions négociées."},
+{i:282,a:"4.6",q:"Comment se calcule le délai moyen de paiement fournisseurs ?",o:["CA × 360","(Dettes fournisseurs TTC / Achats TTC) × 360","Achats / Dettes"],c:1,e:"Plus le délai fournisseurs est long, plus le BFR est faible (ressource gratuite)."},
+{i:283,a:"4.6",q:"Comment se calcule la rotation des stocks ?",o:["CA / Stocks","Stocks × CA","(Stock moyen / Coût d'achat des marchandises vendues) × 360"],c:2,e:"Plus la rotation est rapide, moins le stock est immobilisé et coûteux."},
+{i:284,a:"4.6",q:"Que signifie 'covenant bancaire' ?",o:["Engagement contractuel imposant le respect de ratios financiers durant un emprunt","Une garantie immobilière","Une assurance-crédit"],c:0,e:"Le non-respect des covenants peut déclencher l'exigibilité immédiate de la dette."},
+{i:285,a:"4.6",q:"Quel principe veut qu'un investissement long soit financé par une ressource longue ?",o:["Le principe de précaution","Le principe de l'équilibre financier","Le principe de proportionnalité"],c:1,e:"Cet équilibre est la condition d'un FRNG positif et d'une trésorerie saine."},
+{i:286,a:"4.6",q:"Que sont les amortissements en analyse financière ?",o:["Dépenses de R&D","Remboursements d'emprunt","Charges calculées non décaissables, traduisant la consommation des immobilisations"],c:2,e:"Les amortissements réduisent le résultat mais ne sont pas un décaissement."},
+{i:287,a:"4.6",q:"Pourquoi un crédit-bail (CB) modifie-t-il le bilan retraité ?",o:["Les biens en CB sont retraités en immobilisations + dette financière équivalente","Pas d'impact","Le CB est gratuit"],c:0,e:"Le retraitement du CB en analyse financière permet la comparaison avec une entreprise qui aurait emprunté."},
+{i:288,a:"4.6",q:"Qu'est-ce que la marge brute ?",o:["Bénéfice net","CA - Coûts des marchandises ou matières directes","CA - Charges totales"],c:1,e:"La marge brute (ou marge commerciale en négoce) mesure le surplus brut sur les achats."},
+{i:289,a:"4.6",q:"Quelle est la principale limite de la CAF comme indicateur ?",o:["Elle est calculée annuellement","Elle est trop précise","Elle représente une trésorerie potentielle, pas une trésorerie effectivement disponible"],c:2,e:"La CAF ignore les décalages BFR. Une CAF élevée n'implique pas une trésorerie positive."},
+{i:290,a:"4.6",q:"Que signifie 'analyse en évolution' ?",o:["Comparaison des indicateurs sur plusieurs exercices pour repérer les tendances","Analyse à un instant T","Analyse sectorielle"],c:0,e:"L'analyse en évolution complète l'analyse en niveau et révèle la dynamique de l'entreprise."},
+{i:291,a:"4.6",q:"Que signifie 'benchmarking sectoriel' ?",o:["Une étude clientèle","Comparaison des ratios de l'entreprise à ceux du secteur ou de concurrents","Un audit interne"],c:1,e:"Le benchmark replace les ratios dans un contexte sectoriel (ex. : marges plus faibles en distribution qu'en luxe)."},
+{i:292,a:"4.6",q:"Que désigne le 'point d'équilibre financier' ?",o:["Capitaux propres = 0","CA = SR","Niveau d'activité ou de structure permettant FRNG ≥ BFR"],c:2,e:"L'équilibre financier suppose un FRNG suffisant pour absorber le BFR sans recours abusif au court terme."},
+{i:293,a:"4.6",q:"Comment réduire le BFR d'exploitation ?",o:["Raccourcir les délais clients, allonger les délais fournisseurs, accélérer la rotation des stocks","Augmenter les CF","Distribuer plus de dividendes"],c:0,e:"Ces trois leviers réduisent l'immobilisation de cash dans le cycle d'exploitation."},
+{i:294,a:"4.6",q:"Qu'est-ce que l'affacturage (factoring) ?",o:["Une assurance","Cession des créances clients à une société financière qui en avance le montant","Un prêt long terme"],c:1,e:"L'affacturage améliore la trésorerie en réduisant le délai d'encaissement effectif."},
+{i:295,a:"4.6",q:"Que signifie 'BFR de croissance' ?",o:["Une provision","Une dette à long terme","Augmentation du BFR liée à la croissance de l'activité (à financer)"],c:2,e:"La croissance consomme du cash : il faut anticiper le besoin avant qu'il ne survienne."},
+{i:296,a:"4.6",q:"Quelle est la finalité du diagnostic financier ?",o:["Évaluer la solvabilité, la rentabilité et la liquidité de l'entreprise pour éclairer les décisions","Calculer la TVA","Faire la paie"],c:0,e:"Le diagnostic financier alimente la stratégie, le plan d'investissement et les négociations bancaires."},
+{i:297,a:"4.6",q:"Quel ratio mesure la liquidité générale ?",o:["Capitaux propres / Total bilan","Actif circulant / Dettes court terme","Résultat / CA"],c:1,e:"Un ratio supérieur à 1 indique que l'actif circulant couvre les dettes court terme."},
+{i:298,a:"4.6",q:"Quel ratio est dit 'de liquidité réduite' ?",o:["CA / Stocks","Stocks / CA","(Créances + Disponibilités) / Dettes court terme"],c:2,e:"Ce ratio exclut les stocks (moins liquides). Un seuil de 0,8 à 1 est considéré comme satisfaisant."},
+{i:299,a:"4.6",q:"Pourquoi recourir à l'emprunt plutôt qu'au crédit-bail pour un investissement productif ?",o:["L'emprunt confère la propriété et peut générer une VAN supérieure malgré l'intérêt","Le crédit-bail est toujours plus cher","L'emprunt est gratuit"],c:0,e:"Le choix dépend de la fiscalité, de la VAN comparée et de la flexibilité souhaitée."},
+{i:300,a:"4.6",q:"Que recommande un diagnostic financier face à une PME en projet d'export ?",o:["Distribuer plus de dividendes","Sécuriser le BFR additionnel et la couverture du change avant lancement","Réduire les fonds propres"],c:1,e:"L'export augmente le BFR (délais clients étrangers) et expose au risque de change."},
+  /* === A4.7 (50 questions) === */
+{i:301,a:"4.7",q:"Qu'est-ce qu'un tableau de bord (TDB) ?",o:["Le bilan annuel","Un meuble de bureau","Outil de pilotage regroupant des indicateurs clés pour suivre une activité et décider"],c:2,e:"Le TDB synthétise l'information utile pour le décideur, à fréquence régulière."},
+{i:302,a:"4.7",q:"Que signifie l'acronyme KPI ?",o:["Key Performance Indicator (indicateur clé de performance)","Kit Pratique d'Information","Kanal de Pilotage Interne"],c:0,e:"Un KPI mesure le degré d'atteinte d'un objectif stratégique ou opérationnel."},
+{i:303,a:"4.7",q:"Quelle est la différence entre un indicateur et un KPI ?",o:["Aucune","Tout KPI est un indicateur, mais tous les indicateurs ne sont pas stratégiques","Le KPI est plus simple"],c:1,e:"Le KPI est sélectionné parmi de nombreux indicateurs disponibles, pour son lien direct à un objectif clé."},
+{i:304,a:"4.7",q:"Quel est le critère SMART d'un indicateur ?",o:["Synthétique, Mature, Approuvé, Récurrent, Tarifé","Stratégique, Mensuel, Audité, Reporté, Transparent","Spécifique, Mesurable, Atteignable, Réaliste, Temporel"],c:2,e:"Le critère SMART garantit qu'un objectif (et son indicateur) est exploitable."},
+{i:305,a:"4.7",q:"Quelle distinction entre indicateurs avancés et retardés ?",o:["Avancés (lead) anticipent une tendance, retardés (lag) constatent un résultat","Avancés sont moins fiables","Aucune différence"],c:0,e:"Les indicateurs avancés (NPS, lead générés) anticipent. Les indicateurs retardés (CA, marge) constatent."},
+{i:306,a:"4.7",q:"Quel type d'indicateur convient pour piloter le commerce ?",o:["Bilan annuel","Avancé (leads, devis, taux de transformation)","TVA collectée"],c:1,e:"Les indicateurs avancés permettent d'agir avant que la baisse de CA ne se constate."},
+{i:307,a:"4.7",q:"Combien de KPI maximum sur un tableau de bord opérationnel efficace ?",o:["Aucune limite","50 KPI","5 à 10 KPI"],c:2,e:"Au-delà de 10 KPI, le TDB perd sa lisibilité. Mieux vaut concentrer l'attention sur l'essentiel."},
+{i:308,a:"4.7",q:"Quel est l'objectif principal d'un TDB stratégique ?",o:["Suivre la mise en œuvre de la stratégie sur le moyen et long terme","Calculer la paie","Saisir les commandes"],c:0,e:"Le TDB stratégique alimente le comité de direction. Il diffère du TDB opérationnel par son horizon et son contenu."},
+{i:309,a:"4.7",q:"Quelle est la fréquence usuelle d'un TDB opérationnel ?",o:["Annuelle","Hebdomadaire ou mensuelle","Tous les 5 ans"],c:1,e:"L'opérationnel exige une réactivité courte. La fréquence varie selon l'activité (quotidienne en e-commerce, mensuelle en industrie classique)."},
+{i:310,a:"4.7",q:"Qu'est-ce qu'un objectif chiffré dans un TDB ?",o:["Une moyenne sectorielle","Le résultat de l'an passé","Valeur cible à atteindre, comparée à la valeur réalisée"],c:2,e:"Sans objectif, l'indicateur ne dit rien. Le TDB compare le réalisé à l'objectif."},
+{i:311,a:"4.7",q:"Que signifie 'écart' dans un tableau de bord ?",o:["Différence entre la valeur réalisée et l'objectif (en valeur absolue ou relative)","Une absence","Un retard de paiement"],c:0,e:"L'analyse des écarts est le cœur du contrôle de gestion : pourquoi la valeur s'écarte-t-elle de l'objectif ?"},
+{i:312,a:"4.7",q:"Comment se calcule l'écart relatif ?",o:["Réalisé - Objectif","(Réalisé - Objectif) / Objectif × 100","Réalisé / Objectif"],c:1,e:"L'écart relatif (en %) facilite la comparaison entre indicateurs de natures différentes."},
+{i:313,a:"4.7",q:"Quel code couleur est usuel pour visualiser l'atteinte d'un objectif ?",o:["Aucun","Bleu/Jaune","Vert (ok), Orange (alerte), Rouge (problème)"],c:2,e:"Ce code-feu (RAG = Red/Amber/Green) est universellement compris et facilite la lecture rapide."},
+{i:314,a:"4.7",q:"Qu'est-ce qu'une 'alerte' dans un TDB automatisé ?",o:["Notification déclenchée quand un indicateur franchit un seuil critique","Une alarme incendie","Un message commercial"],c:0,e:"Les alertes (mail, push, surlignage) accélèrent la prise de décision face aux dérives."},
+{i:315,a:"4.7",q:"Qu'est-ce qu'un seuil dans un TDB ?",o:["Le minimum d'activité","Valeur déclenchant un changement de couleur ou une alerte","Le maximum de TVA"],c:1,e:"Les seuils sont définis en amont, en cohérence avec les objectifs et la tolérance acceptée."},
+{i:316,a:"4.7",q:"Quel logiciel est le plus utilisé en PME pour construire un TDB ?",o:["Photoshop","Word","Excel ou Google Sheets"],c:2,e:"Les tableurs offrent flexibilité et puissance pour les TDB classiques. Les solutions BI prennent le relais sur les volumes importants."},
+{i:317,a:"4.7",q:"À quoi sert la fonction RECHERCHEV (ou RECHERCHEX) sous Excel ?",o:["Récupérer une valeur dans un tableau à partir d'une clé de recherche","Calculer une moyenne","Imprimer un document"],c:0,e:"Cette fonction est centrale pour croiser les données entre plusieurs onglets."},
+{i:318,a:"4.7",q:"À quoi sert un tableau croisé dynamique (TCD) ?",o:["Appliquer un thème graphique","Synthétiser et regrouper des données par dimensions choisies sans formule complexe","Imprimer en couleur"],c:1,e:"Le TCD est l'outil le plus puissant d'Excel pour explorer des données massives."},
+{i:319,a:"4.7",q:"À quoi sert la mise en forme conditionnelle ?",o:["Verrouiller une cellule","Imprimer en couleur","Appliquer automatiquement un style selon la valeur d'une cellule (couleur, icône, barre)"],c:2,e:"La MFC matérialise le code-feu (vert/orange/rouge) sans saisie manuelle."},
+{i:320,a:"4.7",q:"À quoi servent les graphiques sparkline dans un TDB ?",o:["Afficher une mini-tendance dans une cellule sans surcharger le TDB","Imprimer des QR codes","Insérer des photos"],c:0,e:"Le sparkline donne le sens (tendance) en un coup d'œil, sans graphique séparé."},
+{i:321,a:"4.7",q:"Quel graphique convient pour comparer la part de plusieurs catégories ?",o:["La courbe","Le diagramme en secteurs (camembert) ou en barres empilées","Le nuage de points"],c:1,e:"Le camembert convient si peu de catégories (3-5 max). Au-delà, préférer les barres."},
+{i:322,a:"4.7",q:"Quel graphique convient pour visualiser une évolution dans le temps ?",o:["L'histogramme","Le camembert","La courbe linéaire"],c:2,e:"La courbe est la représentation naturelle des séries temporelles."},
+{i:323,a:"4.7",q:"Qu'est-ce qu'un 'reporting' ?",o:["Document périodique synthétisant la performance et les indicateurs","Un audit légal","Un sondage"],c:0,e:"Le reporting est la traduction écrite et commentée du TDB pour la hiérarchie ou les actionnaires."},
+{i:324,a:"4.7",q:"Quelle différence entre TDB et reporting ?",o:["Aucune","Le TDB est un outil interactif, le reporting un document figé à un instant","Le TDB est annuel"],c:1,e:"Le TDB sert à piloter, le reporting à rendre compte. Les deux sont complémentaires."},
+{i:325,a:"4.7",q:"Que signifie 'commentaire qualitatif' dans un reporting ?",o:["Un témoignage client","Une publicité","Texte expliquant les écarts, les causes et les actions correctives"],c:2,e:"Le commentaire qualitatif transforme les chiffres en narration intelligible et actionnable."},
+{i:326,a:"4.7",q:"Quelle structure simple pour un reporting mensuel ?",o:["Synthèse, KPI commentés, écarts vs objectif, actions à mener","Long discours","Une simple liste de chiffres"],c:0,e:"Cette structure (top-down) priorise l'information utile et facilite la lecture par le décideur."},
+{i:327,a:"4.7",q:"Que signifie 'drill-down' dans un TDB ?",o:["Une fonction de tri","Zoom progressif d'un indicateur agrégé vers son détail (région → ville → magasin)","Un tableau croisé"],c:1,e:"Le drill-down permet d'investiguer la source d'un écart sans changer d'outil."},
+{i:328,a:"4.7",q:"Quels sont les indicateurs typiques d'un TDB commercial ?",o:["Salaires, charges sociales","Effectif, rotation des stocks, TVA","CA, taux de conversion, panier moyen, NPS, nombre de leads"],c:2,e:"Les KPI commerciaux suivent le tunnel de vente du contact à la fidélisation."},
+{i:329,a:"4.7",q:"Quels sont les indicateurs typiques d'un TDB financier ?",o:["CA, marge, EBE, BFR, trésorerie nette, ratios","Taux d'absentéisme","Note Google"],c:0,e:"Le TDB financier suit la performance économique, la solvabilité et la liquidité."},
+{i:330,a:"4.7",q:"Quels indicateurs typiques pour un TDB RH ?",o:["CA","Effectif, absentéisme, turn-over, accidents du travail, climat social","Marge brute"],c:1,e:"Le TDB RH suit la santé de l'organisation au plan humain."},
+{i:331,a:"4.7",q:"Que signifie 'dashboarding' ?",o:["Une discipline sportive","Décoration de bureau","Pratique de conception et d'usage de tableaux de bord visuels"],c:2,e:"Le dashboarding combine analyse de besoin, choix de KPI et design visuel."},
+{i:332,a:"4.7",q:"Quels outils BI sont alternatives au tableur pour de gros volumes ?",o:["Power BI, Tableau, Looker, Qlik","Word, PowerPoint","Photoshop"],c:0,e:"Les outils BI traitent des volumes massifs et automatisent les rafraîchissements."},
+{i:333,a:"4.7",q:"Que signifie 'data visualisation' (dataviz) ?",o:["Stockage de données","Représentation graphique de données pour faciliter leur lecture","Saisie de données"],c:1,e:"Une bonne dataviz raccourcit le temps de compréhension et limite les biais d'interprétation."},
+{i:334,a:"4.7",q:"Quel principe de design veut un graphique épuré et sans surcharge ?",o:["Le principe d'Ishikawa","Le principe de Pareto","Le principe du data-ink ratio (Tufte) : maximiser l'encre dédiée à l'information"],c:2,e:"Edward Tufte a posé les bases de la dataviz moderne en plaidant pour la sobriété visuelle."},
+{i:335,a:"4.7",q:"Quel est le piège des graphiques 3D ?",o:["Ils déforment la lecture des proportions","Ils sont gratuits","Ils sont obligatoires"],c:0,e:"La 3D ajoute du décor sans information et fausse la perception : à éviter."},
+{i:336,a:"4.7",q:"Que signifie 'plan d'action' associé à un TDB ?",o:["Un plan touristique","Liste d'actions correctives à mener pour résorber les écarts identifiés","Un plan d'évacuation"],c:1,e:"Le TDB n'a de sens que s'il déclenche des actions. Sinon, c'est un simple constat."},
+{i:337,a:"4.7",q:"Quelle structure pour un plan d'action efficace ?",o:["Un long discours","Une simple liste de bonnes intentions","Action, responsable, échéance, indicateur de suivi"],c:2,e:"Cette structure (qui fait quoi pour quand et comment on mesure) garantit le suivi."},
+{i:338,a:"4.7",q:"Que signifie 'KPI process' ?",o:["Indicateur mesurant l'efficacité d'un processus (taux d'erreur, lead time, taux de service)","Un indicateur RH","Un indicateur fiscal"],c:0,e:"Les KPI process complètent les KPI résultat en suivant la qualité du fonctionnement."},
+{i:339,a:"4.7",q:"Que signifie 'taux de service client' ?",o:["Le taux d'absentéisme","Pourcentage de commandes livrées dans les délais et conformes","Le taux de TVA"],c:1,e:"Le taux de service est central en logistique. Une norme courante : > 98% en BtoB."},
+{i:340,a:"4.7",q:"Que signifie 'lead time' dans un TDB logistique ?",o:["Le délai de paiement","Le temps de pause","Délai entre la commande et la livraison"],c:2,e:"Le lead time conditionne la satisfaction client et le BFR."},
+{i:341,a:"4.7",q:"Que mesure le taux d'absentéisme ?",o:["Heures d'absence / Heures théoriques × 100","Heures supplémentaires","Productivité par salarié"],c:0,e:"Un taux supérieur à 5-7% signale un problème de climat social ou d'organisation."},
+{i:342,a:"4.7",q:"Que mesure le turn-over ?",o:["CA généré","Nombre de départs / Effectif moyen × 100","Productivité"],c:1,e:"Un turn-over élevé révèle souvent des problèmes d'engagement, de management ou de rémunération."},
+{i:343,a:"4.7",q:"Quelle pratique fiabilise un TDB sur la durée ?",o:["Refaire à zéro chaque mois","Garder le savoir secret","Documenter les sources, les formules et les définitions des indicateurs"],c:2,e:"Sans documentation, un TDB devient incompréhensible quand son créateur quitte l'entreprise."},
+{i:344,a:"4.7",q:"Pourquoi versionner un TDB Excel ?",o:["Permettre de revenir en arrière, retracer les évolutions et les corrections","Faire jolie","Économiser la mémoire"],c:0,e:"Le versionnage (manuel ou via OneDrive/SharePoint) sécurise les modifications."},
+{i:345,a:"4.7",q:"Que signifie 'automatiser un TDB' ?",o:["L'imprimer en couleur","Mettre en place des liaisons et des actualisations automatiques avec les sources de données","Le faire à la main rapidement"],c:1,e:"L'automatisation réduit les erreurs de saisie et libère du temps d'analyse."},
+{i:346,a:"4.7",q:"Quelle fonction Excel calcule un total conditionnel ?",o:["SI","MOYENNE","SOMME.SI ou SOMME.SI.ENS"],c:2,e:"SOMME.SI(plage; critère; plage_somme) totalise selon une condition. SOMME.SI.ENS gère plusieurs critères."},
+{i:347,a:"4.7",q:"Quelle fonction Excel renvoie une valeur selon une condition ?",o:["SI(test; valeur_si_vrai; valeur_si_faux)","SOMME","NB"],c:0,e:"SI permet de matérialiser des règles métier dans le tableur."},
+{i:348,a:"4.7",q:"Que signifie une cellule contenant '#REF!' ou '#N/A' ?",o:["Une cellule vide","Erreur de référence ou de recherche, à corriger","Un nombre négatif"],c:1,e:"Ces erreurs signalent un dysfonctionnement (référence supprimée, valeur introuvable) à diagnostiquer."},
+{i:349,a:"4.7",q:"Pourquoi protéger un classeur Excel partagé ?",o:["Empêcher l'impression","Faire payer l'accès","Préserver l'intégrité des formules face aux saisies multiples"],c:2,e:"La protection limite la modification aux cellules dédiées à la saisie, et préserve les calculs."},
+{i:350,a:"4.7",q:"Quelle est la finalité ultime d'un tableau de bord ?",o:["Aider à la prise de décision pour atteindre les objectifs de l'entreprise","Faire joli","Justifier les heures du contrôleur"],c:0,e:"Un TDB qui ne déclenche aucune décision n'a aucune utilité opérationnelle."},
+];
+
+let etudiant = { nom: '', prenom: '', classe: '' };
+let modeChoisi = null;
+let activiteChoisie = null;
+let questionsActives = [];
+let reponses = {};
+let timerInterval = null;
+let timerSeconds = 0;
+
+/* === Init === */
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('cadp-gpme-id');
+  if (saved) {
+    etudiant = JSON.parse(saved);
+    document.getElementById('id-nom').value = etudiant.nom;
+    document.getElementById('id-prenom').value = etudiant.prenom;
+  }
+  document.getElementById('btn-id-valid').addEventListener('click', validerIdentification);
+  document.querySelectorAll('.mode-card').forEach(card => {
+    card.addEventListener('click', () => choisirMode(card.dataset.mode));
+  });
+  document.getElementById('btn-start').addEventListener('click', demarrerQuiz);
+  document.getElementById('btn-submit').addEventListener('click', terminerQuiz);
+  document.getElementById('btn-quit').addEventListener('click', () => {
+    if (confirm("Quitter le quiz ? Tes réponses ne seront pas enregistrées.")) retourAccueil();
+  });
+
+  initActivityGrid();
+  afficherHistorique();
+  document.getElementById('intro-total-q').textContent = QUESTIONS.length + ' questions';
+
+  if (etudiant.nom) {
+    document.getElementById('header-name').textContent = etudiant.prenom + ' ' + etudiant.nom;
+    document.getElementById('modal-id').style.display = 'none';
+  }
+});
+
+function validerIdentification() {
+  const nom = document.getElementById('id-nom').value.trim();
+  const prenom = document.getElementById('id-prenom').value.trim();
+  if (!nom || !prenom) { alert("Renseigne ton nom et ton prénom."); return; }
+  etudiant = { nom: nom.toUpperCase(), prenom: prenom, classe: 'BTS GPME 2A - Promo 2426' };
+  localStorage.setItem('cadp-gpme-id', JSON.stringify(etudiant));
+  document.getElementById('header-name').textContent = etudiant.prenom + ' ' + etudiant.nom;
+  document.getElementById('modal-id').style.display = 'none';
+}
+
+function initActivityGrid() {
+  const grid = document.getElementById('activity-grid');
+  Object.keys(ACTIVITES).forEach(code => {
+    const act = ACTIVITES[code];
+    const count = QUESTIONS.filter(q => q.a === code).length;
+    const btn = document.createElement('div');
+    btn.className = 'activity-btn';
+    btn.dataset.activity = code;
+    btn.innerHTML = '<span class="act-code">' + act.code + '</span><span class="act-label">' + act.label + '</span><span class="act-count">' + count + ' questions disponibles</span>';
+    btn.addEventListener('click', () => choisirActivite(code));
+    grid.appendChild(btn);
+  });
+}
+
+function choisirMode(mode) {
+  modeChoisi = mode;
+  document.querySelectorAll('.mode-card').forEach(c => c.classList.toggle('selected', c.dataset.mode === mode));
+  document.getElementById('bloc-thematique').classList.toggle('hidden', mode !== 'thematique');
+
+  if (mode === 'thematique') {
+    activiteChoisie = null;
+    document.querySelectorAll('.activity-btn').forEach(b => b.classList.remove('selected'));
+    document.getElementById('start-section').style.display = 'none';
+  } else {
+    activiteChoisie = null;
+    afficherStartSection();
+  }
+}
+
+function choisirActivite(code) {
+  activiteChoisie = code;
+  document.querySelectorAll('.activity-btn').forEach(b => b.classList.toggle('selected', b.dataset.activity === code));
+  afficherStartSection();
+}
+
+function afficherStartSection() {
+  const ss = document.getElementById('start-section');
+  const cs = document.getElementById('config-summary');
+  ss.style.display = 'block';
+  if (modeChoisi === 'thematique' && activiteChoisie) {
+    cs.innerHTML = '<strong>Mode thématique - ' + ACTIVITES[activiteChoisie].code + '</strong><br>30 questions sur ' + ACTIVITES[activiteChoisie].label + ', dans un ordre aléatoire.';
+  } else if (modeChoisi === 'mixte') {
+    cs.innerHTML = '<strong>Mode mixte</strong><br>50 questions tirées au sort sur les 7 activités, mélangées.';
+  } else if (modeChoisi === 'examen') {
+    cs.innerHTML = '<strong>Mode examen blanc</strong><br>70 questions (10 par activité), chronométrées 60 minutes. Score final consolidé.';
+  } else if (modeChoisi === 'thematique' && !activiteChoisie) {
+    ss.style.display = 'none';
+  }
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function demarrerQuiz() {
+  if (modeChoisi === 'thematique') {
+    if (!activiteChoisie) { alert("Choisis une activité."); return; }
+    const pool = QUESTIONS.filter(q => q.a === activiteChoisie);
+    questionsActives = shuffle(pool).slice(0, Math.min(30, pool.length));
+  } else if (modeChoisi === 'mixte') {
+    questionsActives = shuffle(QUESTIONS).slice(0, Math.min(50, QUESTIONS.length));
+  } else if (modeChoisi === 'examen') {
+    questionsActives = [];
+    Object.keys(ACTIVITES).forEach(code => {
+      const pool = QUESTIONS.filter(q => q.a === code);
+      const tirage = shuffle(pool).slice(0, Math.min(10, pool.length));
+      questionsActives = questionsActives.concat(tirage);
+    });
+    questionsActives = shuffle(questionsActives);
+  }
+  reponses = {};
+  document.getElementById('ecran-accueil').classList.add('hidden');
+  document.getElementById('ecran-quiz').classList.remove('hidden');
+  document.getElementById('ecran-resultats').classList.add('hidden');
+  if (modeChoisi === 'examen') demarrerTimer(60 * 60);
+  afficherQuestions();
+}
+
+function demarrerTimer(secondes) {
+  timerSeconds = secondes;
+  const display = document.getElementById('timer-display');
+  display.classList.add('shown');
+  const update = () => {
+    const m = Math.floor(timerSeconds / 60);
+    const s = timerSeconds % 60;
+    display.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+    display.classList.toggle('warning', timerSeconds <= 600 && timerSeconds > 60);
+    display.classList.toggle('critical', timerSeconds <= 60);
+    if (timerSeconds <= 0) { clearInterval(timerInterval); terminerQuiz(); return; }
+    timerSeconds--;
+  };
+  update();
+  timerInterval = setInterval(update, 1000);
+}
+
+function arreterTimer() {
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  document.getElementById('timer-display').classList.remove('shown', 'warning', 'critical');
+}
+
+function afficherQuestions() {
+  const cont = document.getElementById('quiz-questions');
+  cont.innerHTML = '';
+  questionsActives.forEach((q, idx) => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    let html = '<div class="question-meta"><span class="q-num">Question ' + (idx + 1) + ' / ' + questionsActives.length + '</span><span class="q-act">' + ACTIVITES[q.a].code + '</span></div>';
+    html += '<div class="question-stem">' + q.q + '</div>';
+    html += '<div class="question-options">';
+    q.o.forEach((opt, i) => {
+      html += '<label class="q-option" data-q="' + idx + '" data-opt="' + i + '"><input type="radio" name="q' + idx + '" value="' + i + '"><span>' + opt + '</span></label>';
+    });
+    html += '</div>';
+    card.innerHTML = html;
+    cont.appendChild(card);
+    card.querySelectorAll('.q-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const qi = parseInt(opt.dataset.q);
+        const oi = parseInt(opt.dataset.opt);
+        reponses[qi] = oi;
+        card.querySelectorAll('.q-option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        const radio = opt.querySelector('input');
+        if (radio) radio.checked = true;
+        majProgression();
+      });
+    });
+  });
+  majProgression();
+}
+
+function majProgression() {
+  const total = questionsActives.length;
+  const repondues = Object.keys(reponses).length;
+  const pct = total > 0 ? (repondues / total) * 100 : 0;
+  document.getElementById('quiz-progress-fill').style.width = pct + '%';
+}
+
+function terminerQuiz() {
+  arreterTimer();
+  let bonnes = 0;
+  const parActivite = {};
+  Object.keys(ACTIVITES).forEach(c => parActivite[c] = { bonnes: 0, total: 0 });
+
+  questionsActives.forEach((q, idx) => {
+    parActivite[q.a].total++;
+    const reponse = reponses[idx];
+    if (reponse !== undefined && reponse === q.c) {
+      bonnes++;
+      parActivite[q.a].bonnes++;
+    }
+  });
+
+  const total = questionsActives.length;
+  const pct = total > 0 ? Math.round((bonnes / total) * 100) : 0;
+
+  document.getElementById('results-score').textContent = bonnes + ' / ' + total;
+  document.getElementById('results-pct').textContent = pct + '% de bonnes réponses';
+
+  const detailDiv = document.getElementById('results-detail');
+  detailDiv.innerHTML = '';
+  Object.keys(parActivite).forEach(c => {
+    const pa = parActivite[c];
+    if (pa.total === 0) return;
+    const cell = document.createElement('div');
+    cell.className = 'results-cell';
+    cell.innerHTML = '<div class="cell-label">' + ACTIVITES[c].code + '</div><div class="cell-value">' + pa.bonnes + ' / ' + pa.total + '</div>';
+    detailDiv.appendChild(cell);
+  });
+
+  const reviewList = document.getElementById('review-list');
+  reviewList.innerHTML = '';
+  questionsActives.forEach((q, idx) => {
+    const reponse = reponses[idx];
+    const correct = reponse === q.c;
+    const div = document.createElement('div');
+    div.className = 'review-q ' + (correct ? 'r-correct' : 'r-incorrect');
+    let html = '<div class="r-stem">[' + ACTIVITES[q.a].code + '] Q' + (idx + 1) + ' - ' + q.q + '</div>';
+    if (reponse === undefined) {
+      html += '<div class="r-given">Tu n\'as pas répondu.</div>';
+      html += '<div class="r-correct-ans">Bonne réponse : ' + q.o[q.c] + '</div>';
+    } else if (correct) {
+      html += '<div class="r-given"><strong>Ta réponse (correcte) :</strong> ' + q.o[reponse] + '</div>';
+    } else {
+      html += '<div class="r-given"><strong>Ta réponse :</strong> ' + q.o[reponse] + '</div>';
+      html += '<div class="r-correct-ans"><strong>Bonne réponse :</strong> ' + q.o[q.c] + '</div>';
+    }
+    if (q.e) html += '<div class="r-explain">' + q.e + '</div>';
+    div.innerHTML = html;
+    reviewList.appendChild(div);
+  });
+
+  enregistrerHistorique({ date: new Date().toLocaleString('fr-FR'), mode: modeChoisi, activite: activiteChoisie, bonnes: bonnes, total: total, pct: pct });
+
+  document.getElementById('ecran-quiz').classList.add('hidden');
+  document.getElementById('ecran-resultats').classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function enregistrerHistorique(entry) {
+  const h = JSON.parse(localStorage.getItem('cadp-gpme-historique-qcm') || '[]');
+  h.unshift(entry);
+  if (h.length > 20) h.length = 20;
+  localStorage.setItem('cadp-gpme-historique-qcm', JSON.stringify(h));
+}
+
+function afficherHistorique() {
+  const h = JSON.parse(localStorage.getItem('cadp-gpme-historique-qcm') || '[]');
+  if (h.length === 0) return;
+  document.getElementById('history-section').style.display = 'block';
+  const tbody = document.getElementById('history-body');
+  tbody.innerHTML = '';
+  h.slice(0, 10).forEach(e => {
+    const tr = document.createElement('tr');
+    let modeLabel = e.mode;
+    if (e.mode === 'thematique' && e.activite) modeLabel = 'Thématique ' + ACTIVITES[e.activite].code;
+    else if (e.mode === 'mixte') modeLabel = 'Mixte';
+    else if (e.mode === 'examen') modeLabel = 'Examen blanc';
+    tr.innerHTML = '<td>' + e.date + '</td><td>' + modeLabel + '</td><td><strong>' + e.bonnes + '/' + e.total + '</strong> (' + e.pct + '%)</td><td>' + e.total + '</td>';
+    tbody.appendChild(tr);
+  });
+}
+
+function retourAccueil() {
+  arreterTimer();
+  document.getElementById('ecran-quiz').classList.add('hidden');
+  document.getElementById('ecran-resultats').classList.add('hidden');
+  document.getElementById('ecran-accueil').classList.remove('hidden');
+  modeChoisi = null;
+  activiteChoisie = null;
+  document.querySelectorAll('.mode-card, .activity-btn').forEach(e => e.classList.remove('selected'));
+  document.getElementById('bloc-thematique').classList.add('hidden');
+  document.getElementById('start-section').style.display = 'none';
+  afficherHistorique();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function genererMailto(e) {
+  e.preventDefault();
+  const score = document.getElementById('results-score').textContent;
+  const pct = document.getElementById('results-pct').textContent;
+  let modeTxt = modeChoisi;
+  if (modeChoisi === 'thematique' && activiteChoisie) modeTxt = 'Thématique - ' + ACTIVITES[activiteChoisie].code;
+  else if (modeChoisi === 'mixte') modeTxt = 'Mixte (toutes activités)';
+  else if (modeChoisi === 'examen') modeTxt = 'Examen blanc (70 Q, chrono 60 min)';
+  const sujet = '[CADP - GPME] Banque QCM - ' + (etudiant.prenom || '?') + ' ' + (etudiant.nom || '?') + ' - ' + modeTxt;
+  let corps = 'Bonjour,\n\nVoici mes résultats sur la banque QCM E6 SFPME.\n\n';
+  corps += '=== Identification ===\n';
+  corps += 'Nom : ' + (etudiant.nom || '-') + '\nPrénom : ' + (etudiant.prenom || '-') + '\nClasse : ' + (etudiant.classe || '-') + '\nDate : ' + new Date().toLocaleString('fr-FR') + '\n\n';
+  corps += '=== Configuration ===\n';
+  corps += 'Mode : ' + modeTxt + '\n\n';
+  corps += '=== Score global ===\n';
+  corps += score + ' (' + pct + ')\n\n';
+  corps += '=== Détail par activité ===\n';
+  document.querySelectorAll('.results-cell').forEach(c => {
+    corps += c.querySelector('.cell-label').textContent + ' : ' + c.querySelector('.cell-value').textContent + '\n';
+  });
+  let erreurs = 0;
+  questionsActives.forEach((q, idx) => { if (reponses[idx] !== q.c) erreurs++; });
+  if (erreurs > 0) {
+    corps += '\n=== Questions à revoir (' + erreurs + ' erreurs) ===\n';
+    questionsActives.forEach((q, idx) => {
+      if (reponses[idx] !== q.c) {
+        corps += '\n[' + ACTIVITES[q.a].code + '] ' + q.q + '\n';
+        corps += 'Bonne réponse : ' + q.o[q.c] + '\n';
+        if (q.e) corps += 'Explication : ' + q.e + '\n';
+      }
+    });
+  }
+  corps += '\n---\nBanque QCM E6 SFPME - BTS GPME 2A - Promo 2426\nCampus Alternance Drôme Provence';
+  const url = 'mailto:kevin.vidard@cadp.pro?subject=' + encodeURIComponent(sujet) + '&body=' + encodeURIComponent(corps);
+  window.location.href = url;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capsule GPME - Communication institutionnelle - CADP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0B1929;--navy-light:#1a2c45;--navy-soft:#243b5c;--or:#C9A84C;--or-light:#d4b76a;--or-soft:#e6d29c;--bg:#f7f4ee;--bg-light:#fdfbf6;--text:#1a1a1a;--text-soft:#4a4a4a;--text-mute:#757575;--border:#d8d2c1;--border-light:#e8e3d4;--success:#2d6b3f;--success-bg:#e8f3eb;--error:#b13a3a;--error-bg:#f9eaea;--warning:#8a5a00;--warning-bg:#fcf3dc;--info:#1f4a7a;--info-bg:#e6eef7;--shadow:0 2px 12px rgba(11,25,41,0.08);--shadow-lg:0 8px 32px rgba(11,25,41,0.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',system-ui,sans-serif;font-size:16px;line-height:1.6;color:var(--text);background:var(--bg);min-height:100vh}
+h1,h2,h3,h4{font-family:'Playfair Display',serif;color:var(--navy);line-height:1.25}
+h1{font-size:2.4rem;font-weight:700}
+h2{font-size:1.85rem;font-weight:600;margin-bottom:1rem}
+h3{font-size:1.4rem;font-weight:600;margin:1.5rem 0 .75rem}
+h4{font-size:1.15rem;font-weight:600;margin:1rem 0 .5rem;color:var(--navy-light)}
+h5{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--navy);margin:.8rem 0 .4rem}
+p{margin-bottom:1rem}
+strong{font-weight:600;color:var(--navy)}
+em{font-style:italic;color:var(--text-soft)}
+header.cadp-header{background:var(--navy);color:var(--bg-light);padding:1.5rem 2rem;border-bottom:4px solid var(--or);box-shadow:var(--shadow);position:sticky;top:0;z-index:100}
+.header-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.brand{display:flex;flex-direction:column}
+.brand-name{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--or);letter-spacing:.5px}
+.brand-tag{font-size:.85rem;color:var(--bg-light);opacity:.8;letter-spacing:.5px;text-transform:uppercase}
+.header-info{display:flex;gap:2rem;font-size:.9rem;color:var(--bg-light)}
+.header-info span{display:flex;flex-direction:column}
+.header-info .label{font-size:.75rem;color:var(--or-soft);text-transform:uppercase;letter-spacing:.5px}
+.modal-overlay{position:fixed;inset:0;background:rgba(11,25,41,.85);display:flex;align-items:center;justify-content:center;z-index:1000;padding:1rem}
+.modal{background:var(--bg-light);max-width:540px;width:100%;border-top:6px solid var(--or);box-shadow:var(--shadow-lg);padding:2rem}
+.modal h2{color:var(--navy);margin-bottom:.5rem}
+.modal p{color:var(--text-soft);margin-bottom:1.5rem}
+.modal-form{display:flex;flex-direction:column;gap:1rem}
+.form-row{display:flex;flex-direction:column;gap:.35rem}
+.form-row label{font-weight:600;font-size:.9rem;color:var(--navy)}
+.form-row input{padding:.7rem .9rem;border:1.5px solid var(--border);background:white;font-family:inherit;font-size:1rem}
+.form-row input:focus{outline:none;border-color:var(--or)}
+.btn-primary{background:var(--navy);color:var(--or);border:2px solid var(--navy);padding:.85rem 1.5rem;font-family:inherit;font-size:1rem;font-weight:600;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;transition:all .2s}
+.btn-primary:hover{background:var(--or);color:var(--navy);border-color:var(--or)}
+.btn-secondary{background:transparent;color:var(--navy);border:2px solid var(--navy);padding:.7rem 1.3rem;font-family:inherit;font-size:.95rem;font-weight:600;cursor:pointer;letter-spacing:.3px;transition:all .2s}
+.btn-secondary:hover{background:var(--navy);color:var(--or)}
+.main-container{max-width:1100px;margin:2rem auto;padding:0 1.5rem}
+.phases-nav{display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem;margin-bottom:2rem;padding:1rem;background:white;border:1px solid var(--border);box-shadow:var(--shadow)}
+.phase-tab{padding:.85rem .5rem;text-align:center;font-size:.85rem;font-weight:600;background:var(--bg);border:1.5px solid var(--border);color:var(--text-soft);cursor:pointer;transition:all .2s}
+.phase-tab.active{background:var(--navy);color:var(--or);border-color:var(--navy)}
+.phase-tab.completed{background:var(--or-soft);color:var(--navy);border-color:var(--or)}
+.phase-tab:hover:not(.active){border-color:var(--or);color:var(--navy)}
+.phase-tab .phase-num{display:block;font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:.2rem}
+.phase-tab .phase-title{display:block;font-size:.78rem;line-height:1.2}
+.phase{display:none;background:white;padding:2.5rem;border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:2rem;animation:fadeIn .4s ease}
+.phase.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.phase-header{border-bottom:2px solid var(--or);padding-bottom:1rem;margin-bottom:1.5rem}
+.phase-header .phase-eyebrow{font-size:.85rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--or);font-weight:600;margin-bottom:.3rem}
+.subsection{background:var(--bg-light);border-left:4px solid var(--navy);padding:1.5rem 1.8rem;margin:2rem 0 1.5rem}
+.subsection-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--navy);margin-bottom:.5rem}
+.subsection-eyebrow{font-size:.8rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--or);font-weight:600;margin-bottom:.3rem}
+.encadre{border-left:4px solid;padding:1.2rem 1.5rem;margin:1.5rem 0;background:var(--bg)}
+.encadre-header{font-family:'Playfair Display',serif;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-size:.9rem;margin-bottom:.5rem}
+.encadre-note{border-color:var(--info);background:var(--info-bg)}
+.encadre-note .encadre-header{color:var(--info)}
+.encadre-important{border-color:var(--or);background:var(--warning-bg)}
+.encadre-important .encadre-header{color:var(--warning)}
+.encadre-attention{border-color:var(--error);background:var(--error-bg)}
+.encadre-attention .encadre-header{color:var(--error)}
+.doc-ressource{background:var(--bg-light);border:1px solid var(--border);padding:1.5rem 1.8rem;margin:1.5rem 0;position:relative}
+.doc-ressource::before{content:'Document ressource';position:absolute;top:-.65rem;left:1.5rem;background:var(--navy);color:var(--or);padding:.2rem .7rem;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.8px}
+.doc-meta{font-size:.85rem;color:var(--text-mute);font-style:italic;margin-top:1rem;padding-top:.7rem;border-top:1px dashed var(--border)}
+.linkedin-mockup{background:white;border:1px solid #d6dde6;border-radius:8px;padding:1.2rem 1.5rem;margin:1rem 0;font-family:-apple-system,'Segoe UI',system-ui,sans-serif;max-width:580px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.linkedin-header{display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem}
+.linkedin-avatar{width:44px;height:44px;background:linear-gradient(135deg,#0a66c2,#004182);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem}
+.linkedin-name{font-weight:600;color:#000;font-size:.95rem}
+.linkedin-meta{font-size:.78rem;color:#666}
+.linkedin-text{font-size:.92rem;line-height:1.45;color:#000;margin-bottom:.7rem;white-space:pre-line}
+.linkedin-stats{font-size:.78rem;color:#666;border-top:1px solid #eef0f3;padding-top:.6rem;display:flex;gap:1.5rem}
+.google-review-mockup{background:white;border:1px solid #d6dde6;padding:1rem 1.3rem;margin:.8rem 0;font-family:-apple-system,'Roboto',sans-serif;max-width:580px}
+.google-review-header{display:flex;align-items:flex-start;gap:.7rem;margin-bottom:.5rem}
+.google-review-avatar{width:36px;height:36px;background:#5a9bd4;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;flex-shrink:0}
+.google-review-name{font-weight:500;color:#202124;font-size:.9rem}
+.google-review-stars{color:#fbbc04;font-size:1.1rem;letter-spacing:1px}
+.google-review-stars .empty{color:#dadce0}
+.google-review-meta{font-size:.78rem;color:#5f6368;margin-left:.5rem}
+.google-review-text{font-size:.88rem;color:#3c4043;line-height:1.5;margin-top:.4rem}
+table.cadp-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.92rem;background:white}
+table.cadp-table thead th{background:var(--navy);color:var(--or);padding:.7rem .6rem;text-align:left;font-weight:600;font-size:.82rem;text-transform:uppercase;letter-spacing:.5px;border:1px solid var(--navy)}
+table.cadp-table td{padding:.6rem;border:1px solid var(--border-light);vertical-align:top}
+table.cadp-table tbody tr:nth-child(even){background:var(--bg)}
+table.cadp-table .priority-1{background:#fcf3dc;font-weight:600}
+table.cadp-table .priority-2{background:#e6eef7}
+table.cadp-table .priority-3{background:#f7f4ee}
+.exercise{margin:1.5rem 0;padding:1.5rem;background:var(--bg-light);border:1px solid var(--border)}
+.exercise-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600;color:var(--navy);margin-bottom:.5rem}
+.exercise-instruction{color:var(--text-soft);margin-bottom:1rem;font-size:.95rem}
+.qcm-question{margin:1.2rem 0;padding:1rem 0;border-bottom:1px dashed var(--border)}
+.qcm-question:last-child{border-bottom:none}
+.qcm-stem{font-weight:600;margin-bottom:.7rem;color:var(--navy)}
+.qcm-options{display:flex;flex-direction:column;gap:.4rem}
+.qcm-option{display:flex;align-items:flex-start;padding:.6rem .9rem;background:white;border:1.5px solid var(--border);cursor:pointer;transition:all .15s;gap:.6rem}
+.qcm-option:hover{border-color:var(--or)}
+.qcm-option input{margin-top:.25rem;flex-shrink:0;accent-color:var(--navy)}
+.qcm-option.correct{background:var(--success-bg);border-color:var(--success)}
+.qcm-option.incorrect{background:var(--error-bg);border-color:var(--error)}
+.qcm-option.expected{background:var(--success-bg);border-color:var(--success);border-style:dashed}
+.qcm-feedback{margin-top:.7rem;padding:.7rem 1rem;font-size:.9rem;display:none}
+.qcm-feedback.shown{display:block}
+.qcm-feedback.success{background:var(--success-bg);color:var(--success);border-left:3px solid var(--success)}
+.qcm-feedback.error{background:var(--error-bg);color:var(--error);border-left:3px solid var(--error)}
+.classif-zones{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1rem}
+.classif-zone{background:white;border:2px dashed var(--border);min-height:200px;padding:1rem}
+.classif-zone h4{margin-top:0;font-size:1rem;text-align:center;padding:.4rem;border-bottom:2px solid;margin-bottom:.7rem}
+.classif-zone.zone-1 h4{color:var(--warning);border-color:var(--warning)}
+.classif-zone.zone-2 h4{color:var(--info);border-color:var(--info)}
+.classif-zone.zone-3 h4{color:var(--text-mute);border-color:var(--border)}
+.classif-items{background:var(--bg-light);padding:1rem;border:1px solid var(--border);min-height:80px}
+.classif-item{display:flex;justify-content:space-between;align-items:center;padding:.5rem .8rem;background:white;border:1px solid var(--border-light);margin-bottom:.4rem;font-size:.9rem}
+.classif-item:last-child{margin-bottom:0}
+.classif-item.placed{opacity:.5}
+.classif-item-text{flex:1}
+.classif-controls{display:flex;gap:.2rem}
+.classif-btn{background:var(--navy);color:white;border:none;width:28px;height:28px;cursor:pointer;font-weight:600;font-size:.9rem}
+.classif-btn:hover{background:var(--or);color:var(--navy)}
+.classif-btn.active{background:var(--or);color:var(--navy)}
+.production-area{margin:1.5rem 0}
+.production-area textarea{width:100%;min-height:240px;padding:1rem;border:1.5px solid var(--border);background:white;font-family:'Source Sans 3',sans-serif;font-size:.97rem;line-height:1.6;resize:vertical}
+.production-area textarea:focus{outline:none;border-color:var(--or)}
+.production-counter{font-size:.85rem;color:var(--text-mute);margin-top:.4rem;text-align:right}
+.communique-template{background:var(--bg-light);border:1px solid var(--border);padding:1.5rem;margin:1rem 0}
+.communique-section{margin-bottom:1rem}
+.communique-section label{display:block;font-weight:600;color:var(--navy);font-size:.92rem;margin-bottom:.3rem}
+.communique-section .placeholder{font-size:.82rem;color:var(--text-mute);font-style:italic;margin-bottom:.4rem}
+.communique-section input,.communique-section textarea{width:100%;padding:.7rem;border:1.5px solid var(--border);font-family:inherit;font-size:.95rem;background:white}
+.communique-section input{font-weight:600}
+.communique-section textarea{min-height:90px;resize:vertical}
+.detail-toggle{background:none;border:1px solid var(--navy);color:var(--navy);padding:.4rem .9rem;font-family:inherit;font-size:.85rem;cursor:pointer;margin-top:.5rem;font-weight:600}
+.detail-toggle:hover{background:var(--navy);color:var(--or)}
+.detail-content{display:none;margin-top:.8rem;padding:1.2rem 1.4rem;background:var(--bg);border-left:3px solid var(--or);font-size:.93rem}
+.detail-content.shown{display:block}
+.detail-content h5{font-family:'Playfair Display',serif;color:var(--navy);margin-bottom:.5rem}
+.detail-content ul,.detail-content ol{margin-left:1.5rem;margin-bottom:.7rem}
+.detail-content blockquote{background:white;border-left:3px solid var(--navy);padding:1rem 1.2rem;margin:.8rem 0;font-style:italic;color:var(--text-soft)}
+.grille-evaluation{margin-top:1.5rem;background:white;border:1px solid var(--border);padding:1.5rem}
+.grille-evaluation h4{margin-top:0}
+.critere-row{display:grid;grid-template-columns:1fr 100px 130px;gap:1rem;align-items:center;padding:.7rem 0;border-bottom:1px solid var(--border-light)}
+.critere-row:last-child{border-bottom:none}
+.critere-libelle{font-size:.95rem}
+.critere-points{font-size:.85rem;color:var(--text-mute);text-align:center}
+.critere-input{display:flex;align-items:center;gap:.4rem;justify-content:flex-end}
+.critere-input input{width:60px;padding:.4rem;text-align:center;border:1.5px solid var(--border);font-size:.95rem}
+.critere-total{margin-top:1rem;padding-top:1rem;border-top:2px solid var(--navy);display:flex;justify-content:space-between;align-items:center;font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:600;color:var(--navy)}
+.fiche-methode{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);color:var(--bg-light);padding:2rem;margin:2rem 0;border-left:6px solid var(--or)}
+.fiche-methode h3{color:var(--or);margin-top:0}
+.fiche-methode ol{margin-left:1.5rem}
+.fiche-methode li{margin-bottom:.7rem}
+.fiche-methode strong{color:var(--or-soft)}
+.phase-nav-btns{display:flex;justify-content:space-between;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.progress-bar-wrap{height:6px;background:var(--border-light);margin:1rem 0 2rem;position:relative}
+.progress-bar-fill{height:100%;background:var(--or);width:0%;transition:width .4s}
+.progress-label{font-size:.85rem;color:var(--text-mute);margin-top:.4rem;text-align:right}
+.synthese-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.5rem 0}
+.synthese-card{background:white;border-top:4px solid var(--or);padding:1.2rem;box-shadow:var(--shadow)}
+.synthese-card-num{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:700;color:var(--or);line-height:1}
+.synthese-card-title{font-weight:600;color:var(--navy);margin:.5rem 0}
+.synthese-card-text{font-size:.92rem;color:var(--text-soft)}
+.score-final{background:white;padding:2rem;border:2px solid var(--or);text-align:center;margin:1.5rem 0}
+.score-final h3{color:var(--navy);margin-top:0}
+.score-final .score-big{font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:700;color:var(--or);line-height:1;margin:1rem 0}
+.score-detail{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-top:1.5rem}
+.score-cell{padding:.8rem;background:var(--bg);border-left:3px solid var(--or)}
+.score-cell .score-cell-label{font-size:.85rem;color:var(--text-mute)}
+.score-cell .score-cell-value{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:600;color:var(--navy)}
+.email-cta{background:var(--navy);color:var(--bg-light);padding:2rem;margin:2rem 0;border-left:6px solid var(--or);text-align:center}
+.email-cta h3{color:var(--or);margin-top:0}
+.email-cta p{margin-bottom:1.2rem}
+.email-cta a{display:inline-block;background:var(--or);color:var(--navy);padding:.85rem 2rem;text-decoration:none;font-weight:700;font-size:1rem;letter-spacing:.5px;text-transform:uppercase;transition:all .2s;border:2px solid var(--or)}
+.email-cta a:hover{background:transparent;color:var(--or)}
+footer.cadp-footer{background:var(--navy);color:var(--bg-light);padding:2rem;text-align:center;margin-top:3rem;border-top:4px solid var(--or)}
+footer.cadp-footer p{margin-bottom:.5rem;opacity:.85;font-size:.9rem}
+footer.cadp-footer .cadp-name{color:var(--or);font-family:'Playfair Display',serif;font-weight:700;font-size:1.1rem}
+.action-row{background:var(--bg-light);padding:.8rem 1rem;border-left:3px solid var(--or);margin-bottom:.6rem;display:grid;grid-template-columns:50px 1fr 130px 130px 130px;gap:.8rem;align-items:center;font-size:.92rem}
+.action-row.header-row{background:var(--navy);color:var(--or);font-weight:600;text-transform:uppercase;font-size:.78rem;letter-spacing:.5px}
+.action-row select,.action-row input{padding:.4rem .6rem;border:1.5px solid var(--border);font-family:inherit;font-size:.9rem;background:white;width:100%}
+@media (max-width:768px){h1{font-size:1.8rem}h2{font-size:1.5rem}.main-container{padding:0 1rem}.phase{padding:1.5rem}.phases-nav{padding:.5rem}.phase-tab{padding:.5rem .2rem}.phase-tab .phase-title{font-size:.65rem}.header-info{flex-direction:column;gap:.5rem}.classif-zones{grid-template-columns:1fr}.action-row{grid-template-columns:1fr}.critere-row{grid-template-columns:1fr}}
+@media print{header.cadp-header,.phases-nav,.phase-nav-btns,.modal-overlay{display:none!important}.phase{display:block!important;page-break-after:always;box-shadow:none;border:none}}
+</style>
+</head>
+<body>
+
+<div class="modal-overlay" id="modal-id">
+  <div class="modal">
+    <h2>Identification</h2>
+    <p>Avant de commencer, identifie-toi pour que tes réponses puissent t'être attribuées et que ton récapitulatif soit transmis à ton responsable pédagogique.</p>
+    <div class="modal-form">
+      <div class="form-row"><label for="id-nom">Nom</label><input type="text" id="id-nom" placeholder="DUPONT"></div>
+      <div class="form-row"><label for="id-prenom">Prénom</label><input type="text" id="id-prenom" placeholder="Marie"></div>
+      <div class="form-row"><label for="id-classe">Classe</label><input type="text" id="id-classe" value="BTS GPME 2A - Promo 2426" readonly></div>
+      <button class="btn-primary" id="btn-id-valid">Commencer la capsule</button>
+    </div>
+  </div>
+</div>
+
+<header class="cadp-header">
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-name">CADP</span>
+      <span class="brand-tag">Campus Alternance Drôme Provence</span>
+    </div>
+    <div class="header-info">
+      <span><span class="label">Étudiant</span><strong id="header-name">-</strong></span>
+      <span><span class="label">Capsule</span><strong>Mercredi 13 mai - 13h-16h</strong></span>
+      <span><span class="label">Session</span><strong>BTS GPME E6 - 2026</strong></span>
+    </div>
+  </div>
+</header>
+
+<main class="main-container">
+
+<section style="background:white;padding:2.5rem;border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:2rem;">
+  <div style="font-size:.85rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--or);font-weight:600;margin-bottom:.5rem;">Capsule de révision E6 - SFPME</div>
+  <h1>Communication institutionnelle : gérer une crise digitale en 48 heures</h1>
+  <p style="font-size:1.1rem;color:var(--text-soft);margin-top:1rem;">L'incident d'Hambourg s'invite sur les réseaux sociaux. Le sommelier d'un restaurant étoilé poste sur LinkedIn, des avis Google négatifs apparaissent, la presse locale s'intéresse à l'affaire. Tu dois piloter la réponse.</p>
+  <div style="display:flex;gap:2rem;flex-wrap:wrap;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border);">
+    <div><span style="display:block;font-size:.8rem;color:var(--text-mute);text-transform:uppercase;letter-spacing:.5px;">Activité référentiel</span><strong>A4.4 - Communication institutionnelle</strong></div>
+    <div><span style="display:block;font-size:.8rem;color:var(--text-mute);text-transform:uppercase;letter-spacing:.5px;">Tâches</span><strong>T.4.4.1 - T.4.4.2 - T.4.4.3</strong></div>
+  </div>
+</section>
+
+<div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill"></div></div>
+  <div class="progress-label">Progression : <span id="progress-text">0%</span></div>
+</div>
+
+<nav class="phases-nav" id="phases-nav">
+  <div class="phase-tab active" data-phase="1"><span class="phase-num">1</span><span class="phase-title">Contexte et méthode</span></div>
+  <div class="phase-tab" data-phase="2"><span class="phase-num">2</span><span class="phase-title">Diagnostic et cibles</span></div>
+  <div class="phase-tab" data-phase="3"><span class="phase-num">3</span><span class="phase-title">Note interne</span></div>
+  <div class="phase-tab" data-phase="4"><span class="phase-num">4</span><span class="phase-title">Communiqué et RS</span></div>
+  <div class="phase-tab" data-phase="5"><span class="phase-num">5</span><span class="phase-title">Plan d'action 7j</span></div>
+</nav>
+
+<!-- ===================== PHASE 1 ===================== -->
+<section class="phase active" id="phase-1">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 1 - Durée indicative 15 minutes</div>
+    <h2>Le contexte de la crise et la méthode en quatre étapes</h2>
+  </div>
+
+  <div class="doc-ressource">
+    <h4>Note de cadrage - Communication de crise</h4>
+    <p><strong>De</strong> : Marie Olivier - <strong>Pour</strong> : Camille Roux, apprentie GPME - <strong>Date</strong> : 14 mai 2026, 9h00</p>
+    <p>Camille,</p>
+    <p>Tu te souviens de la commande Hambourg de lundi ? Hanseatic Gastronomy, leur sommelier Klaus Weber, qui a reçu 24 bouteilles de Mistral Premium au lieu des 24 + 12 Lavandin Réserve qu'il avait commandés pour son service du dimanche.</p>
+    <p>Eh bien, ça a pris une autre tournure. Hier soir, Klaus Weber a publié un post LinkedIn très critique. Ce matin il a déjà été partagé 1 247 fois et compte 320 commentaires. Trois avis Google 1 étoile sont apparus sur notre fiche dans la nuit. Et Mathilde Charpentier, journaliste au <strong>Dauphiné Libéré</strong>, vient de m'appeler : elle prépare un papier sur les distilleries drômoises et veut un entretien avec moi avant 17h ce soir.</p>
+    <p>J'ai besoin que tu prennes en main la communication de crise. Voici ce que tu dois préparer :</p>
+    <ul style="margin-left:1.5rem;margin-bottom:1rem;">
+      <li>Un diagnostic des cibles à toucher en priorité</li>
+      <li>Une note interne pour informer et mobiliser nos 35 salariés</li>
+      <li>Un communiqué de presse à transmettre au Dauphiné Libéré</li>
+      <li>Une réponse-type sur LinkedIn et sur Google Reviews</li>
+      <li>Un plan d'action sur les 7 prochains jours</li>
+    </ul>
+    <p>Ne minimise pas, mais ne sur-réagis pas non plus. La règle d'or : factuel, professionnel, tourné vers la solution. Aucun nom de salarié dans les communications externes, aucune polémique avec Klaus Weber, aucune attaque du transporteur sans preuves.</p>
+    <p>On fait le point à 16h.</p>
+    <p>Marie Olivier, Dirigeante, Olivier &amp; Filles SARL.</p>
+    <p class="doc-meta">Document fictif rédigé pour les besoins pédagogiques.</p>
+  </div>
+
+  <h3>Le post LinkedIn de Klaus Weber, sommelier à Hanseatic Gastronomy</h3>
+
+  <div class="linkedin-mockup">
+    <div class="linkedin-header">
+      <div class="linkedin-avatar">KW</div>
+      <div>
+        <div class="linkedin-name">Klaus Weber</div>
+        <div class="linkedin-meta">Sommelier - Hanseatic Gastronomy (1 étoile Michelin) - Hambourg<br>Il y a 14 heures - Visibilité publique</div>
+      </div>
+    </div>
+    <div class="linkedin-text">Quand on positionne sa marque comme « la distillerie haute couture de la Drôme provençale », on assure le suivi qui va avec.
+
+Cette semaine, j'ai dû annoncer à 36 convives — venus pour un menu accord mets-spiritueux — que la moitié de la sélection française que j'avais préparée ne serait pas servie. La raison ? Une commande passée chez @Olivier &amp; Filles, livrée 7 jours en retard avec une référence entièrement manquante (12 Lavandin Réserve, sur lesquelles je communiquais depuis trois semaines auprès de mes clients).
+
+Je crois beaucoup à la valeur des spiritueux artisanaux français. Mais quand on facture 28 € la bouteille, on ne se contente pas d'un « désolé, mauvaise saisie en interne ». La gastronomie, c'est de la précision. La distribution premium aussi.
+
+#hospitality #distribution #premiumspirits #suppliermanagement</div>
+    <div class="linkedin-stats">
+      <span>1 247 partages</span>
+      <span>320 commentaires</span>
+      <span>4 800 réactions</span>
+    </div>
+  </div>
+
+  <h3>Les avis Google parus dans la nuit</h3>
+
+  <div class="google-review-mockup">
+    <div class="google-review-header">
+      <div class="google-review-avatar">SP</div>
+      <div style="flex:1;">
+        <div class="google-review-name">Sven P.</div>
+        <span class="google-review-stars">★<span class="empty">★★★★</span></span>
+        <span class="google-review-meta">il y a 8 heures</span>
+      </div>
+    </div>
+    <div class="google-review-text">Vu le post de Klaus Weber. Pour une marque qui se prétend premium, c'est une vraie déception. Je ne recommanderai plus.</div>
+  </div>
+
+  <div class="google-review-mockup">
+    <div class="google-review-header">
+      <div class="google-review-avatar">L</div>
+      <div style="flex:1;">
+        <div class="google-review-name">Lucas R.</div>
+        <span class="google-review-stars">★<span class="empty">★★★★</span></span>
+        <span class="google-review-meta">il y a 6 heures</span>
+      </div>
+    </div>
+    <div class="google-review-text">Service client au niveau zéro. Pas étonnant qu'ils aient des problèmes avec leurs partenaires étoilés.</div>
+  </div>
+
+  <div class="google-review-mockup">
+    <div class="google-review-header">
+      <div class="google-review-avatar">MK</div>
+      <div style="flex:1;">
+        <div class="google-review-name">Marlene K.</div>
+        <span class="google-review-stars">★<span class="empty">★★★★</span></span>
+        <span class="google-review-meta">il y a 3 heures</span>
+      </div>
+    </div>
+    <div class="google-review-text">Lecture du post LinkedIn édifiante. Je passe mon chemin.</div>
+  </div>
+
+  <h3>La méthode en quatre étapes</h3>
+
+  <div class="synthese-cards">
+    <div class="synthese-card"><div class="synthese-card-num">1</div><div class="synthese-card-title">Analyser</div><div class="synthese-card-text">Évaluer la nature de la crise, son ampleur, les faits avérés et les rumeurs. Vérifier avant de répondre.</div></div>
+    <div class="synthese-card"><div class="synthese-card-num">2</div><div class="synthese-card-title">Cibler</div><div class="synthese-card-text">Identifier les parties prenantes, les hiérarchiser, choisir le canal et le ton adaptés à chaque cible.</div></div>
+    <div class="synthese-card"><div class="synthese-card-num">3</div><div class="synthese-card-title">Rédiger</div><div class="synthese-card-text">Produire des messages factuels, courts, professionnels. L'interne avant l'externe. Pas de polémique, pas de déni.</div></div>
+    <div class="synthese-card"><div class="synthese-card-num">4</div><div class="synthese-card-title">Diffuser et suivre</div><div class="synthese-card-text">Diffuser dans le bon ordre, dans le bon timing. Suivre les retours, ajuster si nécessaire, mesurer l'effet.</div></div>
+  </div>
+
+  <div class="encadre encadre-note">
+    <div class="encadre-header">Note - Lexique de la communication de crise</div>
+    <ul style="margin-left:1.5rem;">
+      <li><strong>Partie prenante</strong> : tout acteur (interne ou externe) susceptible d'être affecté par la crise ou d'agir sur sa résolution. Salariés, clients, fournisseurs, médias, autorités, communauté locale.</li>
+      <li><strong>E-réputation</strong> : image de l'entreprise telle qu'elle est perçue à travers les contenus en ligne. Construite sur la durée, peut s'effondrer en quelques heures.</li>
+      <li><strong>Communication de crise</strong> : ensemble des actions de communication mises en œuvre pour limiter l'impact d'un événement défavorable et protéger la réputation de l'organisation.</li>
+      <li><strong>Élément de langage</strong> : message synthétique préparé en amont, partagé en interne pour homogénéiser les prises de parole.</li>
+      <li><strong>Désamorçage</strong> : action consistant à reconnaître le fait, exprimer de l'empathie, proposer une solution, sans entrer en polémique.</li>
+      <li><strong>Escalade</strong> : amplification de la crise par effet de viralité ou par réaction inadaptée. À éviter absolument.</li>
+      <li><strong>Porte-parole</strong> : personne autorisée à représenter l'entreprise auprès des médias et du public. En PME, généralement le ou la dirigeant·e.</li>
+    </ul>
+  </div>
+
+  <div class="encadre encadre-important">
+    <div class="encadre-header">Important - Les trois règles d'or</div>
+    <p><strong>1. Réagir vite, mais après vérification.</strong> Le silence est interprété comme un aveu, mais une réponse imprécise empire la situation. Idéal : réagir dans les 24 heures avec des faits vérifiés.</p>
+    <p><strong>2. L'interne avant l'externe.</strong> Les salariés doivent toujours être informés avant le grand public, sous peine de découvrir la crise par les réseaux sociaux. C'est aussi une question de respect.</p>
+    <p><strong>3. Factuel, courtois, sans polémique.</strong> On reconnaît les faits, on présente les actions correctives, on n'attaque jamais le client mécontent ni les tiers (ici : le transporteur). Aucun aveu de faute juridique sans réflexion.</p>
+  </div>
+
+  <div class="phase-nav-btns">
+    <span></span>
+    <button class="btn-primary" onclick="goToPhase(2)">Passer à la phase 2 - Diagnostic</button>
+  </div>
+</section>
+
+<!-- ===================== PHASE 2 ===================== -->
+<section class="phase" id="phase-2">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 2 - Durée indicative 45 minutes</div>
+    <h2>Diagnostic de crise et hiérarchisation des cibles</h2>
+  </div>
+
+  <h3>Identification des parties prenantes</h3>
+
+  <p>Avant de rédiger quoi que ce soit, tu dois cartographier les cibles à toucher et les hiérarchiser. Toutes les parties prenantes ne demandent pas le même niveau d'attention ni le même registre de communication.</p>
+
+  <div class="exercise">
+    <div class="exercise-title">Exercice 2.1 - Classification des cibles par priorité</div>
+    <p class="exercise-instruction">Classe les six cibles ci-dessous selon leur priorité. Niveau 1 = action immédiate (avant 17h aujourd'hui), Niveau 2 = action à court terme (sous 48h), Niveau 3 = veille active (sous 7 jours).</p>
+
+    <div class="classif-items" id="classif-items">
+      <div class="classif-item" data-id="c1" data-bonne="1">
+        <span class="classif-item-text"><strong>Équipe interne (35 salariés d'Olivier &amp; Filles)</strong></span>
+        <div class="classif-controls">
+          <button class="classif-btn" data-target="c1" data-niveau="1">1</button>
+          <button class="classif-btn" data-target="c1" data-niveau="2">2</button>
+          <button class="classif-btn" data-target="c1" data-niveau="3">3</button>
+        </div>
+      </div>
+      <div class="classif-item" data-id="c2" data-bonne="1">
+        <span class="classif-item-text"><strong>Hanseatic Gastronomy</strong> (le client à l'origine de la plainte)</span>
+        <div class="classif-controls">
+          <button class="classif-btn" data-target="c2" data-niveau="1">1</button>
+          <button class="classif-btn" data-target="c2" data-niveau="2">2</button>
+          <button class="classif-btn" data-target="c2" data-niveau="3">3</button>
+        </div>
+      </div>
+      <div class="classif-item" data-id="c3" data-bonne="1">
+        <span class="classif-item-text"><strong>Le Dauphiné Libéré</strong> (journaliste qui prépare un papier d'ici 17h)</span>
+        <div class="classif-controls">
+          <button class="classif-btn" data-target="c3" data-niveau="1">1</button>
+          <button class="classif-btn" data-target="c3" data-niveau="2">2</button>
+          <button class="classif-btn" data-target="c3" data-niveau="3">3</button>
+        </div>
+      </div>
+      <div class="classif-item" data-id="c4" data-bonne="2">
+        <span class="classif-item-text"><strong>Communauté LinkedIn et Google Reviews</strong> (audience touchée par le post viral)</span>
+        <div class="classif-controls">
+          <button class="classif-btn" data-target="c4" data-niveau="1">1</button>
+          <button class="classif-btn" data-target="c4" data-niveau="2">2</button>
+          <button class="classif-btn" data-target="c4" data-niveau="3">3</button>
+        </div>
+      </div>
+      <div class="classif-item" data-id="c5" data-bonne="3">
+        <span class="classif-item-text"><strong>Autres clients professionnels</strong> (cavistes, restaurateurs partenaires - 80 clients actifs)</span>
+        <div class="classif-controls">
+          <button class="classif-btn" data-target="c5" data-niveau="1">1</button>
+          <button class="classif-btn" data-target="c5" data-niveau="2">2</button>
+          <button class="classif-btn" data-target="c5" data-niveau="3">3</button>
+        </div>
+      </div>
+      <div class="classif-item" data-id="c6" data-bonne="3">
+        <span class="classif-item-text"><strong>Fournisseurs et partenaires institutionnels</strong> (CCI Drôme, BPI, banques)</span>
+        <div class="classif-controls">
+          <button class="classif-btn" data-target="c6" data-niveau="1">1</button>
+          <button class="classif-btn" data-target="c6" data-niveau="2">2</button>
+          <button class="classif-btn" data-target="c6" data-niveau="3">3</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="classif-zones">
+      <div class="classif-zone zone-1">
+        <h4>Niveau 1 - Action immédiate (avant 17h)</h4>
+        <div class="classif-zone-content" id="zone-1"></div>
+      </div>
+      <div class="classif-zone zone-2">
+        <h4>Niveau 2 - Court terme (sous 48h)</h4>
+        <div class="classif-zone-content" id="zone-2"></div>
+      </div>
+      <div class="classif-zone zone-3">
+        <h4>Niveau 3 - Veille active (sous 7j)</h4>
+        <div class="classif-zone-content" id="zone-3"></div>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="validateClassif()" style="margin-top:1rem;">Vérifier ma classification</button>
+    <div id="classif-result" style="margin-top:1rem;"></div>
+
+    <button class="detail-toggle" onclick="toggleDetail('classif-detail')">Voir le corrigé commenté</button>
+    <div class="detail-content" id="classif-detail">
+      <h5>Niveau 1 - Action immédiate</h5>
+      <ul>
+        <li><strong>Équipe interne</strong> : règle d'or de la communication de crise — l'interne avant l'externe. Si les salariés découvrent la crise par LinkedIn, ils perdent confiance et risquent de communiquer de manière désorganisée. Note interne dans les heures qui viennent.</li>
+        <li><strong>Hanseatic Gastronomy</strong> : c'est le client mécontent à l'origine de la crise. Sans contact direct rapide (Marie doit appeler personnellement Klaus Weber), aucune communication externe ne sera crédible.</li>
+        <li><strong>Le Dauphiné Libéré</strong> : la journaliste publie sous 24h. Sans réponse de Marie, l'article paraîtra sans son point de vue. Communiqué de presse à envoyer avant 17h.</li>
+      </ul>
+      <h5>Niveau 2 - Court terme</h5>
+      <ul>
+        <li><strong>Communauté LinkedIn et Google</strong> : il faut répondre publiquement, mais après avoir traité le client direct. Une réponse publique sans avoir contacté Hanseatic apparaîtrait comme purement défensive.</li>
+      </ul>
+      <h5>Niveau 3 - Veille active</h5>
+      <ul>
+        <li><strong>Autres clients professionnels</strong> : ils peuvent voir le post LinkedIn. Préparer des éléments de langage à transmettre via Lucas Olivier (responsable commercial) lors de ses prochains contacts.</li>
+        <li><strong>Fournisseurs et institutionnels</strong> : pas d'action urgente, mais maintenir la relation par une note d'information factuelle si la crise s'amplifie.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>QCM - Les bons réflexes en communication de crise</h3>
+
+  <div class="exercise" id="qcm-bloc">
+    <div class="exercise-title">Exercice 2.2 - QCM 8 questions</div>
+    <p class="exercise-instruction">Coche la bonne réponse pour chaque question. Une seule bonne réponse par question.</p>
+
+    <div class="qcm-question" data-bonne="b">
+      <p class="qcm-stem">1. Que faut-il faire en priorité dans les heures qui suivent l'apparition d'une crise digitale ?</p>
+      <div class="qcm-options">
+        <label class="qcm-option"><input type="radio" name="q1" value="a"><span>Répondre publiquement le plus vite possible pour reprendre la main sur la narration</span></label>
+        <label class="qcm-option"><input type="radio" name="q1" value="b"><span>Vérifier les faits, qualifier le niveau de gravité, identifier les cibles à toucher</span></label>
+        <label class="qcm-option"><input type="radio" name="q1" value="c"><span>Supprimer les contenus négatifs des réseaux sociaux quand c'est possible</span></label>
+      </div>
+    </div>
+
+    <div class="qcm-question" data-bonne="a">
+      <p class="qcm-stem">2. Dans quel ordre faut-il communiquer ?</p>
+      <div class="qcm-options">
+        <label class="qcm-option"><input type="radio" name="q2" value="a"><span>Interne d'abord, puis client direct, puis presse, puis communauté digitale</span></label>
+        <label class="qcm-option"><input type="radio" name="q2" value="b"><span>Communauté digitale d'abord pour stopper la viralité, puis interne et presse</span></label>
+        <label class="qcm-option"><input type="radio" name="q2" value="c"><span>Tout simultanément pour éviter les fuites et les rumeurs</span></label>
+      </div>
+    </div>
+
+    <div class="qcm-question" data-bonne="c">
+      <p class="qcm-stem">3. Sur LinkedIn, comment répondre à un post critique très partagé ?</p>
+      <div class="qcm-options">
+        <label class="qcm-option"><input type="radio" name="q3" value="a"><span>Signaler le post à la modération de la plateforme</span></label>
+        <label class="qcm-option"><input type="radio" name="q3" value="b"><span>Répondre de manière offensive pour défendre l'image de l'entreprise</span></label>
+        <label class="qcm-option"><input type="radio" name="q3" value="c"><span>Reconnaître les faits, exprimer de l'empathie, proposer un échange direct</span></label>
+      </div>
+    </div>
+
+    <div class="qcm-question" data-bonne="b">
+      <p class="qcm-stem">4. Faut-il répondre aux avis Google 1 étoile ?</p>
+      <div class="qcm-options">
+        <label class="qcm-option"><input type="radio" name="q4" value="a"><span>Non, cela donne plus de visibilité aux avis négatifs</span></label>
+        <label class="qcm-option"><input type="radio" name="q4" value="b"><span>Oui, systématiquement, par une réponse courte et professionnelle proposant un contact direct</span></label>
+        <label class="qcm-option"><input type="radio" name="q4" value="c"><span>Uniquement si l'avis comporte des informations diffamatoires</span></label>
+      </div>
+    </div>
+
+    <div class="qcm-question" data-bonne="a">
+      <p class="qcm-stem">5. Qui doit signer le communiqué de presse pour une PME comme Olivier &amp; Filles ?</p>
+      <div class="qcm-options">
+        <label class="qcm-option"><input type="radio" name="q5" value="a"><span>La dirigeante (Marie Olivier), porte-parole naturelle de l'entreprise</span></label>
+        <label class="qcm-option"><input type="radio" name="q5" value="b"><span>Le service communication ou un cabinet de relations presse externe</span></label>
+        <label class="qcm-option"><input type="radio" name="q5" value="c"><span>L'apprentie GPME qui a rédigé le communiqué</span></label>
+      </div>
+    </div>
+
+    <div class="qcm-question" data-bonne="c">
+      <p class="qcm-stem">6. Que faut-il absolument éviter dans une communication de crise ?</p>
+      <div class="qcm-options">
+        <label class="qcm-option"><input type="radio" name="q6" value="a"><span>Reconnaître publiquement les difficultés rencontrées par l'entreprise</span></label>
+        <label class="qcm-option"><input type="radio" name="q6" value="b"><span>Présenter des excuses au client mécontent</span></label>
+        <label class="qcm-option"><input type="radio" name="q6" value="c"><span>Attaquer le client, minimiser les faits ou rejeter la faute sur un tiers sans preuve</span></label>
+      </div>
+    </div>
+
+    <div class="qcm-question" data-bonne="b">
+      <p class="qcm-stem">7. Quel registre adopter dans une note interne de crise ?</p>
+      <div class="qcm-options">
+        <label class="qcm-option"><input type="radio" name="q7" value="a"><span>Solennel et inquiet pour faire prendre conscience de la gravité</span></label>
+        <label class="qcm-option"><input type="radio" name="q7" value="b"><span>Factuel, rassurant, mobilisateur, avec des éléments de langage clairs</span></label>
+        <label class="qcm-option"><input type="radio" name="q7" value="c"><span>Confidentiel, en demandant aux salariés de ne rien dire à personne</span></label>
+      </div>
+    </div>
+
+    <div class="qcm-question" data-bonne="a">
+      <p class="qcm-stem">8. Sur quel délai faut-il réagir publiquement à une crise digitale virale ?</p>
+      <div class="qcm-options">
+        <label class="qcm-option"><input type="radio" name="q8" value="a"><span>Idéalement sous 24 heures, après vérification des faits</span></label>
+        <label class="qcm-option"><input type="radio" name="q8" value="b"><span>Sous 7 jours, pour ne pas répondre à chaud</span></label>
+        <label class="qcm-option"><input type="radio" name="q8" value="c"><span>Pas de réponse publique : la crise s'éteindra d'elle-même</span></label>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="validateQCM()">Vérifier mes réponses</button>
+    <div id="qcm-result" style="margin-top:1rem;"></div>
+  </div>
+
+  <div class="phase-nav-btns">
+    <button class="btn-secondary" onclick="goToPhase(1)">Retour phase 1</button>
+    <button class="btn-primary" onclick="goToPhase(3)">Passer à la phase 3 - Note interne</button>
+  </div>
+</section>
+
+<!-- ===================== PHASE 3 ===================== -->
+<section class="phase" id="phase-3">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 3 - Durée indicative 45 minutes</div>
+    <h2>Production n°1 : note interne à l'équipe</h2>
+  </div>
+
+  <p>Tu vas rédiger la note interne destinée aux 35 salariés d'Olivier &amp; Filles. Objectifs : informer factuellement, rassurer, donner les éléments de langage si quelqu'un est interpellé. Cette note sera diffusée par mail interne et affichée sur le tableau de bord de l'entreprise.</p>
+
+  <div class="encadre encadre-note">
+    <div class="encadre-header">Note - Cahier des charges de la note interne</div>
+    <ul style="margin-left:1.5rem;">
+      <li><strong>Longueur</strong> : 200 à 300 mots, pas plus.</li>
+      <li><strong>Émetteur / destinataires</strong> : Marie Olivier / l'ensemble du personnel.</li>
+      <li><strong>Objet</strong> : informer sur la situation Hambourg et donner la marche à suivre.</li>
+      <li><strong>Structure attendue</strong> : en-tête (de, à, objet, date) + 3 paragraphes (situation - actions en cours - éléments de langage si on est interpellé) + signature.</li>
+      <li><strong>Tonalité</strong> : factuelle, rassurante, mobilisatrice. Ni alarmiste ni minimisante.</li>
+      <li><strong>À éviter</strong> : noms de salariés (responsabilité collective), critique du transporteur, jugements de valeur sur Klaus Weber.</li>
+    </ul>
+  </div>
+
+  <div class="production-area">
+    <textarea id="note-interne" placeholder="NOTE INTERNE
+
+De : Marie Olivier
+À : Ensemble du personnel
+Objet : ...
+Date : 14 mai 2026
+
+[Paragraphe 1 - Situation et faits avérés]
+...
+
+[Paragraphe 2 - Actions mises en œuvre]
+...
+
+[Paragraphe 3 - Éléments de langage si vous êtes interpellé]
+...
+
+Marie Olivier
+Dirigeante"></textarea>
+    <div class="production-counter"><span id="note-int-count">0</span> caractères - <span id="note-int-mots">0</span> mots</div>
+  </div>
+
+  <button class="detail-toggle" onclick="toggleDetail('note-int-corr')">Voir un exemple de note interne (260 mots)</button>
+  <div class="detail-content" id="note-int-corr">
+    <h5>Exemple de note interne</h5>
+    <blockquote>
+      <p><strong>NOTE INTERNE</strong></p>
+      <p>De : Marie Olivier, dirigeante<br>
+      À : Ensemble du personnel d'Olivier &amp; Filles<br>
+      Objet : Situation Hanseatic Gastronomy et communication associée<br>
+      Date : 14 mai 2026</p>
+
+      <p>Vous avez peut-être eu connaissance, par les réseaux sociaux ou par votre entourage, d'une publication concernant notre société. Le sommelier d'un restaurant client de Hambourg a relayé hier sur LinkedIn son insatisfaction concernant une commande livrée incomplète et en retard la semaine dernière. Cette publication a été largement partagée et a entraîné quelques avis négatifs sur notre fiche Google.</p>
+
+      <p>Les faits sont les suivants : une commande de 36 bouteilles a été expédiée avec une référence manquante (12 bouteilles de Lavandin Réserve) et une livraison effectuée 7 jours après la date prévue. Notre équipe logistique a déjà identifié la cause (erreur de saisie en interne) et mis en place un dispositif de double validation. Une compensation a été proposée au client et un communiqué officiel sera diffusé aujourd'hui à 17h auprès du Dauphiné Libéré.</p>
+
+      <p>Si l'on vous interpelle, voici les éléments à transmettre. Premièrement, la situation est connue de la direction et fait l'objet d'une réponse coordonnée. Deuxièmement, l'incident est isolé et ne remet pas en cause la qualité de nos produits. Troisièmement, pour toute question précise, merci de rediriger vers Léa Dupré ou directement vers moi. Aucune communication individuelle sur les réseaux sociaux ne doit être engagée à ce stade.</p>
+
+      <p>Je vous remercie pour votre engagement et votre professionnalisme. Nous sortirons renforcés de cet épisode.</p>
+
+      <p>Marie Olivier<br>Dirigeante</p>
+    </blockquote>
+    <p><em>Pourquoi cette note fonctionne :</em> en-tête conforme, faits présentés sans dramatisation, actions concrètes citées, éléments de langage clairs et numérotés, redirection nominative pour les questions, ton mobilisateur en clôture.</p>
+  </div>
+
+  <h3>Auto-évaluation pondérée sur 25 points</h3>
+
+  <div class="grille-evaluation">
+    <h4>Grille d'auto-évaluation note interne</h4>
+    <div class="critere-row">
+      <div class="critere-libelle">Présence de l'en-tête conforme (de, à, objet, date)</div>
+      <div class="critere-points">/ 3 pts</div>
+      <div class="critere-input"><input type="number" id="note-int-cr1" min="0" max="3" data-max="3"> <span>/ 3</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Présentation factuelle des faits (sans dramatisation ni minimisation)</div>
+      <div class="critere-points">/ 5 pts</div>
+      <div class="critere-input"><input type="number" id="note-int-cr2" min="0" max="5" data-max="5"> <span>/ 5</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Description des actions correctives mises en œuvre</div>
+      <div class="critere-points">/ 5 pts</div>
+      <div class="critere-input"><input type="number" id="note-int-cr3" min="0" max="5" data-max="5"> <span>/ 5</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Éléments de langage clairs et numérotés pour l'équipe</div>
+      <div class="critere-points">/ 5 pts</div>
+      <div class="critere-input"><input type="number" id="note-int-cr4" min="0" max="5" data-max="5"> <span>/ 5</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Redirection des questions vers une personne identifiée</div>
+      <div class="critere-points">/ 3 pts</div>
+      <div class="critere-input"><input type="number" id="note-int-cr5" min="0" max="3" data-max="3"> <span>/ 3</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Qualité rédactionnelle (registre professionnel, syntaxe, orthographe)</div>
+      <div class="critere-points">/ 4 pts</div>
+      <div class="critere-input"><input type="number" id="note-int-cr6" min="0" max="4" data-max="4"> <span>/ 4</span></div>
+    </div>
+    <div class="critere-total">
+      <span>Total auto-évaluation note interne</span>
+      <span><span id="note-int-total">0</span> / 25</span>
+    </div>
+    <button class="btn-secondary" onclick="calculerGrilleNoteInterne()" style="margin-top:1rem;">Calculer mon score</button>
+  </div>
+
+  <div class="phase-nav-btns">
+    <button class="btn-secondary" onclick="goToPhase(2)">Retour phase 2</button>
+    <button class="btn-primary" onclick="goToPhase(4)">Passer à la phase 4 - Communiqué et RS</button>
+  </div>
+</section>
+
+<!-- ===================== PHASE 4 ===================== -->
+<section class="phase" id="phase-4">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 4 - Durée indicative 60 minutes</div>
+    <h2>Productions n°2, 3 et 4 : communiqué de presse et réponses sur les réseaux</h2>
+  </div>
+
+  <h3>Production n°2 : communiqué de presse pour Le Dauphiné Libéré</h3>
+
+  <p>La journaliste Mathilde Charpentier prépare un papier sur les distilleries drômoises, à publier sous 24h. Elle a sollicité Marie pour un entretien. Plutôt qu'un échange à chaud, Marie te demande de préparer un communiqué de presse qui pourra servir de base à l'entretien et qui constituera la position officielle d'Olivier &amp; Filles.</p>
+
+  <div class="encadre encadre-note">
+    <div class="encadre-header">Note - Format normé du communiqué de presse</div>
+    <ul style="margin-left:1.5rem;">
+      <li><strong>Longueur globale</strong> : 250 à 400 mots.</li>
+      <li><strong>Titre</strong> : factuel, neutre, sans superlatif. Indique de quoi il s'agit.</li>
+      <li><strong>Chapeau</strong> : 2-3 lignes synthétiques résumant la position.</li>
+      <li><strong>Paragraphe 1</strong> : contexte et faits avérés.</li>
+      <li><strong>Paragraphe 2</strong> : position et engagements d'Olivier &amp; Filles.</li>
+      <li><strong>Paragraphe 3</strong> : perspectives et message d'avenir.</li>
+      <li><strong>Encadré contact presse</strong> : nom, fonction, mail, téléphone.</li>
+    </ul>
+  </div>
+
+  <div class="communique-template">
+    <div class="communique-section">
+      <label>TITRE DU COMMUNIQUÉ</label>
+      <span class="placeholder">Factuel et neutre, environ 8-12 mots</span>
+      <input type="text" id="cp-titre">
+    </div>
+    <div class="communique-section">
+      <label>CHAPEAU (2-3 phrases de synthèse)</label>
+      <span class="placeholder">Résume la position d'Olivier &amp; Filles. Donne envie de lire la suite.</span>
+      <textarea id="cp-chapeau" rows="3"></textarea>
+    </div>
+    <div class="communique-section">
+      <label>PARAGRAPHE 1 - Contexte et faits</label>
+      <span class="placeholder">Présente la situation factuellement, sans parti pris.</span>
+      <textarea id="cp-para1" rows="4"></textarea>
+    </div>
+    <div class="communique-section">
+      <label>PARAGRAPHE 2 - Position et engagements</label>
+      <span class="placeholder">Reconnaît, explique les actions correctives, exprime la responsabilité de l'entreprise.</span>
+      <textarea id="cp-para2" rows="4"></textarea>
+    </div>
+    <div class="communique-section">
+      <label>PARAGRAPHE 3 - Perspectives</label>
+      <span class="placeholder">Réaffirme les valeurs, ouvre sur la suite.</span>
+      <textarea id="cp-para3" rows="4"></textarea>
+    </div>
+    <div class="communique-section">
+      <label>CONTACT PRESSE</label>
+      <span class="placeholder">Format : Nom, Fonction, mail, téléphone</span>
+      <input type="text" id="cp-contact">
+    </div>
+    <div class="production-counter"><span id="cp-mots">0</span> mots au total (cible 250-400)</div>
+  </div>
+
+  <button class="detail-toggle" onclick="toggleDetail('cp-corr')">Voir un exemple de communiqué (340 mots)</button>
+  <div class="detail-content" id="cp-corr">
+    <h5>Exemple de communiqué de presse</h5>
+    <blockquote>
+      <p><strong>OLIVIER &amp; FILLES PRÉCISE SA POSITION SUITE À UN INCIDENT DE LIVRAISON</strong></p>
+
+      <p><em>La distillerie nyonsaise reconnaît un dysfonctionnement isolé sur une commande à destination de l'Allemagne et présente le dispositif d'amélioration mis en place.</em></p>
+
+      <p>Nyons, le 14 mai 2026. La distillerie Olivier &amp; Filles a pris connaissance de la publication diffusée sur les réseaux sociaux concernant une commande livrée la semaine dernière à un restaurant client de Hambourg. Les faits sont les suivants : une expédition de 36 bouteilles a été livrée avec un retard de 7 jours et une référence manquante représentant un tiers du volume commandé. La cause, identifiée dès la réception de la réclamation client, est une erreur de saisie en interne combinée à un délai logistique mal anticipé sur l'export longue distance.</p>
+
+      <p>Olivier &amp; Filles assume sa responsabilité dans cet incident. Une compensation a été proposée au restaurant concerné, et un dispositif de double validation des commandes export a été mis en œuvre dès le lundi suivant. La société, fondée en 1987 et engagée depuis trois générations dans la distillation artisanale d'aromates de la Drôme provençale, reconnaît que la qualité de service due à ses clients professionnels n'a pas été au rendez-vous sur cette opération. Marie Olivier, dirigeante, tient à exprimer ses regrets pour le préjudice occasionné.</p>
+
+      <p>L'engagement d'Olivier &amp; Filles auprès des cavistes et des établissements de bouche partenaires reste entier. La distillerie poursuit en 2026 son projet de développement à l'export sur l'Allemagne, la Belgique et les Pays-Bas, avec un investissement de 680 000 euros dans un nouvel alambic et un entrepôt logistique. La rigueur opérationnelle qui accompagne cette croissance fait l'objet d'un plan d'action spécifique présenté ce mois-ci à l'équipe et aux clients partenaires.</p>
+
+      <p><strong>CONTACT PRESSE</strong><br>
+      Léa Dupré, Assistante de direction<br>
+      lea.dupre@olivier-filles.fr<br>
+      04 75 26 XX XX</p>
+    </blockquote>
+    <p><em>Pourquoi ce communiqué fonctionne :</em> titre factuel, chapeau qui synthétise, faits reconnus sans dramatisation, actions concrètes citées, contexte historique et stratégique repositionnant l'incident comme isolé, contact presse identifié.</p>
+  </div>
+
+  <hr style="margin:2rem 0;border:none;border-top:1px solid var(--border);">
+
+  <h3>Production n°3 : réponse-type sur LinkedIn</h3>
+
+  <p>Tu rédiges la réponse officielle d'Olivier &amp; Filles au post de Klaus Weber. Cette réponse sera publiée en commentaire sous le post, depuis le compte officiel de Marie Olivier.</p>
+
+  <div class="encadre encadre-note">
+    <div class="encadre-header">Note - Cahier des charges réponse LinkedIn</div>
+    <ul style="margin-left:1.5rem;">
+      <li><strong>Longueur</strong> : 80 à 120 mots.</li>
+      <li><strong>Mention nominative de Klaus Weber</strong> : oui, courtoisie.</li>
+      <li><strong>Tonalité</strong> : reconnaissance des faits, regret personnel, action concrète, ouverture au dialogue privé.</li>
+      <li><strong>Pas de</strong> : justification longue, polémique sur les détails, mise en cause du transporteur.</li>
+      <li><strong>Signature</strong> : Marie Olivier, dirigeante (la dirigeante en personne, pas le compte entreprise).</li>
+    </ul>
+  </div>
+
+  <div class="production-area">
+    <textarea id="reponse-li" placeholder="Bonjour Klaus Weber,
+
+[Reconnaissance de la lecture du post et empathie]
+...
+
+[Reconnaissance factuelle de l'incident et regret]
+...
+
+[Action concrète déjà engagée]
+...
+
+[Proposition d'échange privé]
+...
+
+Marie Olivier
+Dirigeante, Olivier &amp; Filles" style="min-height:180px;"></textarea>
+    <div class="production-counter"><span id="li-count">0</span> caractères - <span id="li-mots">0</span> mots (cible 80-120)</div>
+  </div>
+
+  <button class="detail-toggle" onclick="toggleDetail('li-corr')">Voir un exemple de réponse LinkedIn (105 mots)</button>
+  <div class="detail-content" id="li-corr">
+    <h5>Exemple de réponse LinkedIn</h5>
+    <blockquote>
+      <p>Bonjour Klaus Weber,</p>
+      <p>J'ai lu attentivement votre publication, et je tiens à y répondre personnellement. Vous avez raison d'attendre, d'une distillerie qui se positionne sur le segment premium, une exécution irréprochable. Sur cette commande, nous ne l'avons pas été. Je vous présente mes regrets pour le préjudice causé à votre service du dimanche et à la promesse faite à vos clients.</p>
+      <p>Une compensation vous a été proposée hier, et un dispositif de double validation des commandes export est en place depuis lundi. Je vous propose un échange téléphonique cette semaine pour reconstruire la confiance. Je vous adresse en message privé mes coordonnées directes.</p>
+      <p>Marie Olivier, Dirigeante, Olivier &amp; Filles.</p>
+    </blockquote>
+    <p><em>Pourquoi cette réponse fonctionne :</em> nominative et courtoise, reconnaissance sans déni, regret exprimé personnellement, actions concrètes citées, redirection vers échange privé qui sort la conversation de la sphère publique, signature directe de la dirigeante (pas un community manager).</p>
+  </div>
+
+  <hr style="margin:2rem 0;border:none;border-top:1px solid var(--border);">
+
+  <h3>Production n°4 : réponse-type sur Google Reviews</h3>
+
+  <p>La même réponse sera adaptée et postée en réponse aux trois avis Google 1 étoile. Le format est plus court, le ton plus impersonnel (les auteurs ne sont pas des clients directs).</p>
+
+  <div class="encadre encadre-note">
+    <div class="encadre-header">Note - Cahier des charges réponse Google Reviews</div>
+    <ul style="margin-left:1.5rem;">
+      <li><strong>Longueur</strong> : 50 à 80 mots.</li>
+      <li><strong>Tonalité</strong> : courtoisie, factuel, redirection vers contact direct.</li>
+      <li><strong>À éviter</strong> : copier-coller identique aux trois avis (Google détecte et déclasse).</li>
+      <li><strong>Signature</strong> : Olivier &amp; Filles - Service Relation Client (pas Marie en personne ici, c'est plus institutionnel).</li>
+    </ul>
+  </div>
+
+  <div class="production-area">
+    <textarea id="reponse-go" placeholder="Bonjour [Prénom],
+
+Nous vous remercions de votre commentaire...
+
+[Reconnaissance + redirection]
+..." style="min-height:140px;"></textarea>
+    <div class="production-counter"><span id="go-count">0</span> caractères - <span id="go-mots">0</span> mots (cible 50-80)</div>
+  </div>
+
+  <button class="detail-toggle" onclick="toggleDetail('go-corr')">Voir un exemple de réponse Google Reviews (65 mots)</button>
+  <div class="detail-content" id="go-corr">
+    <h5>Exemple de réponse Google Reviews</h5>
+    <blockquote>
+      <p>Bonjour Sven, nous vous remercions de prendre le temps de partager votre ressenti. La situation que vous évoquez fait l'objet d'une réponse circonstanciée et nous avons engagé des actions correctives concrètes. Si vous souhaitez en discuter directement ou nous faire part d'une expérience personnelle avec nos produits, n'hésitez pas à nous écrire à contact@olivier-filles.fr. Cordialement, Olivier &amp; Filles - Service Relation Client.</p>
+    </blockquote>
+    <p><em>Pourquoi cette réponse fonctionne :</em> nominative (Google valorise), courtoise, ne relance pas la polémique, redirige vers un contact mail, signature institutionnelle. À adapter pour chacun des trois avis avec une formulation différente pour ne pas paraître robotisée.</p>
+  </div>
+
+  <h3>Auto-évaluation pondérée sur 35 points</h3>
+
+  <div class="grille-evaluation">
+    <h4>Grille d'auto-évaluation communiqué + RS</h4>
+    <div class="critere-row">
+      <div class="critere-libelle">Communiqué : titre factuel et chapeau synthétique</div>
+      <div class="critere-points">/ 4 pts</div>
+      <div class="critere-input"><input type="number" id="cp-cr1" min="0" max="4" data-max="4"> <span>/ 4</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Communiqué : structure 3 paragraphes (contexte, position, perspectives)</div>
+      <div class="critere-points">/ 5 pts</div>
+      <div class="critere-input"><input type="number" id="cp-cr2" min="0" max="5" data-max="5"> <span>/ 5</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Communiqué : reconnaissance des faits + actions correctives concrètes</div>
+      <div class="critere-points">/ 6 pts</div>
+      <div class="critere-input"><input type="number" id="cp-cr3" min="0" max="6" data-max="6"> <span>/ 6</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Communiqué : encadré contact presse complet</div>
+      <div class="critere-points">/ 2 pts</div>
+      <div class="critere-input"><input type="number" id="cp-cr4" min="0" max="2" data-max="2"> <span>/ 2</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Réponse LinkedIn : nominative, regret personnel, redirection privée</div>
+      <div class="critere-points">/ 6 pts</div>
+      <div class="critere-input"><input type="number" id="cp-cr5" min="0" max="6" data-max="6"> <span>/ 6</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Réponse Google Reviews : courtoisie + redirection contact mail</div>
+      <div class="critere-points">/ 4 pts</div>
+      <div class="critere-input"><input type="number" id="cp-cr6" min="0" max="4" data-max="4"> <span>/ 4</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Cohérence des messages entre les 3 supports (un seul fil narratif)</div>
+      <div class="critere-points">/ 4 pts</div>
+      <div class="critere-input"><input type="number" id="cp-cr7" min="0" max="4" data-max="4"> <span>/ 4</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Qualité rédactionnelle (registre, syntaxe, orthographe)</div>
+      <div class="critere-points">/ 4 pts</div>
+      <div class="critere-input"><input type="number" id="cp-cr8" min="0" max="4" data-max="4"> <span>/ 4</span></div>
+    </div>
+    <div class="critere-total">
+      <span>Total auto-évaluation</span>
+      <span><span id="cp-total">0</span> / 35</span>
+    </div>
+    <button class="btn-secondary" onclick="calculerGrilleCP()" style="margin-top:1rem;">Calculer mon score</button>
+  </div>
+
+  <div class="phase-nav-btns">
+    <button class="btn-secondary" onclick="goToPhase(3)">Retour phase 3</button>
+    <button class="btn-primary" onclick="goToPhase(5)">Passer à la phase 5 - Plan d'action</button>
+  </div>
+</section>
+
+<!-- ===================== PHASE 5 ===================== -->
+<section class="phase" id="phase-5">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 5 - Durée indicative 15 minutes</div>
+    <h2>Plan d'action communication sur 7 jours</h2>
+  </div>
+
+  <p>Pour clore la capsule, tu vas formaliser le plan d'action des 7 jours qui viennent. Marie utilisera ce document comme outil de pilotage et de suivi avec son équipe.</p>
+
+  <div class="exercise">
+    <div class="exercise-title">Tableau du plan d'action</div>
+    <p class="exercise-instruction">Renseigne 8 actions à mener sur les 7 prochains jours. Chaque ligne précise : l'action, la personne responsable, le jour de réalisation, le support utilisé.</p>
+
+    <div style="overflow-x:auto;">
+      <div class="action-row header-row">
+        <span>N°</span><span>Action à mener</span><span>Responsable</span><span>Jour</span><span>Support</span>
+      </div>
+      <div class="action-row" id="ar1">
+        <span>1</span>
+        <input type="text" placeholder="Ex : Diffuser la note interne...">
+        <select><option value="">-</option><option>Marie Olivier</option><option>Léa Dupré</option><option>Lucas Olivier</option><option>Camille Roux</option><option>Théa Bonnefoy</option></select>
+        <select><option value="">-</option><option>J (14 mai)</option><option>J+1</option><option>J+2</option><option>J+3</option><option>J+4 à J+7</option></select>
+        <select><option value="">-</option><option>Mail interne</option><option>Affichage</option><option>Réunion</option><option>LinkedIn</option><option>Google</option><option>Téléphone</option><option>Communiqué</option></select>
+      </div>
+      <div class="action-row" id="ar2">
+        <span>2</span>
+        <input type="text" placeholder="">
+        <select><option value="">-</option><option>Marie Olivier</option><option>Léa Dupré</option><option>Lucas Olivier</option><option>Camille Roux</option><option>Théa Bonnefoy</option></select>
+        <select><option value="">-</option><option>J (14 mai)</option><option>J+1</option><option>J+2</option><option>J+3</option><option>J+4 à J+7</option></select>
+        <select><option value="">-</option><option>Mail interne</option><option>Affichage</option><option>Réunion</option><option>LinkedIn</option><option>Google</option><option>Téléphone</option><option>Communiqué</option></select>
+      </div>
+      <div class="action-row" id="ar3">
+        <span>3</span>
+        <input type="text" placeholder="">
+        <select><option value="">-</option><option>Marie Olivier</option><option>Léa Dupré</option><option>Lucas Olivier</option><option>Camille Roux</option><option>Théa Bonnefoy</option></select>
+        <select><option value="">-</option><option>J (14 mai)</option><option>J+1</option><option>J+2</option><option>J+3</option><option>J+4 à J+7</option></select>
+        <select><option value="">-</option><option>Mail interne</option><option>Affichage</option><option>Réunion</option><option>LinkedIn</option><option>Google</option><option>Téléphone</option><option>Communiqué</option></select>
+      </div>
+      <div class="action-row" id="ar4">
+        <span>4</span>
+        <input type="text" placeholder="">
+        <select><option value="">-</option><option>Marie Olivier</option><option>Léa Dupré</option><option>Lucas Olivier</option><option>Camille Roux</option><option>Théa Bonnefoy</option></select>
+        <select><option value="">-</option><option>J (14 mai)</option><option>J+1</option><option>J+2</option><option>J+3</option><option>J+4 à J+7</option></select>
+        <select><option value="">-</option><option>Mail interne</option><option>Affichage</option><option>Réunion</option><option>LinkedIn</option><option>Google</option><option>Téléphone</option><option>Communiqué</option></select>
+      </div>
+      <div class="action-row" id="ar5">
+        <span>5</span>
+        <input type="text" placeholder="">
+        <select><option value="">-</option><option>Marie Olivier</option><option>Léa Dupré</option><option>Lucas Olivier</option><option>Camille Roux</option><option>Théa Bonnefoy</option></select>
+        <select><option value="">-</option><option>J (14 mai)</option><option>J+1</option><option>J+2</option><option>J+3</option><option>J+4 à J+7</option></select>
+        <select><option value="">-</option><option>Mail interne</option><option>Affichage</option><option>Réunion</option><option>LinkedIn</option><option>Google</option><option>Téléphone</option><option>Communiqué</option></select>
+      </div>
+      <div class="action-row" id="ar6">
+        <span>6</span>
+        <input type="text" placeholder="">
+        <select><option value="">-</option><option>Marie Olivier</option><option>Léa Dupré</option><option>Lucas Olivier</option><option>Camille Roux</option><option>Théa Bonnefoy</option></select>
+        <select><option value="">-</option><option>J (14 mai)</option><option>J+1</option><option>J+2</option><option>J+3</option><option>J+4 à J+7</option></select>
+        <select><option value="">-</option><option>Mail interne</option><option>Affichage</option><option>Réunion</option><option>LinkedIn</option><option>Google</option><option>Téléphone</option><option>Communiqué</option></select>
+      </div>
+      <div class="action-row" id="ar7">
+        <span>7</span>
+        <input type="text" placeholder="">
+        <select><option value="">-</option><option>Marie Olivier</option><option>Léa Dupré</option><option>Lucas Olivier</option><option>Camille Roux</option><option>Théa Bonnefoy</option></select>
+        <select><option value="">-</option><option>J (14 mai)</option><option>J+1</option><option>J+2</option><option>J+3</option><option>J+4 à J+7</option></select>
+        <select><option value="">-</option><option>Mail interne</option><option>Affichage</option><option>Réunion</option><option>LinkedIn</option><option>Google</option><option>Téléphone</option><option>Communiqué</option></select>
+      </div>
+      <div class="action-row" id="ar8">
+        <span>8</span>
+        <input type="text" placeholder="">
+        <select><option value="">-</option><option>Marie Olivier</option><option>Léa Dupré</option><option>Lucas Olivier</option><option>Camille Roux</option><option>Théa Bonnefoy</option></select>
+        <select><option value="">-</option><option>J (14 mai)</option><option>J+1</option><option>J+2</option><option>J+3</option><option>J+4 à J+7</option></select>
+        <select><option value="">-</option><option>Mail interne</option><option>Affichage</option><option>Réunion</option><option>LinkedIn</option><option>Google</option><option>Téléphone</option><option>Communiqué</option></select>
+      </div>
+    </div>
+
+    <button class="detail-toggle" onclick="toggleDetail('plan-corr')">Voir un exemple de plan d'action</button>
+    <div class="detail-content" id="plan-corr">
+      <h5>Exemple de plan d'action 7 jours</h5>
+      <table class="cadp-table">
+        <thead><tr><th>N°</th><th>Action</th><th>Responsable</th><th>Jour</th><th>Support</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Diffuser la note interne aux 35 salariés</td><td>Léa Dupré</td><td>J (14 mai matin)</td><td>Mail interne + affichage</td></tr>
+          <tr><td>2</td><td>Appeler personnellement Klaus Weber pour rétablir le dialogue</td><td>Marie Olivier</td><td>J (14 mai 11h)</td><td>Téléphone</td></tr>
+          <tr><td>3</td><td>Envoyer le communiqué de presse au Dauphiné Libéré</td><td>Marie Olivier</td><td>J (14 mai avant 17h)</td><td>Communiqué + entretien</td></tr>
+          <tr><td>4</td><td>Publier la réponse officielle sous le post LinkedIn de Klaus Weber</td><td>Marie Olivier</td><td>J+1 (15 mai)</td><td>LinkedIn</td></tr>
+          <tr><td>5</td><td>Répondre aux 3 avis Google avec formulations différenciées</td><td>Camille Roux</td><td>J+1 (15 mai)</td><td>Google</td></tr>
+          <tr><td>6</td><td>Briefer les 80 clients professionnels avec éléments de langage</td><td>Lucas Olivier</td><td>J+2 et J+3</td><td>Téléphone + mail</td></tr>
+          <tr><td>7</td><td>Réunion équipe : retour d'expérience + dispositif anti-récurrence</td><td>Marie Olivier</td><td>J+4 (lundi 18 mai)</td><td>Réunion</td></tr>
+          <tr><td>8</td><td>Suivi e-réputation : monitoring LinkedIn, presse, Google Reviews</td><td>Camille Roux</td><td>J+4 à J+7</td><td>Veille + reporting</td></tr>
+        </tbody>
+      </table>
+      <p><em>Le plan illustre les principes vus en phase 1 : interne avant externe (action 1 avant 3), client direct avant communauté (action 2 avant 4-5), monitoring permanent en clôture (action 8).</em></p>
+    </div>
+  </div>
+
+  <h3>Auto-évaluation pondérée sur 25 points</h3>
+
+  <div class="grille-evaluation">
+    <h4>Grille d'auto-évaluation plan d'action</h4>
+    <div class="critere-row">
+      <div class="critere-libelle">8 actions identifiées et formulées clairement</div>
+      <div class="critere-points">/ 8 pts</div>
+      <div class="critere-input"><input type="number" id="plan-cr1" min="0" max="8" data-max="8"> <span>/ 8</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Cohérence des responsables (rôles compatibles avec leurs fonctions)</div>
+      <div class="critere-points">/ 5 pts</div>
+      <div class="critere-input"><input type="number" id="plan-cr2" min="0" max="5" data-max="5"> <span>/ 5</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Cohérence du calendrier (interne avant externe, urgent en J)</div>
+      <div class="critere-points">/ 6 pts</div>
+      <div class="critere-input"><input type="number" id="plan-cr3" min="0" max="6" data-max="6"> <span>/ 6</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Pertinence des supports choisis pour chaque cible</div>
+      <div class="critere-points">/ 4 pts</div>
+      <div class="critere-input"><input type="number" id="plan-cr4" min="0" max="4" data-max="4"> <span>/ 4</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Présence d'une action de monitoring / suivi sur la durée</div>
+      <div class="critere-points">/ 2 pts</div>
+      <div class="critere-input"><input type="number" id="plan-cr5" min="0" max="2" data-max="2"> <span>/ 2</span></div>
+    </div>
+    <div class="critere-total">
+      <span>Total plan d'action</span>
+      <span><span id="plan-total">0</span> / 25</span>
+    </div>
+    <button class="btn-secondary" onclick="calculerGrillePlan()" style="margin-top:1rem;">Calculer mon score</button>
+  </div>
+
+  <div class="fiche-methode">
+    <h3>Fiche-mémo - Communication de crise en PME</h3>
+    <ol>
+      <li><strong>Vérifier avant de répondre</strong> : faits avérés, sources vérifiées, ampleur réelle de la viralité.</li>
+      <li><strong>Hiérarchiser les cibles</strong> : interne d'abord, puis client direct, puis presse, puis communauté digitale.</li>
+      <li><strong>Adapter le registre</strong> : factuel et mobilisateur en interne, factuel et engageant en presse, courtois et redirectif sur RS.</li>
+      <li><strong>Reconnaître sans se flageller</strong> : assumer l'incident, présenter les actions correctives, ne pas s'auto-incriminer juridiquement.</li>
+      <li><strong>Ne jamais</strong> : minimiser, attaquer le client, accuser un tiers sans preuve, supprimer les avis négatifs, copier-coller la même réponse partout.</li>
+      <li><strong>Centraliser la parole</strong> : un seul porte-parole (la dirigeante), des éléments de langage partagés en interne, pas de communication individuelle sur RS par les salariés.</li>
+      <li><strong>Suivre dans la durée</strong> : monitoring 7 jours minimum, retour d'expérience interne, dispositif anti-récurrence opérationnel.</li>
+    </ol>
+  </div>
+
+  <h3>Ton score sur la capsule</h3>
+  <div class="score-final" id="score-final">
+    <h3>Capsule mercredi PM - Communication institutionnelle</h3>
+    <div class="score-big" id="score-big-display">- / -</div>
+    <p>Score consolidé sur les exercices auto-corrigés et les auto-évaluations</p>
+    <div class="score-detail" id="score-detail-display"></div>
+  </div>
+
+  <div class="email-cta">
+    <h3>Transmettre le récapitulatif</h3>
+    <p>Génère le courriel pré-rédigé incluant tes scores, la note interne, le communiqué, les réponses RS et le plan d'action.</p>
+    <a href="#" id="mailto-link" onclick="genererMailto(event)">Envoyer mon récapitulatif</a>
+  </div>
+
+  <div class="phase-nav-btns">
+    <button class="btn-secondary" onclick="goToPhase(4)">Retour phase 4</button>
+    <span></span>
+  </div>
+</section>
+
+</main>
+
+<footer class="cadp-footer">
+  <p class="cadp-name">Campus Alternance Drôme Provence</p>
+  <p>Capsule de révision E6 SFPME - Session 2026 - BTS GPME 2A</p>
+</footer>
+
+<script>
+let etudiant = { nom: '', prenom: '', classe: '' };
+let scores = {};
+let currentPhase = 1;
+let classifSelections = {};
+
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('cadp-gpme-id');
+  if (saved) {
+    etudiant = JSON.parse(saved);
+    document.getElementById('id-nom').value = etudiant.nom;
+    document.getElementById('id-prenom').value = etudiant.prenom;
+  }
+  document.getElementById('btn-id-valid').addEventListener('click', validerIdentification);
+
+  initCompteur('note-interne', 'note-int-count', 'note-int-mots');
+  initCompteur('reponse-li', 'li-count', 'li-mots');
+  initCompteur('reponse-go', 'go-count', 'go-mots');
+
+  // Compteur communiqué (somme de tous les champs)
+  ['cp-titre', 'cp-chapeau', 'cp-para1', 'cp-para2', 'cp-para3', 'cp-contact'].forEach(id => {
+    document.getElementById(id).addEventListener('input', updateCPMots);
+  });
+
+  // Sauvegarde des productions
+  document.querySelectorAll('textarea, .communique-section input').forEach(el => {
+    el.addEventListener('input', sauvegarderTextes);
+  });
+  document.querySelectorAll('.action-row input, .action-row select').forEach(el => {
+    el.addEventListener('input', sauvegarderTextes);
+    el.addEventListener('change', sauvegarderTextes);
+  });
+
+  // Classification : boutons 1/2/3
+  document.querySelectorAll('.classif-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.target;
+      const niveau = btn.dataset.niveau;
+      classifSelections[target] = niveau;
+      const item = document.querySelector('[data-id="' + target + '"]');
+      item.querySelectorAll('.classif-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      updateClassifZones();
+      sauvegarderProgression();
+    });
+  });
+
+  document.querySelectorAll('.phase-tab').forEach(tab => {
+    tab.addEventListener('click', () => goToPhase(parseInt(tab.dataset.phase)));
+  });
+
+  restaurerProgression();
+});
+
+function validerIdentification() {
+  const nom = document.getElementById('id-nom').value.trim();
+  const prenom = document.getElementById('id-prenom').value.trim();
+  if (!nom || !prenom) { alert("Renseigne ton nom et ton prénom pour continuer."); return; }
+  etudiant = { nom: nom.toUpperCase(), prenom: prenom, classe: 'BTS GPME 2A - Promo 2426' };
+  localStorage.setItem('cadp-gpme-id', JSON.stringify(etudiant));
+  document.getElementById('header-name').textContent = etudiant.prenom + ' ' + etudiant.nom;
+  document.getElementById('modal-id').style.display = 'none';
+}
+
+function initCompteur(taId, cId, mId) {
+  const ta = document.getElementById(taId);
+  if (!ta) return;
+  ta.addEventListener('input', () => {
+    document.getElementById(cId).textContent = ta.value.length;
+    document.getElementById(mId).textContent = ta.value.trim().split(/\s+/).filter(w => w.length > 0).length;
+  });
+}
+
+function updateCPMots() {
+  const ids = ['cp-titre', 'cp-chapeau', 'cp-para1', 'cp-para2', 'cp-para3', 'cp-contact'];
+  let total = 0;
+  ids.forEach(id => {
+    const v = document.getElementById(id).value.trim();
+    if (v) total += v.split(/\s+/).filter(w => w.length > 0).length;
+  });
+  document.getElementById('cp-mots').textContent = total;
+}
+
+function updateClassifZones() {
+  ['1', '2', '3'].forEach(z => document.getElementById('zone-' + z).innerHTML = '');
+  Object.keys(classifSelections).forEach(itemId => {
+    const niveau = classifSelections[itemId];
+    const item = document.querySelector('[data-id="' + itemId + '"]');
+    const itemText = item.querySelector('.classif-item-text').innerHTML;
+    const ph = document.createElement('div');
+    ph.style.cssText = 'background:white;padding:.4rem .7rem;border-left:3px solid var(--or);font-size:.85rem;margin-bottom:.4rem;';
+    ph.innerHTML = itemText;
+    document.getElementById('zone-' + niveau).appendChild(ph);
+  });
+}
+
+function validateClassif() {
+  const items = document.querySelectorAll('[data-id]');
+  let bonnes = 0, total = 0, manquants = 0;
+  items.forEach(item => {
+    const id = item.dataset.id;
+    const bonne = item.dataset.bonne;
+    if (classifSelections[id]) {
+      total++;
+      if (classifSelections[id] === bonne) bonnes++;
+    } else manquants++;
+  });
+  let html = '';
+  if (manquants > 0) html = '<div class="encadre encadre-attention"><div class="encadre-header">Classification incomplète</div><p>Il reste ' + manquants + ' cible(s) non classée(s).</p></div>';
+  else if (bonnes === 6) html = '<div class="encadre encadre-note"><div class="encadre-header">Classification parfaite</div><p>Tu as bien hiérarchisé les 6 cibles. Bravo.</p></div>';
+  else html = '<div class="encadre encadre-attention"><div class="encadre-header">Classification partielle</div><p>' + bonnes + ' bonne(s) sur 6. Consulte le corrigé pour comprendre la logique.</p></div>';
+  document.getElementById('classif-result').innerHTML = html;
+  scores.classif = { bonnes: bonnes, total: 6, note20: Math.round(bonnes / 6 * 20 * 10) / 10 };
+  miseAJourScoreFinal();
+  sauvegarderProgression();
+}
+
+function validateQCM() {
+  const questions = document.querySelectorAll('#qcm-bloc .qcm-question');
+  let bonnes = 0, total = 0;
+  questions.forEach((q, i) => {
+    const bonne = q.dataset.bonne;
+    const checked = q.querySelector('input[type="radio"]:checked');
+    q.querySelectorAll('.qcm-option').forEach(opt => opt.classList.remove('correct', 'incorrect', 'expected'));
+    if (checked) {
+      total++;
+      const userVal = checked.value;
+      const userOpt = checked.closest('.qcm-option');
+      if (userVal === bonne) { userOpt.classList.add('correct'); bonnes++; }
+      else {
+        userOpt.classList.add('incorrect');
+        const correctOpt = q.querySelector('input[value="' + bonne + '"]').closest('.qcm-option');
+        correctOpt.classList.add('expected');
+      }
+    }
+  });
+  let html = '';
+  if (total < 8) html = '<div class="encadre encadre-attention"><div class="encadre-header">QCM incomplet</div><p>Il reste ' + (8 - total) + ' question(s) non répondue(s).</p></div>';
+  else if (bonnes === 8) html = '<div class="encadre encadre-note"><div class="encadre-header">Excellent</div><p>8 / 8. Tu maîtrises les bons réflexes en communication de crise.</p></div>';
+  else html = '<div class="encadre encadre-attention"><div class="encadre-header">Résultat partiel</div><p>' + bonnes + ' / 8 réponses correctes. Les bonnes réponses sont indiquées en pointillés verts.</p></div>';
+  document.getElementById('qcm-result').innerHTML = html;
+  scores.qcm = { bonnes: bonnes, total: 8, note20: Math.round(bonnes / 8 * 20 * 10) / 10 };
+  miseAJourScoreFinal();
+  sauvegarderProgression();
+}
+
+function calculerGrille(prefix, nbCriteres, totalId, scoreKey, max) {
+  let total = 0, valide = true;
+  for (let i = 1; i <= nbCriteres; i++) {
+    const inp = document.getElementById(prefix + i);
+    if (!inp) continue;
+    const v = parseFloat(inp.value);
+    const m = parseFloat(inp.dataset.max);
+    if (isNaN(v) || v < 0 || v > m) { inp.style.borderColor = 'var(--error)'; valide = false; }
+    else { inp.style.borderColor = 'var(--border)'; total += v; }
+  }
+  if (!valide) { alert('Vérifie tes saisies (toutes remplies, dans la limite max).'); return; }
+  document.getElementById(totalId).textContent = total;
+  scores[scoreKey] = { val: total, max: max };
+  sauvegarderProgression();
+  miseAJourScoreFinal();
+}
+
+function calculerGrilleNoteInterne() { calculerGrille('note-int-cr', 6, 'note-int-total', 'noteInt', 25); }
+function calculerGrilleCP() { calculerGrille('cp-cr', 8, 'cp-total', 'cp', 35); }
+function calculerGrillePlan() { calculerGrille('plan-cr', 5, 'plan-total', 'plan', 25); }
+
+function toggleDetail(id) { document.getElementById(id).classList.toggle('shown'); }
+
+function sauvegarderTextes() {
+  const data = {
+    noteInt: document.getElementById('note-interne').value,
+    cpTitre: document.getElementById('cp-titre').value,
+    cpChapeau: document.getElementById('cp-chapeau').value,
+    cpPara1: document.getElementById('cp-para1').value,
+    cpPara2: document.getElementById('cp-para2').value,
+    cpPara3: document.getElementById('cp-para3').value,
+    cpContact: document.getElementById('cp-contact').value,
+    repLI: document.getElementById('reponse-li').value,
+    repGO: document.getElementById('reponse-go').value,
+    plan: []
+  };
+  for (let i = 1; i <= 8; i++) {
+    const row = document.getElementById('ar' + i);
+    if (row) {
+      const inp = row.querySelector('input');
+      const sels = row.querySelectorAll('select');
+      data.plan.push({ action: inp.value, resp: sels[0].value, jour: sels[1].value, support: sels[2].value });
+    }
+  }
+  localStorage.setItem('cadp-gpme-textes-mercredi-pm', JSON.stringify(data));
+}
+
+function goToPhase(num) {
+  document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+  document.getElementById('phase-' + num).classList.add('active');
+  document.querySelectorAll('.phase-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('.phase-tab[data-phase="' + num + '"]').classList.add('active');
+  currentPhase = num;
+  if (num > 1) document.querySelector('.phase-tab[data-phase="' + (num - 1) + '"]').classList.add('completed');
+  miseAJourProgression();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function miseAJourProgression() {
+  const pct = Math.round((Math.max(currentPhase - 1, 0) / 5) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = pct + '%';
+}
+
+function miseAJourScoreFinal() {
+  const labelMap = {
+    'classif': 'Classification cibles',
+    'qcm': 'QCM réflexes crise',
+    'noteInt': 'Note interne (auto)',
+    'cp': 'Communiqué + RS (auto)',
+    'plan': 'Plan d\'action 7j (auto)'
+  };
+  const sList = [];
+  Object.keys(labelMap).forEach(key => {
+    if (scores[key]) {
+      if (scores[key].note20 !== undefined) sList.push({ label: labelMap[key], val: scores[key].note20.toFixed(1) + ' / 20' });
+      else if (scores[key].val !== undefined) sList.push({ label: labelMap[key], val: scores[key].val + ' / ' + scores[key].max });
+    }
+  });
+  if (sList.length === 0) {
+    document.getElementById('score-big-display').textContent = '- / -';
+    document.getElementById('score-detail-display').innerHTML = '<p style="color:var(--text-mute);">Réalise les exercices pour afficher tes scores.</p>';
+    return;
+  }
+  // Calcul du total auto-déclaré
+  const autoTotal = (scores.noteInt ? scores.noteInt.val : 0) + (scores.cp ? scores.cp.val : 0) + (scores.plan ? scores.plan.val : 0);
+  const autoMax = 25 + 35 + 25;
+  const autoNote = Math.round((autoTotal / autoMax) * 20 * 10) / 10;
+  // Score consolidé : moyenne pondérée des QCM + auto
+  let totalNotes = 0, nb = 0;
+  if (scores.classif) { totalNotes += scores.classif.note20; nb++; }
+  if (scores.qcm) { totalNotes += scores.qcm.note20; nb++; }
+  if (autoTotal > 0) { totalNotes += autoNote; nb++; }
+  const moyenne = nb > 0 ? (totalNotes / nb).toFixed(1) : '-';
+  document.getElementById('score-big-display').textContent = moyenne + ' / 20';
+  let detail = '';
+  sList.forEach(s => { detail += '<div class="score-cell"><div class="score-cell-label">' + s.label + '</div><div class="score-cell-value">' + s.val + '</div></div>'; });
+  if (autoTotal > 0) detail += '<div class="score-cell"><div class="score-cell-label">Total productions</div><div class="score-cell-value">' + autoTotal + ' / ' + autoMax + '</div></div>';
+  document.getElementById('score-detail-display').innerHTML = detail;
+}
+
+function sauvegarderProgression() {
+  localStorage.setItem('cadp-gpme-prog-mercredi-pm', JSON.stringify({ scores: scores, classif: classifSelections }));
+}
+
+function restaurerProgression() {
+  const saved = localStorage.getItem('cadp-gpme-prog-mercredi-pm');
+  if (saved) {
+    const data = JSON.parse(saved);
+    scores = data.scores || {};
+    classifSelections = data.classif || {};
+    Object.keys(classifSelections).forEach(itemId => {
+      const item = document.querySelector('[data-id="' + itemId + '"]');
+      if (item) {
+        const btn = item.querySelector('.classif-btn[data-niveau="' + classifSelections[itemId] + '"]');
+        if (btn) btn.classList.add('active');
+      }
+    });
+    updateClassifZones();
+    miseAJourScoreFinal();
+  }
+  const textes = localStorage.getItem('cadp-gpme-textes-mercredi-pm');
+  if (textes) {
+    const d = JSON.parse(textes);
+    if (d.noteInt) document.getElementById('note-interne').value = d.noteInt;
+    if (d.cpTitre) document.getElementById('cp-titre').value = d.cpTitre;
+    if (d.cpChapeau) document.getElementById('cp-chapeau').value = d.cpChapeau;
+    if (d.cpPara1) document.getElementById('cp-para1').value = d.cpPara1;
+    if (d.cpPara2) document.getElementById('cp-para2').value = d.cpPara2;
+    if (d.cpPara3) document.getElementById('cp-para3').value = d.cpPara3;
+    if (d.cpContact) document.getElementById('cp-contact').value = d.cpContact;
+    if (d.repLI) document.getElementById('reponse-li').value = d.repLI;
+    if (d.repGO) document.getElementById('reponse-go').value = d.repGO;
+    if (d.plan) {
+      d.plan.forEach((act, i) => {
+        const row = document.getElementById('ar' + (i + 1));
+        if (row && act) {
+          const inp = row.querySelector('input');
+          const sels = row.querySelectorAll('select');
+          if (inp) inp.value = act.action || '';
+          if (sels[0]) sels[0].value = act.resp || '';
+          if (sels[1]) sels[1].value = act.jour || '';
+          if (sels[2]) sels[2].value = act.support || '';
+        }
+      });
+    }
+    updateCPMots();
+    ['note-interne', 'reponse-li', 'reponse-go'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.dispatchEvent(new Event('input'));
+    });
+  }
+  if (etudiant.nom) {
+    document.getElementById('header-name').textContent = etudiant.prenom + ' ' + etudiant.nom;
+    document.getElementById('modal-id').style.display = 'none';
+  }
+}
+
+function genererMailto(e) {
+  e.preventDefault();
+  const sujet = '[CADP - GPME] Capsule mercredi PM - Communication de crise - ' + (etudiant.prenom || '?') + ' ' + (etudiant.nom || '?');
+  let corps = 'Bonjour,\n\nVoici le récapitulatif de ma capsule de révision sur la communication institutionnelle (A4.4).\n\n';
+  corps += '=== Identification ===\n';
+  corps += 'Nom : ' + (etudiant.nom || '-') + '\nPrénom : ' + (etudiant.prenom || '-') + '\nClasse : ' + (etudiant.classe || '-') + '\nDate : ' + new Date().toLocaleString('fr-FR') + '\n\n';
+  corps += '=== Scores ===\n';
+  if (scores.classif) corps += 'Classification cibles : ' + scores.classif.bonnes + '/6 soit ' + scores.classif.note20.toFixed(1) + '/20\n';
+  if (scores.qcm) corps += 'QCM réflexes crise : ' + scores.qcm.bonnes + '/8 soit ' + scores.qcm.note20.toFixed(1) + '/20\n';
+  if (scores.noteInt) corps += 'Auto-éval note interne : ' + scores.noteInt.val + '/25\n';
+  if (scores.cp) corps += 'Auto-éval communiqué + RS : ' + scores.cp.val + '/35\n';
+  if (scores.plan) corps += 'Auto-éval plan d\'action : ' + scores.plan.val + '/25\n';
+
+  const noteInt = document.getElementById('note-interne').value.trim();
+  if (noteInt) corps += '\n=== Note interne ===\n\n' + noteInt + '\n';
+
+  const cpT = document.getElementById('cp-titre').value.trim();
+  if (cpT) {
+    corps += '\n=== Communiqué de presse ===\n\n';
+    corps += 'TITRE : ' + cpT + '\n\n';
+    corps += 'CHAPEAU : ' + document.getElementById('cp-chapeau').value.trim() + '\n\n';
+    corps += 'PARAGRAPHE 1 : ' + document.getElementById('cp-para1').value.trim() + '\n\n';
+    corps += 'PARAGRAPHE 2 : ' + document.getElementById('cp-para2').value.trim() + '\n\n';
+    corps += 'PARAGRAPHE 3 : ' + document.getElementById('cp-para3').value.trim() + '\n\n';
+    corps += 'CONTACT : ' + document.getElementById('cp-contact').value.trim() + '\n';
+  }
+
+  const repLI = document.getElementById('reponse-li').value.trim();
+  if (repLI) corps += '\n=== Réponse LinkedIn ===\n\n' + repLI + '\n';
+
+  const repGO = document.getElementById('reponse-go').value.trim();
+  if (repGO) corps += '\n=== Réponse Google Reviews ===\n\n' + repGO + '\n';
+
+  let planTxt = '';
+  for (let i = 1; i <= 8; i++) {
+    const row = document.getElementById('ar' + i);
+    if (row) {
+      const inp = row.querySelector('input').value.trim();
+      const sels = row.querySelectorAll('select');
+      if (inp) planTxt += i + '. ' + inp + ' | ' + sels[0].value + ' | ' + sels[1].value + ' | ' + sels[2].value + '\n';
+    }
+  }
+  if (planTxt) corps += '\n=== Plan d\'action 7 jours ===\n\n' + planTxt;
+
+  corps += '\n---\nCapsule de révision E6 SFPME - Activité A4.4 - BTS GPME 2A - Promo 2426\nCampus Alternance Drôme Provence';
+  const url = 'mailto:kevin.vidard@cadp.pro?subject=' + encodeURIComponent(sujet) + '&body=' + encodeURIComponent(corps);
+  window.location.href = url;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capsule GPME - Analyse de l'activité - CADP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0B1929;--navy-light:#1a2c45;--navy-soft:#243b5c;--or:#C9A84C;--or-light:#d4b76a;--or-soft:#e6d29c;--bg:#f7f4ee;--bg-light:#fdfbf6;--text:#1a1a1a;--text-soft:#4a4a4a;--text-mute:#757575;--border:#d8d2c1;--border-light:#e8e3d4;--success:#2d6b3f;--success-bg:#e8f3eb;--error:#b13a3a;--error-bg:#f9eaea;--warning:#8a5a00;--warning-bg:#fcf3dc;--info:#1f4a7a;--info-bg:#e6eef7;--shadow:0 2px 12px rgba(11,25,41,0.08);--shadow-lg:0 8px 32px rgba(11,25,41,0.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',system-ui,sans-serif;font-size:16px;line-height:1.6;color:var(--text);background:var(--bg);min-height:100vh}
+h1,h2,h3,h4{font-family:'Playfair Display',serif;color:var(--navy);line-height:1.25}
+h1{font-size:2.4rem;font-weight:700}
+h2{font-size:1.85rem;font-weight:600;margin-bottom:1rem}
+h3{font-size:1.4rem;font-weight:600;margin:1.5rem 0 .75rem}
+h4{font-size:1.15rem;font-weight:600;margin:1rem 0 .5rem;color:var(--navy-light)}
+h5{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--navy);margin:.8rem 0 .4rem}
+p{margin-bottom:1rem}
+strong{font-weight:600;color:var(--navy)}
+em{font-style:italic;color:var(--text-soft)}
+header.cadp-header{background:var(--navy);color:var(--bg-light);padding:1.5rem 2rem;border-bottom:4px solid var(--or);box-shadow:var(--shadow);position:sticky;top:0;z-index:100}
+.header-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.brand{display:flex;flex-direction:column}
+.brand-name{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--or);letter-spacing:.5px}
+.brand-tag{font-size:.85rem;color:var(--bg-light);opacity:.8;letter-spacing:.5px;text-transform:uppercase}
+.header-info{display:flex;gap:2rem;font-size:.9rem;color:var(--bg-light)}
+.header-info span{display:flex;flex-direction:column}
+.header-info .label{font-size:.75rem;color:var(--or-soft);text-transform:uppercase;letter-spacing:.5px}
+.modal-overlay{position:fixed;inset:0;background:rgba(11,25,41,.85);display:flex;align-items:center;justify-content:center;z-index:1000;padding:1rem}
+.modal{background:var(--bg-light);max-width:540px;width:100%;border-top:6px solid var(--or);box-shadow:var(--shadow-lg);padding:2rem}
+.modal h2{color:var(--navy);margin-bottom:.5rem}
+.modal p{color:var(--text-soft);margin-bottom:1.5rem}
+.modal-form{display:flex;flex-direction:column;gap:1rem}
+.form-row{display:flex;flex-direction:column;gap:.35rem}
+.form-row label{font-weight:600;font-size:.9rem;color:var(--navy)}
+.form-row input{padding:.7rem .9rem;border:1.5px solid var(--border);background:white;font-family:inherit;font-size:1rem}
+.form-row input:focus{outline:none;border-color:var(--or)}
+.btn-primary{background:var(--navy);color:var(--or);border:2px solid var(--navy);padding:.85rem 1.5rem;font-family:inherit;font-size:1rem;font-weight:600;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;transition:all .2s}
+.btn-primary:hover{background:var(--or);color:var(--navy);border-color:var(--or)}
+.btn-secondary{background:transparent;color:var(--navy);border:2px solid var(--navy);padding:.7rem 1.3rem;font-family:inherit;font-size:.95rem;font-weight:600;cursor:pointer;letter-spacing:.3px;transition:all .2s}
+.btn-secondary:hover{background:var(--navy);color:var(--or)}
+.main-container{max-width:1100px;margin:2rem auto;padding:0 1.5rem}
+.phases-nav{display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem;margin-bottom:2rem;padding:1rem;background:white;border:1px solid var(--border);box-shadow:var(--shadow)}
+.phase-tab{padding:.85rem .5rem;text-align:center;font-size:.85rem;font-weight:600;background:var(--bg);border:1.5px solid var(--border);color:var(--text-soft);cursor:pointer;transition:all .2s}
+.phase-tab.active{background:var(--navy);color:var(--or);border-color:var(--navy)}
+.phase-tab.completed{background:var(--or-soft);color:var(--navy);border-color:var(--or)}
+.phase-tab:hover:not(.active){border-color:var(--or);color:var(--navy)}
+.phase-tab .phase-num{display:block;font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:.2rem}
+.phase-tab .phase-title{display:block;font-size:.78rem;line-height:1.2}
+.phase{display:none;background:white;padding:2.5rem;border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:2rem;animation:fadeIn .4s ease}
+.phase.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.phase-header{border-bottom:2px solid var(--or);padding-bottom:1rem;margin-bottom:1.5rem}
+.phase-header .phase-eyebrow{font-size:.85rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--or);font-weight:600;margin-bottom:.3rem}
+.subsection{background:var(--bg-light);border-left:4px solid var(--navy);padding:1.5rem 1.8rem;margin:2rem 0 1.5rem}
+.subsection-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--navy);margin-bottom:.5rem}
+.subsection-eyebrow{font-size:.8rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--or);font-weight:600;margin-bottom:.3rem}
+.encadre{border-left:4px solid;padding:1.2rem 1.5rem;margin:1.5rem 0;background:var(--bg)}
+.encadre-header{font-family:'Playfair Display',serif;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-size:.9rem;margin-bottom:.5rem}
+.encadre-note{border-color:var(--info);background:var(--info-bg)}
+.encadre-note .encadre-header{color:var(--info)}
+.encadre-important{border-color:var(--or);background:var(--warning-bg)}
+.encadre-important .encadre-header{color:var(--warning)}
+.encadre-attention{border-color:var(--error);background:var(--error-bg)}
+.encadre-attention .encadre-header{color:var(--error)}
+.doc-ressource{background:var(--bg-light);border:1px solid var(--border);padding:1.5rem 1.8rem;margin:1.5rem 0;position:relative}
+.doc-ressource::before{content:'Document ressource';position:absolute;top:-.65rem;left:1.5rem;background:var(--navy);color:var(--or);padding:.2rem .7rem;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.8px}
+.doc-meta{font-size:.85rem;color:var(--text-mute);font-style:italic;margin-top:1rem;padding-top:.7rem;border-top:1px dashed var(--border)}
+table.cadp-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.92rem;background:white}
+table.cadp-table thead th{background:var(--navy);color:var(--or);padding:.6rem .5rem;text-align:left;font-weight:600;font-size:.82rem;text-transform:uppercase;letter-spacing:.5px;border:1px solid var(--navy)}
+table.cadp-table td{padding:.5rem .55rem;border:1px solid var(--border-light);vertical-align:top}
+table.cadp-table tbody tr:nth-child(even){background:var(--bg)}
+table.cadp-table .num-col{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+table.cadp-table .num-col.bold{font-weight:700;color:var(--navy)}
+table.cadp-table .total-row td{background:var(--navy-soft);color:white;font-weight:600;border:1px solid var(--navy-soft)}
+table.cadp-table .total-row td.total-num{color:var(--or)}
+table.cadp-table .subtotal-row td{background:var(--or-soft);font-weight:600}
+table.cadp-table .calc-input{width:100%;padding:.3rem .4rem;border:1.5px solid var(--border);background:white;font-family:inherit;font-size:.9rem;text-align:right;font-variant-numeric:tabular-nums}
+table.cadp-table .calc-input:focus{outline:none;border-color:var(--or)}
+table.cadp-table .calc-input.correct{background:var(--success-bg);border-color:var(--success)}
+table.cadp-table .calc-input.incorrect{background:var(--error-bg);border-color:var(--error)}
+.exercise{margin:1.5rem 0;padding:1.5rem;background:var(--bg-light);border:1px solid var(--border)}
+.exercise-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600;color:var(--navy);margin-bottom:.5rem}
+.exercise-instruction{color:var(--text-soft);margin-bottom:1rem;font-size:.95rem}
+.qcm-question{margin:1.2rem 0;padding:1rem 0;border-bottom:1px dashed var(--border)}
+.qcm-question:last-child{border-bottom:none}
+.qcm-stem{font-weight:600;margin-bottom:.7rem;color:var(--navy)}
+.qcm-options{display:flex;flex-direction:column;gap:.4rem}
+.qcm-option{display:flex;align-items:flex-start;padding:.6rem .9rem;background:white;border:1.5px solid var(--border);cursor:pointer;transition:all .15s;gap:.6rem}
+.qcm-option:hover{border-color:var(--or)}
+.qcm-option input{margin-top:.25rem;flex-shrink:0;accent-color:var(--navy)}
+.qcm-option.correct{background:var(--success-bg);border-color:var(--success)}
+.qcm-option.incorrect{background:var(--error-bg);border-color:var(--error)}
+.qcm-option.expected{background:var(--success-bg);border-color:var(--success);border-style:dashed}
+.qcm-feedback{margin-top:.7rem;padding:.7rem 1rem;font-size:.9rem;display:none}
+.qcm-feedback.shown{display:block}
+.qcm-feedback.success{background:var(--success-bg);color:var(--success);border-left:3px solid var(--success)}
+.qcm-feedback.error{background:var(--error-bg);color:var(--error);border-left:3px solid var(--error)}
+.saisie-question{margin:1.2rem 0;padding:1rem 0;border-bottom:1px dashed var(--border)}
+.saisie-question:last-child{border-bottom:none}
+.saisie-row{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-top:.5rem}
+.saisie-row label{font-weight:600;color:var(--navy);min-width:240px}
+.saisie-row input[type=text],.saisie-row input[type=number]{padding:.55rem .8rem;border:1.5px solid var(--border);background:white;font-family:inherit;font-size:1rem;width:130px;font-variant-numeric:tabular-nums}
+.saisie-row input:focus{outline:none;border-color:var(--or)}
+.saisie-row input.correct{border-color:var(--success);background:var(--success-bg)}
+.saisie-row input.incorrect{border-color:var(--error);background:var(--error-bg)}
+.saisie-unit{color:var(--text-soft);font-size:.95rem}
+.saisie-tolerance{display:block;font-size:.82rem;color:var(--text-mute);font-style:italic;margin-top:.3rem}
+.detail-toggle{background:none;border:1px solid var(--navy);color:var(--navy);padding:.4rem .9rem;font-family:inherit;font-size:.85rem;cursor:pointer;margin-top:.5rem;font-weight:600}
+.detail-toggle:hover{background:var(--navy);color:var(--or)}
+.detail-content{display:none;margin-top:.8rem;padding:1rem 1.2rem;background:var(--bg);border-left:3px solid var(--or);font-size:.93rem}
+.detail-content.shown{display:block}
+.detail-content h5{font-family:'Playfair Display',serif;color:var(--navy);margin-bottom:.5rem}
+.detail-content ol,.detail-content ul{margin-left:1.5rem;margin-bottom:.7rem}
+.detail-content code{background:white;padding:.1rem .4rem;border:1px solid var(--border);font-family:'Courier New',monospace;font-size:.88rem}
+.production-area{margin:1.5rem 0}
+.production-area textarea{width:100%;min-height:280px;padding:1rem;border:1.5px solid var(--border);background:white;font-family:'Source Sans 3',sans-serif;font-size:.97rem;line-height:1.6;resize:vertical}
+.production-area textarea:focus{outline:none;border-color:var(--or)}
+.production-counter{font-size:.85rem;color:var(--text-mute);margin-top:.4rem;text-align:right}
+.grille-evaluation{margin-top:1.5rem;background:white;border:1px solid var(--border);padding:1.5rem}
+.grille-evaluation h4{margin-top:0}
+.critere-row{display:grid;grid-template-columns:1fr 100px 130px;gap:1rem;align-items:center;padding:.7rem 0;border-bottom:1px solid var(--border-light)}
+.critere-row:last-child{border-bottom:none}
+.critere-libelle{font-size:.95rem}
+.critere-points{font-size:.85rem;color:var(--text-mute);text-align:center}
+.critere-input{display:flex;align-items:center;gap:.4rem;justify-content:flex-end}
+.critere-input input{width:60px;padding:.4rem;text-align:center;border:1.5px solid var(--border);font-size:.95rem}
+.critere-total{margin-top:1rem;padding-top:1rem;border-top:2px solid var(--navy);display:flex;justify-content:space-between;align-items:center;font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:600;color:var(--navy)}
+.fiche-methode{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);color:var(--bg-light);padding:2rem;margin:2rem 0;border-left:6px solid var(--or)}
+.fiche-methode h3{color:var(--or);margin-top:0}
+.fiche-methode ol{margin-left:1.5rem}
+.fiche-methode li{margin-bottom:.7rem}
+.fiche-methode strong{color:var(--or-soft)}
+.phase-nav-btns{display:flex;justify-content:space-between;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.progress-bar-wrap{height:6px;background:var(--border-light);margin:1rem 0 2rem;position:relative}
+.progress-bar-fill{height:100%;background:var(--or);width:0%;transition:width .4s}
+.progress-label{font-size:.85rem;color:var(--text-mute);margin-top:.4rem;text-align:right}
+.synthese-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.5rem 0}
+.synthese-card{background:white;border-top:4px solid var(--or);padding:1.2rem;box-shadow:var(--shadow)}
+.synthese-card-num{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:700;color:var(--or);line-height:1}
+.synthese-card-title{font-weight:600;color:var(--navy);margin:.5rem 0}
+.synthese-card-text{font-size:.92rem;color:var(--text-soft)}
+.score-final{background:white;padding:2rem;border:2px solid var(--or);text-align:center;margin:1.5rem 0}
+.score-final h3{color:var(--navy);margin-top:0}
+.score-final .score-big{font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:700;color:var(--or);line-height:1;margin:1rem 0}
+.score-detail{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-top:1.5rem}
+.score-cell{padding:.8rem;background:var(--bg);border-left:3px solid var(--or)}
+.score-cell .score-cell-label{font-size:.85rem;color:var(--text-mute)}
+.score-cell .score-cell-value{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:600;color:var(--navy)}
+.email-cta{background:var(--navy);color:var(--bg-light);padding:2rem;margin:2rem 0;border-left:6px solid var(--or);text-align:center}
+.email-cta h3{color:var(--or);margin-top:0}
+.email-cta p{margin-bottom:1.2rem}
+.email-cta a{display:inline-block;background:var(--or);color:var(--navy);padding:.85rem 2rem;text-decoration:none;font-weight:700;font-size:1rem;letter-spacing:.5px;text-transform:uppercase;transition:all .2s;border:2px solid var(--or)}
+.email-cta a:hover{background:transparent;color:var(--or)}
+footer.cadp-footer{background:var(--navy);color:var(--bg-light);padding:2rem;text-align:center;margin-top:3rem;border-top:4px solid var(--or)}
+footer.cadp-footer p{margin-bottom:.5rem;opacity:.85;font-size:.9rem}
+footer.cadp-footer .cadp-name{color:var(--or);font-family:'Playfair Display',serif;font-weight:700;font-size:1.1rem}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:1.5rem 0}
+.kpi-card{background:white;padding:1rem 1.2rem;border-left:4px solid var(--or);box-shadow:var(--shadow)}
+.kpi-label{font-size:.85rem;color:var(--text-mute);text-transform:uppercase;letter-spacing:.5px}
+.kpi-value{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--navy);margin-top:.3rem}
+.kpi-comment{font-size:.8rem;color:var(--text-soft);margin-top:.3rem;font-style:italic}
+.kpi-card.alert{border-left-color:var(--error)}
+.kpi-card.alert .kpi-value{color:var(--error)}
+.kpi-card.good{border-left-color:var(--success)}
+.kpi-card.good .kpi-value{color:var(--success)}
+.formule{background:var(--bg);padding:.8rem 1.2rem;border-left:3px solid var(--or);font-family:'Courier New',monospace;font-size:.95rem;margin:.8rem 0;color:var(--navy)}
+.tres-negatif{background:var(--error-bg);color:var(--error);font-weight:700;padding:.3rem .5rem;}
+.tres-positif{background:var(--success-bg);color:var(--success);font-weight:700;padding:.3rem .5rem;}
+@media (max-width:768px){h1{font-size:1.8rem}h2{font-size:1.5rem}.main-container{padding:0 1rem}.phase{padding:1.5rem}.phases-nav{padding:.5rem}.phase-tab{padding:.5rem .2rem}.phase-tab .phase-title{font-size:.65rem}.header-info{flex-direction:column;gap:.5rem}.critere-row{grid-template-columns:1fr}table.cadp-table{font-size:.78rem}table.cadp-table thead th,table.cadp-table td{padding:.3rem .25rem}.saisie-row label{min-width:auto}}
+@media print{header.cadp-header,.phases-nav,.phase-nav-btns,.modal-overlay{display:none!important}.phase{display:block!important;page-break-after:always;box-shadow:none;border:none}}
+</style>
+</head>
+<body>
+
+<div class="modal-overlay" id="modal-id">
+  <div class="modal">
+    <h2>Identification</h2>
+    <p>Avant de commencer, identifie-toi pour que tes réponses puissent t'être attribuées et que ton récapitulatif soit transmis à ton responsable pédagogique.</p>
+    <div class="modal-form">
+      <div class="form-row"><label for="id-nom">Nom</label><input type="text" id="id-nom" placeholder="DUPONT"></div>
+      <div class="form-row"><label for="id-prenom">Prénom</label><input type="text" id="id-prenom" placeholder="Marie"></div>
+      <div class="form-row"><label for="id-classe">Classe</label><input type="text" id="id-classe" value="BTS GPME 2A - Promo 2426" readonly></div>
+      <button class="btn-primary" id="btn-id-valid">Commencer la capsule</button>
+    </div>
+  </div>
+</div>
+
+<header class="cadp-header">
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-name">CADP</span>
+      <span class="brand-tag">Campus Alternance Drôme Provence</span>
+    </div>
+    <div class="header-info">
+      <span><span class="label">Étudiant</span><strong id="header-name">-</strong></span>
+      <span><span class="label">Capsule</span><strong>Mercredi 13 mai - 8h-12h</strong></span>
+      <span><span class="label">Session</span><strong>BTS GPME E6 - 2026</strong></span>
+    </div>
+  </div>
+</header>
+
+<main class="main-container">
+
+<section style="background:white;padding:2.5rem;border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:2rem;">
+  <div style="font-size:.85rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--or);font-weight:600;margin-bottom:.5rem;">Capsule de révision E6 - SFPME</div>
+  <h1>Analyse de l'activité : décider du lancement d'une nouvelle cuvée</h1>
+  <p style="font-size:1.1rem;color:var(--text-soft);margin-top:1rem;">Direct costing, seuil de rentabilité, point mort, budget de trésorerie. Tu accompagnes Marie dans la décision la plus structurante de l'année 2026.</p>
+  <div style="display:flex;gap:2rem;flex-wrap:wrap;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border);">
+    <div><span style="display:block;font-size:.8rem;color:var(--text-mute);text-transform:uppercase;letter-spacing:.5px;">Activité référentiel</span><strong>A4.5 - Analyse de l'activité</strong></div>
+    <div><span style="display:block;font-size:.8rem;color:var(--text-mute);text-transform:uppercase;letter-spacing:.5px;">Tâches</span><strong>T.4.5.1 - T.4.5.2 - T.4.5.3 - T.4.5.4</strong></div>
+  </div>
+</section>
+
+<div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill"></div></div>
+  <div class="progress-label">Progression : <span id="progress-text">0%</span></div>
+</div>
+
+<nav class="phases-nav" id="phases-nav">
+  <div class="phase-tab active" data-phase="1"><span class="phase-num">1</span><span class="phase-title">Contexte et méthode</span></div>
+  <div class="phase-tab" data-phase="2"><span class="phase-num">2</span><span class="phase-title">Coûts et marges</span></div>
+  <div class="phase-tab" data-phase="3"><span class="phase-num">3</span><span class="phase-title">Seuil de rentabilité</span></div>
+  <div class="phase-tab" data-phase="4"><span class="phase-num">4</span><span class="phase-title">Budget de trésorerie</span></div>
+  <div class="phase-tab" data-phase="5"><span class="phase-num">5</span><span class="phase-title">Note de décision</span></div>
+</nav>
+
+<!-- ===================== PHASE 1 ===================== -->
+<section class="phase active" id="phase-1">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 1 - Durée indicative 15 minutes</div>
+    <h2>Contexte du projet et méthode du direct costing</h2>
+  </div>
+
+  <div class="doc-ressource">
+    <h4>Note de cadrage - Projet « Génépi des Baronnies »</h4>
+    <p><strong>De</strong> : Marie Olivier, dirigeante - <strong>Pour</strong> : Camille Roux, apprentie GPME - <strong>Date</strong> : 12 mai 2026</p>
+    <p>Camille,</p>
+    <p>Je veux lancer une nouvelle cuvée à partir de juin 2026 : le <strong>« Génépi des Baronnies »</strong>, une liqueur d'altitude à base de génépi sauvage récolté dans le Parc Naturel Régional des Baronnies Provençales. Le positionnement est clairement haut de gamme : 28 € HT la bouteille de 50 cl, distribution sélective auprès de cavistes et de restaurants gastronomiques.</p>
+    <p>Avant de me lancer, j'ai besoin que tu me dises :</p>
+    <ul style="margin-left:1.5rem;margin-bottom:1rem;">
+      <li>Quel sera le seuil de rentabilité du produit (en chiffre d'affaires et en bouteilles) ?</li>
+      <li>Quand atteindrai-je ce seuil dans l'année (point mort) ?</li>
+      <li>La trésorerie tient-elle pendant les six premiers mois de commercialisation ?</li>
+      <li>Quelle est ta recommandation finale : je lance, je ne lance pas, je modifie le projet ?</li>
+    </ul>
+    <p>Je te transmets toutes les hypothèses chiffrées dans la phase suivante. Travail attendu pour midi.</p>
+    <p>Marie Olivier, Dirigeante, Olivier &amp; Filles SARL.</p>
+    <p class="doc-meta">Document fictif rédigé pour les besoins pédagogiques.</p>
+  </div>
+
+  <h3>La méthode du direct costing en quatre étapes</h3>
+
+  <div class="synthese-cards">
+    <div class="synthese-card"><div class="synthese-card-num">1</div><div class="synthese-card-title">Séparer</div><div class="synthese-card-text">Distinguer charges variables (proportionnelles à l'activité) et charges fixes (indépendantes du volume).</div></div>
+    <div class="synthese-card"><div class="synthese-card-num">2</div><div class="synthese-card-title">Calculer la MCV</div><div class="synthese-card-text">Marge sur coût variable = CA - charges variables. Globale et unitaire. Le taux de MCV est l'indicateur clé.</div></div>
+    <div class="synthese-card"><div class="synthese-card-num">3</div><div class="synthese-card-title">Déterminer le SR</div><div class="synthese-card-text">Seuil de rentabilité = niveau d'activité où la MCV couvre exactement les charges fixes.</div></div>
+    <div class="synthese-card"><div class="synthese-card-num">4</div><div class="synthese-card-title">Vérifier la trésorerie</div><div class="synthese-card-text">Un produit rentable peut être tué par un manque de trésorerie. Le budget de trésorerie est indispensable.</div></div>
+  </div>
+
+  <div class="encadre encadre-note">
+    <div class="encadre-header">Note - Lexique du direct costing</div>
+    <ul style="margin-left:1.5rem;">
+      <li><strong>Charges variables (CV)</strong> : charges qui varient proportionnellement avec le niveau d'activité (matières premières, contenants, transport, commissions sur ventes).</li>
+      <li><strong>Charges fixes (CF)</strong> : charges qui ne varient pas dans une plage donnée d'activité (loyers, salaires, amortissements, marketing budgétaire).</li>
+      <li><strong>MCV</strong> (Marge sur Coût Variable) : CA - CV. Représente ce qui reste pour absorber les charges fixes et générer du résultat.</li>
+      <li><strong>Taux de MCV</strong> : MCV / CA, en pourcentage. Plus il est élevé, plus le produit absorbe vite ses charges fixes.</li>
+      <li><strong>Seuil de rentabilité (SR)</strong> : niveau d'activité où le résultat est nul. SR valeur = CF / Taux MCV. SR quantité = CF / MCV unitaire.</li>
+      <li><strong>Point mort</strong> : date à laquelle le SR est atteint dans l'année, en supposant une activité uniforme.</li>
+      <li><strong>Marge de sécurité (MS)</strong> : CA prévisionnel - SR. Montant de baisse possible avant de tomber en perte.</li>
+      <li><strong>Indice de sécurité (IS)</strong> : MS / CA, en pourcentage. Mesure relative de la marge de manœuvre.</li>
+    </ul>
+  </div>
+
+  <div class="encadre encadre-important">
+    <div class="encadre-header">Important - Convention pédagogique</div>
+    <p>L'année de référence pour l'analyse globale (phases 2 et 3) est <strong>l'année 1 du lancement</strong> (juin 2026 - mai 2027), sur une base de 12 mois pleins. Le budget de trésorerie (phase 4) couvre uniquement le <strong>2e semestre 2026 (juillet-décembre)</strong>, période de montée en puissance et de saisonnalité forte fin d'année.</p>
+  </div>
+
+  <div class="phase-nav-btns">
+    <span></span>
+    <button class="btn-primary" onclick="goToPhase(2)">Passer à la phase 2 - Coûts et marges</button>
+  </div>
+</section>
+
+<!-- ===================== PHASE 2 ===================== -->
+<section class="phase" id="phase-2">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 2 - Durée indicative 75 minutes</div>
+    <h2>Décomposition des coûts, marge sur coût variable et résultat prévisionnel</h2>
+  </div>
+
+  <div class="doc-ressource">
+    <h4>Données prévisionnelles - Génépi des Baronnies (an 1)</h4>
+    <p><strong>Hypothèses commerciales</strong></p>
+    <ul style="margin-left:1.5rem;margin-bottom:1rem;">
+      <li>Prix de vente HT : 28,00 € la bouteille de 50 cl</li>
+      <li>Volume prévisionnel an 1 (juin 2026 - mai 2027) : 6 000 bouteilles</li>
+      <li>TVA applicable : 20%</li>
+    </ul>
+    <p><strong>Charges variables unitaires</strong> (par bouteille produite et vendue)</p>
+    <ul style="margin-left:1.5rem;margin-bottom:1rem;">
+      <li>Alcool neutre + plantes (génépi sauvage, herbes alpines) : 6,00 €</li>
+      <li>Contenant (bouteille, étiquette, bouchon de liège) : 3,50 €</li>
+      <li>Transport et logistique : 1,50 €</li>
+      <li>Commission commerciale (5% du prix HT, arrondie) : 1,50 €</li>
+    </ul>
+    <p><strong>Charges fixes annuelles</strong></p>
+    <ul style="margin-left:1.5rem;margin-bottom:1rem;">
+      <li>Loyer entrepôt dédié au vieillissement : 12 000 €</li>
+      <li>Salaire saisonnier (cueilleur de génépi en juin-juillet, distillateur en août) : 18 000 €</li>
+      <li>Amortissement matériel spécifique (cuves, alambic petit format) : 6 000 €</li>
+      <li>Marketing et communication (salons, presse spécialisée, web) : 8 000 €</li>
+      <li>Autres charges fixes (assurance, frais administratifs alloués) : 4 000 €</li>
+    </ul>
+    <p class="doc-meta">Hypothèses chiffrées établies par Marc Léonetti (cabinet Léonetti Conseil) sur la base d'études de marché spiritueux artisanaux et des coûts de production observés sur les autres cuvées d'Olivier &amp; Filles. Document fictif à usage pédagogique.</p>
+  </div>
+
+  <!-- 2.1 -->
+  <div class="subsection">
+    <div class="subsection-eyebrow">Section 2.1 - Coûts unitaires et globaux</div>
+    <div class="subsection-title">Calcul des charges variables et fixes</div>
+  </div>
+
+  <div class="exercise">
+    <div class="exercise-title">Exercice 2.1 - Décomposition des coûts</div>
+    <p class="exercise-instruction">Saisis les valeurs en euros, sans espace ni signe €. Tolérance ±1 €.</p>
+
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Coût variable unitaire :</label><input type="text" id="cv-cv-unit" data-bonne="12.50" data-tol="0.5" data-decimal="true"><span class="saisie-unit">€ par bouteille</span></div>
+      <span class="saisie-tolerance">Somme des 4 charges variables unitaires. Saisis 12.50 ou 12,50.</span>
+    </div>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Charges variables totales an 1 :</label><input type="number" id="cv-cv-total" data-bonne="75000" data-tol="100"><span class="saisie-unit">€</span></div>
+      <span class="saisie-tolerance">Volume × CV unitaire</span>
+    </div>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Charges fixes totales an 1 :</label><input type="number" id="cv-cf-total" data-bonne="48000" data-tol="100"><span class="saisie-unit">€</span></div>
+      <span class="saisie-tolerance">Somme des 5 charges fixes</span>
+    </div>
+
+    <button class="btn-primary" onclick="validateSaisie('cv')">Vérifier mes calculs</button>
+    <div id="cv-result" style="margin-top:1rem;"></div>
+
+    <button class="detail-toggle" onclick="toggleDetail('cv-detail')">Voir le détail des calculs</button>
+    <div class="detail-content" id="cv-detail">
+      <h5>Démarche</h5>
+      <p><strong>CV unitaire</strong> : <code>6,00 + 3,50 + 1,50 + 1,50 = 12,50 €</code> par bouteille.</p>
+      <p><strong>CV totales an 1</strong> : <code>6 000 × 12,50 = 75 000 €</code>. Ces charges varient strictement avec le volume produit.</p>
+      <p><strong>CF totales an 1</strong> : <code>12 000 + 18 000 + 6 000 + 8 000 + 4 000 = 48 000 €</code>. Ces charges seront supportées que tu vendes 1 bouteille ou 6 000.</p>
+      <p><em>Point d'attention pédagogique : la commission commerciale (1,50 €) est bien une charge variable (elle existe seulement quand on vend), pas une charge fixe.</em></p>
+    </div>
+  </div>
+
+  <!-- 2.2 -->
+  <div class="subsection">
+    <div class="subsection-eyebrow">Section 2.2 - Marge sur coût variable</div>
+    <div class="subsection-title">MCV unitaire, MCV globale et taux de MCV</div>
+  </div>
+
+  <div class="exercise">
+    <div class="exercise-title">Exercice 2.2 - Calcul de la MCV</div>
+    <p class="exercise-instruction">Tolérance ±1 € sur les valeurs et ±0,5 point sur le taux.</p>
+
+    <div class="saisie-question">
+      <div class="saisie-row"><label>MCV unitaire :</label><input type="text" id="mcv-unit" data-bonne="15.50" data-tol="0.5" data-decimal="true"><span class="saisie-unit">€ par bouteille</span></div>
+      <div class="formule">MCV unitaire = Prix de vente HT - Coût variable unitaire</div>
+    </div>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>MCV globale an 1 :</label><input type="number" id="mcv-global" data-bonne="93000" data-tol="100"><span class="saisie-unit">€</span></div>
+      <div class="formule">MCV globale = CA - Charges variables totales</div>
+    </div>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Taux de MCV :</label><input type="text" id="mcv-taux" data-bonne="55.36" data-tol="0.5" data-decimal="true"><span class="saisie-unit">% (avec décimales)</span></div>
+      <div class="formule">Taux de MCV = MCV globale / CA × 100</div>
+      <span class="saisie-tolerance">Saisis 55.36 ou 55,36 ou 55,4. Tolérance ±0,5 point.</span>
+    </div>
+
+    <button class="btn-primary" onclick="validateSaisie('mcv')">Vérifier mes calculs</button>
+    <div id="mcv-result" style="margin-top:1rem;"></div>
+
+    <button class="detail-toggle" onclick="toggleDetail('mcv-detail')">Voir le détail des calculs</button>
+    <div class="detail-content" id="mcv-detail">
+      <h5>Démarche</h5>
+      <p><strong>CA an 1</strong> : <code>6 000 × 28,00 = 168 000 €</code></p>
+      <p><strong>MCV unitaire</strong> : <code>28,00 - 12,50 = 15,50 €</code> par bouteille.</p>
+      <p><strong>MCV globale</strong> : <code>168 000 - 75 000 = 93 000 €</code> ou <code>6 000 × 15,50 = 93 000 €</code> (les deux méthodes convergent).</p>
+      <p><strong>Taux de MCV</strong> : <code>93 000 / 168 000 = 0,5536 = 55,36%</code>. Cela signifie que sur chaque euro de chiffre d'affaires, 55 centimes restent disponibles pour absorber les charges fixes et dégager du résultat.</p>
+      <p><em>Le taux de MCV est l'indicateur que l'analyste retient en premier. À 55%, on est dans une zone très favorable pour les spiritueux premium (le secteur se situe généralement entre 45% et 60%).</em></p>
+    </div>
+  </div>
+
+  <!-- 2.3 -->
+  <div class="subsection">
+    <div class="subsection-eyebrow">Section 2.3 - Compte de résultat différentiel</div>
+    <div class="subsection-title">Synthèse et résultat prévisionnel</div>
+  </div>
+
+  <div class="exercise">
+    <div class="exercise-title">Exercice 2.3 - Compte de résultat différentiel</div>
+    <p class="exercise-instruction">Complète le tableau récapitulatif. Le résultat se déduit de MCV - CF.</p>
+
+    <table class="cadp-table">
+      <thead><tr><th>Élément</th><th class="num-col">Montant (€)</th><th class="num-col">% du CA</th></tr></thead>
+      <tbody>
+        <tr><td>Chiffre d'affaires HT</td><td class="num-col">168 000</td><td class="num-col">100,00%</td></tr>
+        <tr><td>Charges variables</td><td class="num-col">75 000</td><td class="num-col"><input type="text" class="calc-input" id="crd-pct-cv" data-bonne="44.64" data-tol="0.5" data-decimal="true"></td></tr>
+        <tr class="subtotal-row"><td><strong>Marge sur coût variable</strong></td><td class="num-col"><input type="number" class="calc-input" id="crd-mcv" data-bonne="93000" data-tol="100"></td><td class="num-col"><input type="text" class="calc-input" id="crd-pct-mcv" data-bonne="55.36" data-tol="0.5" data-decimal="true"></td></tr>
+        <tr><td>Charges fixes</td><td class="num-col"><input type="number" class="calc-input" id="crd-cf" data-bonne="48000" data-tol="100"></td><td class="num-col empty-cell">-</td></tr>
+        <tr class="total-row"><td><strong>RESULTAT D'EXPLOITATION</strong></td><td class="num-col total-num"><input type="number" class="calc-input" id="crd-resultat" data-bonne="45000" data-tol="100"></td><td class="num-col empty-cell">-</td></tr>
+      </tbody>
+    </table>
+    <button class="btn-primary" onclick="validateSaisie('crd')">Vérifier le compte de résultat</button>
+    <div id="crd-result" style="margin-top:1rem;"></div>
+
+    <button class="detail-toggle" onclick="toggleDetail('crd-detail')">Voir le détail des calculs</button>
+    <div class="detail-content" id="crd-detail">
+      <h5>Démarche</h5>
+      <p><strong>% des CV sur CA</strong> : <code>75 000 / 168 000 × 100 = 44,64%</code> (c'est aussi 100% - 55,36%).</p>
+      <p><strong>MCV</strong> : <code>168 000 - 75 000 = 93 000 €</code> soit <code>55,36%</code> du CA.</p>
+      <p><strong>Résultat</strong> : <code>MCV - CF = 93 000 - 48 000 = 45 000 €</code>.</p>
+      <p><em>Le projet est rentable sur le papier : 45 000 € de résultat prévisionnel sur l'an 1, soit une rentabilité commerciale de 26,8% (45 000 / 168 000), bien au-dessus de la moyenne du secteur.</em></p>
+    </div>
+  </div>
+
+  <div class="phase-nav-btns">
+    <button class="btn-secondary" onclick="goToPhase(1)">Retour phase 1</button>
+    <button class="btn-primary" onclick="goToPhase(3)">Passer à la phase 3 - Seuil de rentabilité</button>
+  </div>
+</section>
+
+<!-- ===================== PHASE 3 ===================== -->
+<section class="phase" id="phase-3">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 3 - Durée indicative 60 minutes</div>
+    <h2>Seuil de rentabilité, point mort, et sensibilité au prix</h2>
+  </div>
+
+  <!-- 3.1 -->
+  <div class="subsection">
+    <div class="subsection-eyebrow">Section 3.1 - Seuil de rentabilité</div>
+    <div class="subsection-title">SR en valeur, en quantité et point mort</div>
+  </div>
+
+  <div class="exercise">
+    <div class="exercise-title">Exercice 3.1 - Calcul du seuil de rentabilité</div>
+    <p class="exercise-instruction">Tolérance ±100 € sur le SR valeur, ±5 bouteilles sur le SR quantité, ±2 jours sur le point mort.</p>
+
+    <div class="saisie-question">
+      <div class="saisie-row"><label>SR en valeur :</label><input type="number" id="sr-valeur" data-bonne="86710" data-tol="100"><span class="saisie-unit">€</span></div>
+      <div class="formule">SR valeur = CF / Taux de MCV = 48 000 / 0,5536</div>
+    </div>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>SR en quantité :</label><input type="number" id="sr-quantite" data-bonne="3097" data-tol="5"><span class="saisie-unit">bouteilles (entier sup.)</span></div>
+      <div class="formule">SR quantité = CF / MCV unitaire = 48 000 / 15,50</div>
+      <span class="saisie-tolerance">Arrondir à l'entier supérieur (ne pas vendre une demi-bouteille).</span>
+    </div>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Point mort en jours :</label><input type="number" id="sr-pm" data-bonne="186" data-tol="2"><span class="saisie-unit">jours</span></div>
+      <div class="formule">Point mort = SR valeur / CA × 360</div>
+    </div>
+
+    <button class="btn-primary" onclick="validateSaisie('sr')">Vérifier le seuil de rentabilité</button>
+    <div id="sr-result" style="margin-top:1rem;"></div>
+
+    <button class="detail-toggle" onclick="toggleDetail('sr-detail')">Voir le détail des calculs</button>
+    <div class="detail-content" id="sr-detail">
+      <h5>Démarche</h5>
+      <p><strong>SR en valeur</strong> : <code>48 000 / 0,5536 = 86 710 €</code> (arrondi).</p>
+      <p>Cela signifie qu'à partir d'un chiffre d'affaires de 86 710 €, le projet commence à dégager du bénéfice. En dessous, il est en perte.</p>
+      <p><strong>SR en quantité</strong> : <code>48 000 / 15,50 = 3 096,77</code>, arrondi à 3 097 bouteilles.</p>
+      <p>Vérification : <code>3 097 × 28,00 = 86 716 €</code>, cohérent avec le SR valeur (légère différence due aux arrondis).</p>
+      <p><strong>Point mort</strong> : <code>86 710 / 168 000 × 360 = 185,8 jours</code>, arrondi à 186 jours.</p>
+      <p>Si le lancement a lieu le 1er juin 2026 et que l'activité est uniformément répartie, le point mort serait atteint vers le <strong>4 décembre 2026</strong> (186 jours plus tard).</p>
+      <p><em>Mais attention : avec la saisonnalité réelle (forte concentration des ventes en novembre-décembre pour les fêtes), le point mort réel sera <strong>plus tardif</strong> dans le calendrier civil, probablement vers la mi-décembre. C'est un point que tu dois mentionner dans ta note finale.</em></p>
+    </div>
+  </div>
+
+  <!-- 3.2 -->
+  <div class="subsection">
+    <div class="subsection-eyebrow">Section 3.2 - Marge de sécurité</div>
+    <div class="subsection-title">Combien peut-on perdre avant de tomber en perte ?</div>
+  </div>
+
+  <div class="exercise">
+    <div class="exercise-title">Exercice 3.2 - Marge et indice de sécurité</div>
+    <p class="exercise-instruction">Tolérance ±100 € sur la marge, ±0,5 point sur l'indice.</p>
+
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Marge de sécurité :</label><input type="number" id="ms-valeur" data-bonne="81290" data-tol="100"><span class="saisie-unit">€</span></div>
+      <div class="formule">MS = CA prévisionnel - SR valeur</div>
+    </div>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Indice de sécurité :</label><input type="text" id="ms-indice" data-bonne="48.39" data-tol="0.5" data-decimal="true"><span class="saisie-unit">% (avec décimales)</span></div>
+      <div class="formule">IS = MS / CA × 100</div>
+    </div>
+
+    <button class="btn-primary" onclick="validateSaisie('ms')">Vérifier marge et indice</button>
+    <div id="ms-result" style="margin-top:1rem;"></div>
+
+    <button class="detail-toggle" onclick="toggleDetail('ms-detail')">Voir le détail des calculs</button>
+    <div class="detail-content" id="ms-detail">
+      <h5>Démarche</h5>
+      <p><strong>Marge de sécurité</strong> : <code>168 000 - 86 710 = 81 290 €</code></p>
+      <p>Cela signifie que le CA peut baisser de 81 290 € avant que le projet ne devienne déficitaire.</p>
+      <p><strong>Indice de sécurité</strong> : <code>81 290 / 168 000 × 100 = 48,39%</code></p>
+      <p>L'activité peut chuter de près de 48% avant de basculer en perte. Une marge de sécurité confortable, signe d'un projet économiquement robuste à condition d'atteindre les volumes prévus.</p>
+    </div>
+  </div>
+
+  <!-- 3.3 SENSIBILITE -->
+  <div class="subsection">
+    <div class="subsection-eyebrow">Section 3.3 - Sensibilité au prix de vente</div>
+    <div class="subsection-title">Que se passe-t-il si Marie doit baisser son prix à 27 € ?</div>
+  </div>
+
+  <p>L'un des cavistes prospects a fait remarquer à Marie que 28 € est cher pour un Génépi face à la concurrence des Alpes (souvent positionné à 25-26 €). Marie envisage de baisser le prix à <strong>27 € HT</strong>, soit 1 € de moins. À volume constant (6 000 bouteilles), quelle serait la conséquence ?</p>
+
+  <div class="exercise">
+    <div class="exercise-title">Exercice 3.3 - Calcul du nouveau seuil avec prix réduit</div>
+    <p class="exercise-instruction">Le prix passe de 28 à 27 €. Les coûts variables unitaires restent identiques (12,50 €). Recalcule les indicateurs clés.</p>
+
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Nouvelle MCV unitaire :</label><input type="text" id="sens-mcv" data-bonne="14.50" data-tol="0.5" data-decimal="true"><span class="saisie-unit">€</span></div>
+      <span class="saisie-tolerance">27,00 - 12,50</span>
+    </div>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Nouveau taux de MCV :</label><input type="text" id="sens-taux" data-bonne="53.70" data-tol="0.5" data-decimal="true"><span class="saisie-unit">%</span></div>
+      <span class="saisie-tolerance">14,50 / 27,00 × 100</span>
+    </div>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Nouveau SR en valeur :</label><input type="number" id="sens-sr" data-bonne="89379" data-tol="200"><span class="saisie-unit">€</span></div>
+      <span class="saisie-tolerance">CF / Nouveau taux MCV</span>
+    </div>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Nouveau résultat (à 6 000 b) :</label><input type="number" id="sens-resultat" data-bonne="39000" data-tol="200"><span class="saisie-unit">€</span></div>
+      <span class="saisie-tolerance">(6 000 × 14,50) - 48 000</span>
+    </div>
+
+    <button class="btn-primary" onclick="validateSaisie('sens')">Vérifier la sensibilité</button>
+    <div id="sens-result" style="margin-top:1rem;"></div>
+
+    <button class="detail-toggle" onclick="toggleDetail('sens-detail')">Voir le détail des calculs</button>
+    <div class="detail-content" id="sens-detail">
+      <h5>Démarche et lecture</h5>
+      <p><strong>Nouvelle MCV unitaire</strong> : <code>27,00 - 12,50 = 14,50 €</code></p>
+      <p><strong>Nouveau taux de MCV</strong> : <code>14,50 / 27,00 × 100 = 53,70%</code> (au lieu de 55,36%).</p>
+      <p><strong>Nouveau SR en valeur</strong> : <code>48 000 / 0,5370 = 89 379 €</code> (au lieu de 86 710 €). Le SR augmente de 2 669 €, soit <strong>+3,1%</strong>.</p>
+      <p><strong>Nouveau résultat</strong> : <code>(6 000 × 14,50) - 48 000 = 87 000 - 48 000 = 39 000 €</code> (au lieu de 45 000 €).</p>
+      <p><strong>Lecture économique</strong> : une baisse de prix de seulement <strong>3,6%</strong> (de 28 à 27 €) entraîne une baisse de résultat de <strong>13,3%</strong> (de 45 000 à 39 000 €). C'est l'illustration du redoutable <em>effet ciseau</em> : la baisse de prix se reporte intégralement sur la marge, qui devient mécaniquement plus faible.</p>
+      <p><em>À retenir pour ta note de décision : Marie doit défendre son prix de 28 €, l'élasticité-prix est défavorable au lancement.</em></p>
+    </div>
+  </div>
+
+  <!-- 3.4 SYNTHESE -->
+  <div class="subsection">
+    <div class="subsection-eyebrow">Section 3.4 - Synthèse</div>
+    <div class="subsection-title">Tableau de bord de rentabilité</div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card good"><div class="kpi-label">CA prévisionnel</div><div class="kpi-value">168 000 €</div><div class="kpi-comment">An 1, 6 000 bouteilles à 28 €</div></div>
+    <div class="kpi-card good"><div class="kpi-label">Taux de MCV</div><div class="kpi-value">55,4%</div><div class="kpi-comment">Très favorable</div></div>
+    <div class="kpi-card good"><div class="kpi-label">SR en quantité</div><div class="kpi-value">3 097 b</div><div class="kpi-comment">52% du volume cible</div></div>
+    <div class="kpi-card good"><div class="kpi-label">Indice de sécurité</div><div class="kpi-value">48,4%</div><div class="kpi-comment">Marge confortable</div></div>
+    <div class="kpi-card good"><div class="kpi-label">Résultat an 1</div><div class="kpi-value">45 000 €</div><div class="kpi-comment">Rentabilité commerciale 26,8%</div></div>
+    <div class="kpi-card alert"><div class="kpi-label">Point mort</div><div class="kpi-value">186 j</div><div class="kpi-comment">Vers début décembre 2026</div></div>
+  </div>
+
+  <div class="interp-block" style="background:var(--info-bg);border-left:4px solid var(--info);padding:1rem 1.2rem;margin:1rem 0;font-size:.95rem;">
+    <strong>Conclusion intermédiaire :</strong> au plan de la rentabilité économique, le projet est très solide. Tous les indicateurs convergent vers une décision de lancement. Mais il reste à vérifier que la <strong>trésorerie tient</strong> pendant la phase de montée en puissance — c'est l'objet de la phase 4.
+  </div>
+
+  <div class="phase-nav-btns">
+    <button class="btn-secondary" onclick="goToPhase(2)">Retour phase 2</button>
+    <button class="btn-primary" onclick="goToPhase(4)">Passer à la phase 4 - Trésorerie</button>
+  </div>
+</section>
+
+<!-- ===================== PHASE 4 ===================== -->
+<section class="phase" id="phase-4">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 4 - Durée indicative 60 minutes</div>
+    <h2>Budget de trésorerie 2e semestre 2026</h2>
+  </div>
+
+  <p>La rentabilité prévisionnelle est positive, mais cela ne garantit pas que la trésorerie suive. Tu vas construire un budget de trésorerie sur les six premiers mois de commercialisation (juillet-décembre 2026) pour vérifier que Marie peut tenir financièrement la montée en puissance.</p>
+
+  <div class="encadre encadre-note">
+    <div class="encadre-header">Hypothèses du budget de trésorerie</div>
+    <ul style="margin-left:1.5rem;">
+      <li><strong>Trésorerie initiale au 1er juillet 2026</strong> : 5 000 € (Marie a affecté ce montant au démarrage du projet)</li>
+      <li><strong>Délai de paiement clients</strong> : 30 jours fin de mois, ce qui revient à encaisser en M les ventes du mois M-1</li>
+      <li><strong>Charges variables</strong> : payées au comptant le mois de la vente (matières et logistique)</li>
+      <li><strong>Charges fixes</strong> : payées mensuellement (loyer 1 000 €/mois, salaires 1 500 €/mois, autres 333 €/mois). Marketing concentré fin d'année (saisonnalité)</li>
+      <li><strong>TVA</strong> : la TVA à décaisser du mois M est payée en M+1</li>
+      <li><strong>Amortissements</strong> : non décaissables, donc absents du budget de trésorerie</li>
+    </ul>
+  </div>
+
+  <div class="doc-ressource">
+    <h4>Prévisions de ventes 2e semestre 2026 (saisonnalité fêtes)</h4>
+    <table class="cadp-table">
+      <thead><tr><th>Mois</th><th class="num-col">Volume (bouteilles)</th><th class="num-col">CA HT (€)</th><th class="num-col">CA TTC (€)</th></tr></thead>
+      <tbody>
+        <tr><td>Juin 2026 (rappel : ventes initiales)</td><td class="num-col">100</td><td class="num-col">2 800</td><td class="num-col">3 360</td></tr>
+        <tr><td>Juillet</td><td class="num-col">150</td><td class="num-col">4 200</td><td class="num-col">5 040</td></tr>
+        <tr><td>Août</td><td class="num-col">200</td><td class="num-col">5 600</td><td class="num-col">6 720</td></tr>
+        <tr><td>Septembre</td><td class="num-col">300</td><td class="num-col">8 400</td><td class="num-col">10 080</td></tr>
+        <tr><td>Octobre</td><td class="num-col">450</td><td class="num-col">12 600</td><td class="num-col">15 120</td></tr>
+        <tr><td>Novembre</td><td class="num-col">750</td><td class="num-col">21 000</td><td class="num-col">25 200</td></tr>
+        <tr><td>Décembre (Noël)</td><td class="num-col">1 150</td><td class="num-col">32 200</td><td class="num-col">38 640</td></tr>
+        <tr class="total-row"><td><strong>Total juillet-décembre</strong></td><td class="num-col total-num">3 000</td><td class="num-col total-num">84 000</td><td class="num-col total-num">100 800</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="exercise">
+    <div class="exercise-title">Exercice 4 - Construction du budget de trésorerie</div>
+    <p class="exercise-instruction">Complète les cellules manquantes du tableau. Tolérance ±50 € sur chaque cellule.</p>
+
+    <table class="cadp-table" style="font-size:.78rem;">
+      <thead>
+        <tr><th>Poste (en € TTC)</th><th class="num-col">Juillet</th><th class="num-col">Août</th><th class="num-col">Sept.</th><th class="num-col">Oct.</th><th class="num-col">Nov.</th><th class="num-col">Déc.</th></tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="7" style="background:var(--success);color:white;text-transform:uppercase;letter-spacing:1px;font-weight:600;">ENCAISSEMENTS</td></tr>
+        <tr><td>Encaissements clients (ventes M-1)</td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-enc-jui" data-bonne="3360" data-tol="50"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-enc-aou" data-bonne="5040" data-tol="50"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-enc-sep" data-bonne="6720" data-tol="50"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-enc-oct" data-bonne="10080" data-tol="50"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-enc-nov" data-bonne="15120" data-tol="50"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-enc-dec" data-bonne="25200" data-tol="50"></td>
+        </tr>
+        <tr><td colspan="7" style="background:var(--error);color:white;text-transform:uppercase;letter-spacing:1px;font-weight:600;">DECAISSEMENTS</td></tr>
+        <tr><td>Achats variables (volume × 12,50 × 1,2)</td>
+          <td class="num-col">2 250</td><td class="num-col">3 000</td><td class="num-col">4 500</td><td class="num-col">6 750</td><td class="num-col">11 250</td><td class="num-col">17 250</td>
+        </tr>
+        <tr><td>Salaires + charges sociales</td>
+          <td class="num-col">1 500</td><td class="num-col">1 500</td><td class="num-col">1 500</td><td class="num-col">1 500</td><td class="num-col">1 500</td><td class="num-col">1 500</td>
+        </tr>
+        <tr><td>Loyer entrepôt</td>
+          <td class="num-col">1 000</td><td class="num-col">1 000</td><td class="num-col">1 000</td><td class="num-col">1 000</td><td class="num-col">1 000</td><td class="num-col">1 000</td>
+        </tr>
+        <tr><td>Marketing (saisonnalité)</td>
+          <td class="num-col">500</td><td class="num-col">500</td><td class="num-col">1 000</td><td class="num-col">1 500</td><td class="num-col">2 500</td><td class="num-col">2 000</td>
+        </tr>
+        <tr><td>Autres charges fixes</td>
+          <td class="num-col">333</td><td class="num-col">333</td><td class="num-col">333</td><td class="num-col">333</td><td class="num-col">333</td><td class="num-col">333</td>
+        </tr>
+        <tr><td>TVA à reverser (TVA M-1)</td>
+          <td class="num-col">0</td><td class="num-col">465</td><td class="num-col">620</td><td class="num-col">930</td><td class="num-col">1 395</td><td class="num-col">2 325</td>
+        </tr>
+        <tr class="subtotal-row"><td><strong>Total décaissements</strong></td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-dec-jui" data-bonne="5583" data-tol="50"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-dec-aou" data-bonne="6798" data-tol="50"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-dec-sep" data-bonne="8953" data-tol="50"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-dec-oct" data-bonne="12013" data-tol="50"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-dec-nov" data-bonne="17978" data-tol="50"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-dec-dec" data-bonne="24408" data-tol="50"></td>
+        </tr>
+        <tr><td colspan="7" style="background:var(--navy);color:var(--or);text-transform:uppercase;letter-spacing:1px;font-weight:600;">SOLDES</td></tr>
+        <tr><td><strong>Solde mensuel</strong></td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-sld-jui" data-bonne="-2223" data-tol="50"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-sld-aou" data-bonne="-1758" data-tol="50"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-sld-sep" data-bonne="-2233" data-tol="50"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-sld-oct" data-bonne="-1933" data-tol="50"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-sld-nov" data-bonne="-2858" data-tol="50"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-sld-dec" data-bonne="792" data-tol="50"></td>
+        </tr>
+        <tr class="total-row"><td><strong>Solde cumulé (trésorerie initiale 5 000 €)</strong></td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-cum-jui" data-bonne="2777" data-tol="50"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-cum-aou" data-bonne="1019" data-tol="50"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-cum-sep" data-bonne="-1214" data-tol="50"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-cum-oct" data-bonne="-3147" data-tol="50"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-cum-nov" data-bonne="-6005" data-tol="50"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="bt-cum-dec" data-bonne="-5213" data-tol="50"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button class="btn-primary" onclick="validateSaisie('bt')">Vérifier le budget de trésorerie</button>
+    <div id="bt-result" style="margin-top:1rem;"></div>
+
+    <button class="detail-toggle" onclick="toggleDetail('bt-detail')">Voir le détail des calculs</button>
+    <div class="detail-content" id="bt-detail">
+      <h5>Démarche</h5>
+      <p><strong>Encaissements</strong> : on encaisse en M les ventes de M-1 (paiement à 30 jours fin de mois). Donc :</p>
+      <ul>
+        <li>Juillet encaisse les 100 b vendues en juin : <code>100 × 28 × 1,2 = 3 360 €</code></li>
+        <li>Août encaisse les 150 b vendues en juillet : <code>150 × 28 × 1,2 = 5 040 €</code></li>
+        <li>Et ainsi de suite jusqu'à décembre qui encaisse les ventes de novembre : <code>750 × 28 × 1,2 = 25 200 €</code></li>
+      </ul>
+      <p><strong>Décaissements</strong> : achats variables payés cash (volume × 12,50 × 1,2) + charges fixes mensuelles + TVA M-1.</p>
+      <p><strong>Total décaissements juillet</strong> : <code>2 250 + 1 500 + 1 000 + 500 + 333 + 0 = 5 583 €</code>.</p>
+      <p><strong>Solde mensuel juillet</strong> : <code>3 360 - 5 583 = -2 223 €</code> (déficit de trésorerie sur le mois).</p>
+      <p><strong>Solde cumulé juillet</strong> : <code>5 000 + (-2 223) = 2 777 €</code>.</p>
+      <p><strong>Solde cumulé août</strong> : <code>2 777 + (-1 758) = 1 019 €</code>. Et ainsi de suite.</p>
+      <h5>Lecture critique</h5>
+      <p>La trésorerie devient <strong class="tres-negatif">NEGATIVE dès septembre (-1 214 €)</strong> et atteint son point bas en novembre <strong class="tres-negatif">(-6 005 €)</strong>. Elle ne se redresse que partiellement en décembre <strong class="tres-negatif">(-5 213 €)</strong>, sans repasser dans le vert avant le 1er semestre 2027.</p>
+    </div>
+  </div>
+
+  <div class="encadre encadre-attention">
+    <div class="encadre-header">Attention - Le paradoxe rentabilité / trésorerie</div>
+    <p>Le projet est <strong>rentable</strong> sur l'an 1 (résultat prévisionnel 45 000 €) mais la <strong>trésorerie devient négative dès septembre 2026</strong>. C'est l'un des pièges classiques en analyse de projet.</p>
+    <p>L'explication tient au décalage temporel : on encaisse en M les ventes de M-1, mais on paie les achats en M et la TVA en M+1. La montée en puissance des ventes (saisonnalité fêtes) accentue ce décalage.</p>
+    <p><strong>Conséquence concrète</strong> : Marie doit prévoir un complément de financement court terme d'environ <strong>7 000 €</strong> (par exemple : ligne de crédit Crédit Agricole, ou apport personnel complémentaire) pour passer le creux de novembre, sous peine de cessation de paiement.</p>
+  </div>
+
+  <h3>Tableau de bord de la trésorerie</h3>
+
+  <div class="kpi-grid">
+    <div class="kpi-card alert"><div class="kpi-label">Trésorerie min</div><div class="kpi-value">-6 005 €</div><div class="kpi-comment">En novembre 2026</div></div>
+    <div class="kpi-card alert"><div class="kpi-label">Mois critique</div><div class="kpi-value">Sept. → Déc.</div><div class="kpi-comment">Trésorerie négative continue</div></div>
+    <div class="kpi-card alert"><div class="kpi-label">Trésorerie 31/12</div><div class="kpi-value">-5 213 €</div><div class="kpi-comment">Toujours déficitaire</div></div>
+    <div class="kpi-card good"><div class="kpi-label">Solde du semestre</div><div class="kpi-value">-10 213 €</div><div class="kpi-comment">Couvert par le résultat an 1</div></div>
+  </div>
+
+  <div class="phase-nav-btns">
+    <button class="btn-secondary" onclick="goToPhase(3)">Retour phase 3</button>
+    <button class="btn-primary" onclick="goToPhase(5)">Passer à la phase 5 - Note de décision</button>
+  </div>
+</section>
+
+<!-- ===================== PHASE 5 ===================== -->
+<section class="phase" id="phase-5">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 5 - Durée indicative 30 minutes</div>
+    <h2>Recommandation et note de décision à Marie</h2>
+  </div>
+
+  <p>Tu as l'ensemble des éléments. Le projet est rentable mais nécessite une vigilance trésorerie. Ta recommandation doit articuler les deux temporalités : le verdict économique global (an 1) et la contrainte cash de la phase de lancement.</p>
+
+  <h3>Tableau de décision structuré</h3>
+
+  <p>Renseigne d'abord le tableau ci-dessous, qui structure ton argumentaire avant la rédaction.</p>
+
+  <div class="exercise">
+    <div class="exercise-title">Tableau de décision : pour, contre, conditions</div>
+    <table class="cadp-table">
+      <thead>
+        <tr><th style="width:33%;">Arguments POUR le lancement</th><th style="width:33%;">Arguments CONTRE ou points de vigilance</th><th style="width:34%;">Conditions de réussite (recommandations)</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><textarea rows="6" id="dec-pour" style="width:100%;border:1.5px solid var(--border);padding:.5rem;font-family:inherit;font-size:.9rem;" placeholder="Ex : Taux de MCV à 55%..."></textarea></td>
+          <td><textarea rows="6" id="dec-contre" style="width:100%;border:1.5px solid var(--border);padding:.5rem;font-family:inherit;font-size:.9rem;" placeholder="Ex : Trésorerie négative dès septembre..."></textarea></td>
+          <td><textarea rows="6" id="dec-cond" style="width:100%;border:1.5px solid var(--border);padding:.5rem;font-family:inherit;font-size:.9rem;" placeholder="Ex : Sécuriser une ligne de crédit court terme de 8 000 €..."></textarea></td>
+        </tr>
+      </tbody>
+    </table>
+    <button class="detail-toggle" onclick="toggleDetail('dec-corr')">Voir un exemple de tableau rempli</button>
+    <div class="detail-content" id="dec-corr">
+      <h5>Exemple de tableau de décision</h5>
+      <p><strong>Arguments POUR</strong></p>
+      <ul>
+        <li>Taux de MCV élevé (55,4%), supérieur à la moyenne du secteur</li>
+        <li>Indice de sécurité confortable (48,4%)</li>
+        <li>Résultat prévisionnel an 1 : 45 000 € (rentabilité commerciale 26,8%)</li>
+        <li>Point mort atteignable dès le premier semestre d'activité (186 jours)</li>
+        <li>Cohérence stratégique avec le positionnement premium d'Olivier &amp; Filles</li>
+        <li>Effet de gamme positif (élargissement de la cuvée pour les cavistes)</li>
+      </ul>
+      <p><strong>Arguments CONTRE / Points de vigilance</strong></p>
+      <ul>
+        <li>Trésorerie négative dès septembre, point bas -6 005 € en novembre</li>
+        <li>Sensibilité au prix : -1 € sur le prix → -6 000 € de résultat</li>
+        <li>Concurrence des Génépis alpins déjà établis (Chartreuse, Grande Chartreuse, etc.)</li>
+        <li>Saisonnalité forte qui concentre 38% des ventes annuelles sur novembre-décembre</li>
+        <li>Risque de retard fournisseurs sur le génépi sauvage (saison de cueillette courte)</li>
+      </ul>
+      <p><strong>Conditions de réussite</strong></p>
+      <ul>
+        <li>Sécuriser une ligne de crédit court terme de 8 000 € avec le Crédit Agricole</li>
+        <li>Négocier un délai fournisseur sur les contenants pour décaler les décaissements</li>
+        <li>Tenir le prix de 28 € HT, ne pas céder à la pression des cavistes</li>
+        <li>Doubler le budget marketing en octobre-novembre pour sécuriser la saison de Noël</li>
+        <li>Mettre en place un suivi mensuel de trésorerie dès juillet 2026</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Note de décision rédigée (250-350 mots)</h3>
+
+  <div class="production-area">
+    <textarea id="note-decision" placeholder="Note de décision - Lancement de la cuvée Génépi des Baronnies
+
+À l'attention de : Marie Olivier, dirigeante
+De : Camille Roux, apprentie GPME
+Date : ...
+Objet : ...
+
+Recommandation
+[Lancer / Ne pas lancer / Lancer sous conditions...]
+
+Justification économique
+[CA, MCV, SR, marge de sécurité...]
+
+Vigilance trésorerie
+[Décrire le creux et la solution proposée]
+
+Conclusion
+..."></textarea>
+    <div class="production-counter"><span id="note-count">0</span> caractères - <span id="note-mots">0</span> mots</div>
+  </div>
+
+  <button class="detail-toggle" onclick="toggleDetail('note-corr')">Voir un exemple de note rédigée (320 mots)</button>
+  <div class="detail-content" id="note-corr">
+    <h5>Exemple de note de décision</h5>
+
+    <p><strong>Note de décision - Lancement de la cuvée Génépi des Baronnies</strong></p>
+    <p>À l'attention de : Marie Olivier, dirigeante<br>
+    De : Camille Roux, apprentie GPME<br>
+    Date : 13 mai 2026<br>
+    Objet : Avis sur le lancement du Génépi des Baronnies à compter de juin 2026, sur la base d'une analyse du seuil de rentabilité et d'un budget de trésorerie sur le 2e semestre 2026.</p>
+
+    <p><strong>Recommandation</strong></p>
+    <p>Je recommande de <strong>lancer le projet sous conditions</strong>. Les fondamentaux économiques sont très favorables, mais la trésorerie de lancement appelle une mesure de sécurisation indispensable.</p>
+
+    <p><strong>Justification économique</strong></p>
+    <p>Le projet présente un compte de résultat différentiel solide. Sur l'an 1 (juin 2026 - mai 2027), avec un objectif de 6 000 bouteilles à 28 € HT, le chiffre d'affaires atteint 168 000 €, la marge sur coût variable s'élève à 93 000 € (taux de 55,4%, supérieur à la moyenne du secteur des spiritueux artisanaux), et le résultat prévisionnel se chiffre à 45 000 €. Le seuil de rentabilité est atteint à 86 710 € de chiffre d'affaires, soit 3 097 bouteilles, ce qui représente seulement 52% de l'objectif annuel. L'indice de sécurité s'établit à 48,4%, soit une marge de manœuvre confortable. Le point mort est atteint vers le 4 décembre 2026 si l'on retient une activité uniforme, probablement plus tard avec la saisonnalité réelle, mais dans tous les cas dès la première année d'exploitation.</p>
+
+    <p><strong>Point de vigilance trésorerie</strong></p>
+    <p>Le budget de trésorerie sur le 2e semestre 2026 fait apparaître un creux significatif : la trésorerie devient négative dès septembre et atteint son point bas en novembre à -6 005 €. Cette tension provient du décalage classique entre encaissements clients (à 30 jours) et décaissements (achats au comptant et TVA en M+1). La rentabilité prévisionnelle de l'an 1 couvre largement ce besoin, mais il faut le financer pendant la phase de montée en puissance.</p>
+
+    <p><strong>Conditions de réussite</strong></p>
+    <p>Je propose trois mesures concrètes : (1) négocier dès juin une ligne de crédit court terme de 8 000 € avec le Crédit Agricole Sud Rhône Alpes, (2) tenir fermement le prix de 28 € HT face aux cavistes (la sensibilité prix est très défavorable : -1 € → -13% de résultat), (3) renforcer le suivi mensuel de trésorerie dès juillet 2026 pour anticiper toute déviation.</p>
+
+    <p>Camille Roux, apprentie GPME, Olivier &amp; Filles SARL.</p>
+  </div>
+
+  <h3>Auto-évaluation pondérée sur 50 points</h3>
+
+  <div class="grille-evaluation" id="grille-eval">
+    <h4>Grille d'auto-évaluation</h4>
+    <div class="critere-row">
+      <div class="critere-libelle">Tableau de décision : pertinence des arguments POUR / CONTRE</div>
+      <div class="critere-points">/ 15 pts</div>
+      <div class="critere-input"><input type="number" id="cr1" min="0" max="15" data-max="15"> <span>/ 15</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Tableau de décision : qualité et faisabilité des conditions de réussite</div>
+      <div class="critere-points">/ 10 pts</div>
+      <div class="critere-input"><input type="number" id="cr2" min="0" max="10" data-max="10"> <span>/ 10</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Note rédigée : clarté de la recommandation et justification économique</div>
+      <div class="critere-points">/ 15 pts</div>
+      <div class="critere-input"><input type="number" id="cr3" min="0" max="15" data-max="15"> <span>/ 15</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Articulation rentabilité / trésorerie (compréhension du paradoxe)</div>
+      <div class="critere-points">/ 5 pts</div>
+      <div class="critere-input"><input type="number" id="cr4" min="0" max="5" data-max="5"> <span>/ 5</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Qualité rédactionnelle (registre, syntaxe, orthographe)</div>
+      <div class="critere-points">/ 5 pts</div>
+      <div class="critere-input"><input type="number" id="cr5" min="0" max="5" data-max="5"> <span>/ 5</span></div>
+    </div>
+    <div class="critere-total">
+      <span>Total auto-évaluation</span>
+      <span><span id="grille-total">0</span> / 50</span>
+    </div>
+    <button class="btn-secondary" onclick="calculerGrille()" style="margin-top:1rem;">Calculer mon score</button>
+  </div>
+
+  <div class="fiche-methode">
+    <h3>Fiche-mémo - Formules clés</h3>
+    <ol>
+      <li><strong>MCV unitaire</strong> = Prix de vente HT - Coût variable unitaire</li>
+      <li><strong>MCV globale</strong> = CA - CV totales = Volume × MCV unitaire</li>
+      <li><strong>Taux de MCV</strong> = MCV globale / CA × 100</li>
+      <li><strong>SR en valeur</strong> = CF / Taux de MCV</li>
+      <li><strong>SR en quantité</strong> = CF / MCV unitaire</li>
+      <li><strong>Point mort</strong> = SR / CA × 360 (en jours, si activité uniforme)</li>
+      <li><strong>Marge de sécurité</strong> = CA prévisionnel - SR</li>
+      <li><strong>Indice de sécurité</strong> = MS / CA × 100</li>
+      <li><strong>Résultat</strong> = MCV - CF</li>
+      <li><strong>Solde de trésorerie M</strong> = Encaissements M - Décaissements M</li>
+      <li><strong>Solde cumulé M</strong> = Solde cumulé M-1 + Solde mensuel M</li>
+    </ol>
+  </div>
+
+  <h3>Ton score sur la capsule</h3>
+  <div class="score-final" id="score-final">
+    <h3>Capsule mercredi - Analyse de l'activité</h3>
+    <div class="score-big" id="score-big-display">- / -</div>
+    <p>Score consolidé sur les exercices auto-corrigés (toutes phases)</p>
+    <div class="score-detail" id="score-detail-display"></div>
+  </div>
+
+  <div class="email-cta">
+    <h3>Transmettre le récapitulatif</h3>
+    <p>Génère le courriel pré-rédigé incluant tes scores, ton tableau de décision et ta note. Envoie-le à ton responsable pédagogique.</p>
+    <a href="#" id="mailto-link" onclick="genererMailto(event)">Envoyer mon récapitulatif</a>
+  </div>
+
+  <div class="phase-nav-btns">
+    <button class="btn-secondary" onclick="goToPhase(4)">Retour phase 4</button>
+    <span></span>
+  </div>
+</section>
+
+</main>
+
+<footer class="cadp-footer">
+  <p class="cadp-name">Campus Alternance Drôme Provence</p>
+  <p>Capsule de révision E6 SFPME - Session 2026 - BTS GPME 2A</p>
+</footer>
+
+<script>
+/* MOTEUR CADP - Capsule mercredi matin - A4.5 */
+
+let etudiant = { nom: '', prenom: '', classe: '' };
+let scores = {};
+let phasesCompletes = new Set();
+let currentPhase = 1;
+
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('cadp-gpme-id');
+  if (saved) {
+    etudiant = JSON.parse(saved);
+    document.getElementById('id-nom').value = etudiant.nom;
+    document.getElementById('id-prenom').value = etudiant.prenom;
+  }
+  document.getElementById('btn-id-valid').addEventListener('click', validerIdentification);
+
+  initCompteurNote('note-decision');
+  document.querySelectorAll('textarea[id^="dec-"]').forEach(ta => ta.addEventListener('input', sauvegarderTextes));
+
+  document.querySelectorAll('.phase-tab').forEach(tab => {
+    tab.addEventListener('click', () => goToPhase(parseInt(tab.dataset.phase)));
+  });
+
+  restaurerProgression();
+});
+
+function validerIdentification() {
+  const nom = document.getElementById('id-nom').value.trim();
+  const prenom = document.getElementById('id-prenom').value.trim();
+  if (!nom || !prenom) { alert("Renseigne ton nom et ton prénom pour continuer."); return; }
+  etudiant = { nom: nom.toUpperCase(), prenom: prenom, classe: 'BTS GPME 2A - Promo 2426' };
+  localStorage.setItem('cadp-gpme-id', JSON.stringify(etudiant));
+  document.getElementById('header-name').textContent = etudiant.prenom + ' ' + etudiant.nom;
+  document.getElementById('modal-id').style.display = 'none';
+}
+
+function validateSaisie(blocId) {
+  const inputs = document.querySelectorAll('[id^="' + blocId + '-"]');
+  let bonnes = 0, total = 0;
+  inputs.forEach(inp => {
+    if (inp.tagName !== 'INPUT' || (inp.type !== 'number' && inp.type !== 'text')) return;
+    const bonneRaw = inp.dataset.bonne;
+    if (bonneRaw === undefined) return;
+    const valeurRaw = inp.value.trim().replace(',', '.');
+    const valeur = parseFloat(valeurRaw);
+    const bonne = parseFloat(bonneRaw);
+    const tol = parseFloat(inp.dataset.tol || '0');
+    inp.classList.remove('correct', 'incorrect');
+    if (!isNaN(valeur) && valeurRaw !== '') {
+      total++;
+      if (Math.abs(valeur - bonne) <= tol) { inp.classList.add('correct'); bonnes++; }
+      else inp.classList.add('incorrect');
+    }
+  });
+  const note20 = total > 0 ? Math.round((bonnes / total) * 20 * 10) / 10 : 0;
+  scores[blocId] = { bonnes: bonnes, total: total, note20: note20 };
+  let html = '';
+  if (total === 0) html = '<div class="encadre encadre-attention"><div class="encadre-header">Saisie incomplète</div><p>Renseigne au moins une valeur avant de valider.</p></div>';
+  else if (bonnes === total) html = '<div class="encadre encadre-note"><div class="encadre-header">Excellent</div><p>Toutes tes réponses sont correctes (' + bonnes + ' / ' + total + ').</p></div>';
+  else html = '<div class="encadre encadre-attention"><div class="encadre-header">Réponses partielles</div><p>' + bonnes + ' bonne(s) réponse(s) sur ' + total + '. Les saisies en rouge sont à revoir. Clique sur "Voir le détail" pour identifier ton erreur.</p></div>';
+  document.getElementById(blocId + '-result').innerHTML = html;
+  if (bonnes === total && total > 0) { phasesCompletes.add(blocId); sauvegarderProgression(); miseAJourScoreFinal(); }
+}
+
+function toggleDetail(id) { document.getElementById(id).classList.toggle('shown'); }
+
+function initCompteurNote(id) {
+  const ta = document.getElementById(id);
+  const counterC = document.getElementById('note-count');
+  const counterM = document.getElementById('note-mots');
+  if (ta && counterC && counterM) {
+    ta.addEventListener('input', () => {
+      counterC.textContent = ta.value.length;
+      counterM.textContent = ta.value.trim().split(/\s+/).filter(w => w.length > 0).length;
+      sauvegarderTextes();
+    });
+  }
+}
+
+function sauvegarderTextes() {
+  const data = {
+    note: document.getElementById('note-decision').value,
+    pour: document.getElementById('dec-pour').value,
+    contre: document.getElementById('dec-contre').value,
+    cond: document.getElementById('dec-cond').value
+  };
+  localStorage.setItem('cadp-gpme-textes-mercredi', JSON.stringify(data));
+}
+
+function calculerGrille() {
+  let total = 0, valide = true;
+  for (let i = 1; i <= 5; i++) {
+    const inp = document.getElementById('cr' + i);
+    const v = parseFloat(inp.value);
+    const max = parseFloat(inp.dataset.max);
+    if (isNaN(v) || v < 0 || v > max) { inp.style.borderColor = 'var(--error)'; valide = false; }
+    else { inp.style.borderColor = 'var(--border)'; total += v; }
+  }
+  if (!valide) { alert('Vérifie que toutes les notes sont remplies et qu\'aucune ne dépasse le maximum autorisé.'); document.getElementById('grille-total').textContent = '0'; return; }
+  document.getElementById('grille-total').textContent = total;
+  scores.grille = total;
+  sauvegarderProgression();
+  miseAJourScoreFinal();
+}
+
+function goToPhase(num) {
+  document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+  document.getElementById('phase-' + num).classList.add('active');
+  document.querySelectorAll('.phase-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('.phase-tab[data-phase="' + num + '"]').classList.add('active');
+  currentPhase = num;
+  if (num > 1) { phasesCompletes.add('phase' + (num - 1)); marquerPhaseCompletee(num - 1); }
+  miseAJourProgression();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function marquerPhaseCompletee(num) { document.querySelector('.phase-tab[data-phase="' + num + '"]').classList.add('completed'); }
+
+function miseAJourProgression() {
+  const pct = Math.round((Math.max(currentPhase - 1, 0) / 5) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = pct + '%';
+}
+
+function miseAJourScoreFinal() {
+  const labelMap = {
+    'cv': 'Décomposition coûts (Phase 2)',
+    'mcv': 'MCV (Phase 2)',
+    'crd': 'CR différentiel (Phase 2)',
+    'sr': 'Seuil de rentabilité (Phase 3)',
+    'ms': 'Marge de sécurité (Phase 3)',
+    'sens': 'Sensibilité prix (Phase 3)',
+    'bt': 'Budget de trésorerie (Phase 4)'
+  };
+  const scoresList = [];
+  Object.keys(labelMap).forEach(key => {
+    if (scores[key] && scores[key].total > 0) scoresList.push({ label: labelMap[key], val: scores[key].note20 });
+  });
+  if (scoresList.length === 0) {
+    document.getElementById('score-big-display').textContent = '- / 20';
+    document.getElementById('score-detail-display').innerHTML = '<p style="color:var(--text-mute);">Réalise les exercices auto-corrigés pour afficher ton score.</p>';
+    return;
+  }
+  const moyenne = scoresList.reduce((sum, s) => sum + s.val, 0) / scoresList.length;
+  document.getElementById('score-big-display').textContent = moyenne.toFixed(1) + ' / 20';
+  let detailHtml = '';
+  scoresList.forEach(s => { detailHtml += '<div class="score-cell"><div class="score-cell-label">' + s.label + '</div><div class="score-cell-value">' + s.val.toFixed(1) + ' / 20</div></div>'; });
+  if (scores.grille !== undefined) detailHtml += '<div class="score-cell"><div class="score-cell-label">Auto-éval note</div><div class="score-cell-value">' + scores.grille + ' / 50</div></div>';
+  document.getElementById('score-detail-display').innerHTML = detailHtml;
+}
+
+function sauvegarderProgression() {
+  localStorage.setItem('cadp-gpme-prog-mercredi', JSON.stringify({ scores: scores, phasesCompletes: Array.from(phasesCompletes) }));
+}
+
+function restaurerProgression() {
+  const saved = localStorage.getItem('cadp-gpme-prog-mercredi');
+  if (saved) {
+    const data = JSON.parse(saved);
+    scores = data.scores || {};
+    phasesCompletes = new Set(data.phasesCompletes || []);
+    miseAJourScoreFinal();
+  }
+  const textes = localStorage.getItem('cadp-gpme-textes-mercredi');
+  if (textes) {
+    const data = JSON.parse(textes);
+    if (data.note) document.getElementById('note-decision').value = data.note;
+    if (data.pour) document.getElementById('dec-pour').value = data.pour;
+    if (data.contre) document.getElementById('dec-contre').value = data.contre;
+    if (data.cond) document.getElementById('dec-cond').value = data.cond;
+  }
+  if (etudiant.nom) {
+    document.getElementById('header-name').textContent = etudiant.prenom + ' ' + etudiant.nom;
+    document.getElementById('modal-id').style.display = 'none';
+  }
+}
+
+function genererMailto(e) {
+  e.preventDefault();
+  const sujet = '[CADP - GPME] Capsule mercredi - Analyse de l\'activité - ' + (etudiant.prenom || '?') + ' ' + (etudiant.nom || '?');
+  let corps = 'Bonjour,\n\nVoici le récapitulatif de ma capsule de révision sur l\'analyse de l\'activité (A4.5).\n\n';
+  corps += '=== Identification ===\n';
+  corps += 'Nom : ' + (etudiant.nom || '-') + '\nPrénom : ' + (etudiant.prenom || '-') + '\nClasse : ' + (etudiant.classe || '-') + '\nDate : ' + new Date().toLocaleString('fr-FR') + '\n\n';
+  corps += '=== Scores aux exercices auto-corrigés ===\n';
+  const labelMap = {
+    'cv': 'Décomposition des coûts',
+    'mcv': 'Marge sur coût variable',
+    'crd': 'Compte de résultat différentiel',
+    'sr': 'Seuil de rentabilité',
+    'ms': 'Marge de sécurité',
+    'sens': 'Sensibilité prix',
+    'bt': 'Budget de trésorerie'
+  };
+  Object.keys(labelMap).forEach(key => {
+    if (scores[key] && scores[key].total > 0) corps += labelMap[key] + ' : ' + scores[key].bonnes + '/' + scores[key].total + ' soit ' + scores[key].note20.toFixed(1) + '/20\n';
+  });
+  if (scores.grille !== undefined) corps += '\n=== Auto-évaluation note de décision ===\nScore auto-déclaré : ' + scores.grille + '/50\n';
+  const pour = document.getElementById('dec-pour').value.trim();
+  const contre = document.getElementById('dec-contre').value.trim();
+  const cond = document.getElementById('dec-cond').value.trim();
+  if (pour || contre || cond) {
+    corps += '\n=== Mon tableau de décision ===\n';
+    corps += '\n[Arguments POUR le lancement]\n' + (pour || '(non renseigné)');
+    corps += '\n\n[Arguments CONTRE / vigilance]\n' + (contre || '(non renseigné)');
+    corps += '\n\n[Conditions de réussite]\n' + (cond || '(non renseigné)');
+  }
+  const note = document.getElementById('note-decision').value.trim();
+  if (note) corps += '\n\n=== Ma note de décision ===\n\n' + note + '\n';
+  corps += '\n---\nCapsule de révision E6 SFPME - Activité A4.5 - BTS GPME 2A - Promo 2426\nCampus Alternance Drôme Provence';
+  const url = 'mailto:kevin.vidard@cadp.pro?subject=' + encodeURIComponent(sujet) + '&body=' + encodeURIComponent(corps);
+  window.location.href = url;
+}
+</script>
+</body>
+</html>

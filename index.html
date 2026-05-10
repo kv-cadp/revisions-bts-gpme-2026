@@ -1,72 +1,230 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Révisions BTS GPME 2A | CADP</title>
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="icon" type="image/jpeg" href="assets/img/logo-cadp.jpg">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Révisions BTS GPME 2A - Session 2026 - CADP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0B1929;--navy-light:#1a2c45;--navy-soft:#243b5c;--or:#C9A84C;--or-light:#d4b76a;--or-soft:#e6d29c;--bg:#f7f4ee;--bg-light:#fdfbf6;--text:#1a1a1a;--text-soft:#4a4a4a;--text-mute:#757575;--border:#d8d2c1;--border-light:#e8e3d4;--shadow:0 2px 12px rgba(11,25,41,0.08);--shadow-lg:0 8px 32px rgba(11,25,41,0.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',system-ui,sans-serif;font-size:16px;line-height:1.6;color:var(--text);background:var(--bg);min-height:100vh}
+h1,h2,h3,h4{font-family:'Playfair Display',serif;color:var(--navy);line-height:1.25}
+header.cadp-header{background:var(--navy);color:var(--bg-light);padding:1.5rem 2rem;border-bottom:4px solid var(--or);box-shadow:var(--shadow)}
+.header-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.brand-name{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--or);letter-spacing:.5px}
+.brand-tag{font-size:.85rem;color:var(--bg-light);opacity:.8;letter-spacing:.5px;text-transform:uppercase}
+.session-tag{font-size:.85rem;color:var(--or-soft);text-transform:uppercase;letter-spacing:1px;font-weight:600}
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);color:var(--bg-light);padding:4rem 2rem;border-bottom:4px solid var(--or)}
+.hero-inner{max-width:1100px;margin:0 auto;text-align:center}
+.hero-eyebrow{font-size:.95rem;text-transform:uppercase;letter-spacing:2px;color:var(--or);font-weight:600;margin-bottom:1rem}
+.hero h1{color:var(--bg-light);font-size:2.8rem;font-weight:700;margin-bottom:1rem;line-height:1.15}
+.hero h1 em{color:var(--or);font-style:normal;font-weight:600}
+.hero p.lead{font-size:1.2rem;color:var(--bg-light);opacity:.9;max-width:780px;margin:0 auto 1.5rem;line-height:1.5}
+.hero-stats{display:flex;justify-content:center;gap:2.5rem;margin-top:2rem;flex-wrap:wrap}
+.hero-stat{text-align:center}
+.hero-stat-num{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:var(--or);line-height:1}
+.hero-stat-lbl{font-size:.85rem;color:var(--bg-light);opacity:.8;letter-spacing:.5px;text-transform:uppercase;margin-top:.3rem}
+.main-container{max-width:1100px;margin:3rem auto;padding:0 1.5rem}
+.section-title{font-size:.85rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--or);font-weight:600;margin-bottom:.5rem}
+.section-h{font-size:2rem;font-weight:600;margin-bottom:.5rem}
+.section-intro{color:var(--text-soft);margin-bottom:2rem;font-size:1.05rem;max-width:800px;line-height:1.6}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:1.5rem;margin-bottom:3rem}
+.card{background:white;border:1px solid var(--border);box-shadow:var(--shadow);transition:all .25s;display:flex;flex-direction:column;text-decoration:none;color:inherit;border-top:4px solid var(--or)}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-top-color:var(--navy)}
+.card-header{padding:1.5rem 1.5rem .8rem;border-bottom:1px solid var(--border-light)}
+.card-eyebrow{font-size:.78rem;text-transform:uppercase;letter-spacing:1px;color:var(--or);font-weight:600;margin-bottom:.4rem;display:flex;justify-content:space-between;align-items:center}
+.card-day{background:var(--navy);color:var(--or);padding:.2rem .65rem;font-size:.75rem;font-weight:600;letter-spacing:.5px}
+.card h3{font-size:1.25rem;color:var(--navy);font-weight:600;line-height:1.3}
+.card-body{padding:1rem 1.5rem 1.5rem;flex-grow:1;display:flex;flex-direction:column}
+.card-meta{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem}
+.card-tag{font-size:.78rem;background:var(--bg-light);color:var(--navy);padding:.25rem .65rem;border:1px solid var(--border);font-weight:500}
+.card-tag.tag-activity{background:var(--or-soft);border-color:var(--or)}
+.card p{color:var(--text-soft);font-size:.93rem;line-height:1.55;margin-bottom:1rem;flex-grow:1}
+.card-cta{margin-top:auto;padding-top:.8rem;border-top:1px dashed var(--border);font-size:.9rem;color:var(--navy);font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.card-cta::after{content:"→";font-size:1.2rem;color:var(--or);transition:transform .2s}
+.card:hover .card-cta::after{transform:translateX(5px)}
+.banque-card{grid-column:1/-1;background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);color:var(--bg-light);border-top:4px solid var(--or)}
+.banque-card:hover{background:linear-gradient(135deg,var(--navy-light) 0%,var(--navy-soft) 100%)}
+.banque-card .card-header{border-bottom:1px solid rgba(255,255,255,.1)}
+.banque-card .card-eyebrow{color:var(--or-soft)}
+.banque-card .card-day{background:var(--or);color:var(--navy)}
+.banque-card h3{color:var(--bg-light);font-size:1.5rem}
+.banque-card p{color:var(--bg-light);opacity:.9}
+.banque-card .card-tag{background:rgba(255,255,255,.1);color:var(--bg-light);border-color:rgba(255,255,255,.2)}
+.banque-card .card-tag.tag-activity{background:var(--or);color:var(--navy);border-color:var(--or);font-weight:600}
+.banque-card .card-cta{color:var(--or);border-top-color:rgba(255,255,255,.15)}
+.banque-card .card-cta::after{color:var(--or)}
+.consigne-section{background:var(--bg-light);border-left:4px solid var(--or);padding:1.5rem 2rem;margin:3rem 0}
+.consigne-section h3{margin-top:0;font-size:1.25rem}
+.consigne-section ul{margin:.7rem 0 0 1.5rem}
+.consigne-section li{margin-bottom:.5rem;color:var(--text-soft)}
+.consigne-section strong{color:var(--navy)}
+footer.cadp-footer{background:var(--navy);color:var(--bg-light);padding:2rem;text-align:center;margin-top:4rem;border-top:4px solid var(--or)}
+footer.cadp-footer p{margin-bottom:.5rem;opacity:.85;font-size:.9rem}
+footer.cadp-footer .cadp-name{color:var(--or);font-family:'Playfair Display',serif;font-weight:700;font-size:1.1rem}
+footer.cadp-footer .footer-meta{font-size:.82rem;opacity:.7;margin-top:.7rem}
+@media (max-width:768px){.hero{padding:2.5rem 1rem}.hero h1{font-size:2rem}.hero p.lead{font-size:1rem}.hero-stats{gap:1.5rem}.main-container{padding:0 1rem;margin:2rem auto}.cards-grid{grid-template-columns:1fr}.section-h{font-size:1.5rem}}
+</style>
 </head>
 <body>
-  <header class="cadp-header">
-    <img src="assets/img/logo-cadp.jpg" alt="CADP" class="cadp-header__logo">
-    <div class="cadp-header__titre">Révisions BTS GPME 2A<span class="cadp-header__sous-titre">Promo 2024-2026 · Campus Alternance Drôme Provence</span></div>
-    <div class="cadp-header__mention">Pierrelatte (26)</div>
-  </header>
 
-  <main class="cadp-container">
-    <h1 class="cadp-titre-cas">Bienvenue dans tes capsules de révision</h1>
-
-    <div class="cadp-encadre cadp-encadre--note">
-      <div class="cadp-encadre__titre">Mode d'emploi</div>
-      <p>Chaque capsule est un cas pratique autonome. Tu travailles à ton rythme, tu vérifies tes réponses au fur et à mesure, et tu envoies tes résultats à Kévin à la fin via le bouton dédié. Pense à renseigner ton nom et prénom en haut de chaque cas.</p>
+<header class="cadp-header">
+  <div class="header-inner">
+    <div>
+      <div class="brand-name">CADP</div>
+      <div class="brand-tag">Campus Alternance Drôme Provence</div>
     </div>
+    <div class="session-tag">Session 2026</div>
+  </div>
+</header>
 
-    <h2 class="cadp-titre-cas" style="font-size:1.3rem;margin-top:2rem;color:var(--navy-profond);">Session du 28 avril</h2>
-
-    <table class="cadp-planning">
-      <thead><tr><th>Créneau</th><th>Contenu</th></tr></thead>
-      <tbody>
-        <tr>
-          <td><strong>Journée complète</strong></td>
-          <td><a href="cas/28avril-journee-e6-flux-tresorerie.html">E6 — Flux nets de trésorerie et budget de trésorerie (La Maison Levert, Montélimar)</a></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <h2 class="cadp-titre-cas" style="font-size:1.3rem;margin-top:2.5rem;color:var(--navy-profond);">Mercredi 6 mai</h2>
-
-    <table class="cadp-planning">
-      <thead><tr><th>Créneau</th><th>Contenu</th></tr></thead>
-      <tbody>
-        <tr>
-          <td><strong>Matin (8h-12h)</strong></td>
-          <td><a href="cas/6mai-pm-e6-fnt-champs-emile.html">E6 — Flux nets de trésorerie (cas n°2) : Les Champs d'Émile, lavande</a></td>
-        </tr>
-        <tr>
-          <td><strong>Après-midi (13h-15h30)</strong></td>
-          <td><a href="cas/6mai-pm-e52-grh-champs-emile.html">E52 — GRH : Les Champs d'Émile, lavande</a></td>
-        </tr>
-        <tr>
-          <td><strong>Bonus</strong></td>
-          <td><a href="cas/6mai-matin-cejm-sujet-blanc-brasserie.html">CEJM E3 — Sujet blanc : La Brasserie des Deux Rivières (management, économie, droit)</a></td>
-        </tr>
-        <tr>
-          <td><strong>Bonus</strong></td>
-          <td><a href="cas/6mai-cejm-sujet-blanc-format-reel.html">CEJM E3 — Sujet blanc format examen réel (3 missions transversales)</a></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="cadp-encadre cadp-encadre--note">
-      <div class="cadp-encadre__titre">Une question ou un blocage ?</div>
-      <p>Réponds par mail à Kévin ou passe le voir au campus.</p>
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Révisions Épreuve E6 SFPME</div>
+    <h1>BTS GPME 2A — <em>Promo 2426</em></h1>
+    <p class="lead">Cinq cas pratiques, une banque de 350 questions et plus de quatre heures de travail autonome pour préparer l'épreuve E6 dans les meilleures conditions.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-num">5</div><div class="hero-stat-lbl">Capsules</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">350</div><div class="hero-stat-lbl">QCM</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">7</div><div class="hero-stat-lbl">Activités A4.1 - A4.7</div></div>
     </div>
-  </main>
+  </div>
+</section>
 
-  <footer class="cadp-footer">
-    Campus Alternance Drôme Provence — Pierrelatte (26)<br>
-    BTS GPME 2A — Promo 2024-2026
-  </footer>
+<main class="main-container">
+
+<div class="section-title">Capsules de révision</div>
+<h2 class="section-h">Cinq cas pratiques pour mobiliser le référentiel</h2>
+<p class="section-intro">Chaque capsule t'accompagne sur un cas concret de la PME fictive Olivier &amp; Filles, distillerie nyonsaise. Productions guidées, calculs auto-corrigés, grilles d'évaluation pondérées et corrigés-types détaillés.</p>
+
+<div class="cards-grid">
+
+  <a href="capsule-lundi-tableau-repartition.html" class="card">
+    <div class="card-header">
+      <div class="card-eyebrow"><span>Cas pratique</span><span class="card-day">Lundi</span></div>
+      <h3>Tableau de Répartition des Tâches</h3>
+    </div>
+    <div class="card-body">
+      <div class="card-meta">
+        <span class="card-tag tag-activity">A4.2</span>
+        <span class="card-tag">TRT</span>
+        <span class="card-tag">Charge nette</span>
+        <span class="card-tag">Taux d'engagement</span>
+      </div>
+      <p>Marie Olivier te confie l'analyse de la répartition des tâches du service administratif. Méthode CADP en 4 étapes, calculs charge nette/taux d'engagement, propositions de réorganisation chiffrées.</p>
+      <div class="card-cta">Démarrer la capsule</div>
+    </div>
+  </a>
+
+  <a href="capsule-mardi-diagnostic-financier.html" class="card">
+    <div class="card-header">
+      <div class="card-eyebrow"><span>Cas pratique</span><span class="card-day">Mardi matin</span></div>
+      <h3>Diagnostic financier complet</h3>
+    </div>
+    <div class="card-body">
+      <div class="card-meta">
+        <span class="card-tag tag-activity">A4.6</span>
+        <span class="card-tag">Bilan fonctionnel</span>
+        <span class="card-tag">CAF</span>
+        <span class="card-tag">VAN</span>
+      </div>
+      <p>Le projet d'investissement export Allemagne nécessite un diagnostic financier solide. Bilan fonctionnel, FRNG, BFR, ratios, plan de financement, comparaison emprunt/crédit-bail par VAN.</p>
+      <div class="card-cta">Démarrer la capsule</div>
+    </div>
+  </a>
+
+  <a href="capsule-mardi-pm-si-processus.html" class="card">
+    <div class="card-header">
+      <div class="card-eyebrow"><span>Cas pratique</span><span class="card-day">Mardi PM</span></div>
+      <h3>SI et processus - incident logistique</h3>
+    </div>
+    <div class="card-body">
+      <div class="card-meta">
+        <span class="card-tag tag-activity">A4.1 + A4.2</span>
+        <span class="card-tag">D.E.R.</span>
+        <span class="card-tag">Workflow</span>
+        <span class="card-tag">Indicateurs</span>
+      </div>
+      <p>Une commande Hambourg part avec une référence manquante et 7 jours de retard. Diagnostic du processus, analyse SI, indicateurs de performance, propositions correctives structurées.</p>
+      <div class="card-cta">Démarrer la capsule</div>
+    </div>
+  </a>
+
+  <a href="capsule-mercredi-analyse-activite.html" class="card">
+    <div class="card-header">
+      <div class="card-eyebrow"><span>Cas pratique</span><span class="card-day">Mercredi matin</span></div>
+      <h3>Analyse de l'activité - lancement Génépi</h3>
+    </div>
+    <div class="card-body">
+      <div class="card-meta">
+        <span class="card-tag tag-activity">A4.5</span>
+        <span class="card-tag">MCV</span>
+        <span class="card-tag">Seuil de rentabilité</span>
+        <span class="card-tag">Trésorerie</span>
+      </div>
+      <p>Lancement du Génépi des Baronnies à 28 €. Calculs de marge sur coût variable, seuil de rentabilité, point mort, marge de sécurité, budget de trésorerie mensuel et analyse de sensibilité prix.</p>
+      <div class="card-cta">Démarrer la capsule</div>
+    </div>
+  </a>
+
+  <a href="capsule-mercredi-pm-communication.html" class="card">
+    <div class="card-header">
+      <div class="card-eyebrow"><span>Cas pratique</span><span class="card-day">Mercredi PM</span></div>
+      <h3>Communication institutionnelle - crise digitale</h3>
+    </div>
+    <div class="card-body">
+      <div class="card-meta">
+        <span class="card-tag tag-activity">A4.4</span>
+        <span class="card-tag">Note interne</span>
+        <span class="card-tag">Communiqué presse</span>
+        <span class="card-tag">E-réputation</span>
+      </div>
+      <p>Le sommelier de Hanseatic Gastronomy poste sur LinkedIn, des avis Google négatifs apparaissent, la presse sollicite Marie. Note interne, communiqué presse, réponses RS, plan d'action 7 jours.</p>
+      <div class="card-cta">Démarrer la capsule</div>
+    </div>
+  </a>
+
+  <a href="banque-qcm-bts-gpme.html" class="card banque-card">
+    <div class="card-header">
+      <div class="card-eyebrow"><span>Banque QCM</span><span class="card-day">350 questions</span></div>
+      <h3>Banque de questions à choix multiples - 7 activités</h3>
+    </div>
+    <div class="card-body">
+      <div class="card-meta">
+        <span class="card-tag tag-activity">A4.1 → A4.7</span>
+        <span class="card-tag">Mode thématique</span>
+        <span class="card-tag">Mode mixte</span>
+        <span class="card-tag">Examen blanc</span>
+      </div>
+      <p>50 questions par activité, trois modes d'entraînement : thématique (30 Q ciblées), mixte (50 Q toutes activités) et examen blanc (70 Q chronométrées 60 min). Correction immédiate, explications, historique de tes scores.</p>
+      <div class="card-cta">Accéder à la banque QCM</div>
+    </div>
+  </a>
+
+</div>
+
+<div class="consigne-section">
+  <h3>Comment utiliser ces ressources ?</h3>
+  <ul>
+    <li><strong>Travaille en autonomie</strong> : chaque capsule est conçue pour être réalisée seule, avec un parcours guidé phase par phase.</li>
+    <li><strong>Identifie-toi systématiquement</strong> dès l'ouverture de chaque ressource : ton nom et ton prénom permettent à ton récapitulatif d'être correctement attribué.</li>
+    <li><strong>Réalise les exercices avant de consulter les corrigés</strong> : les détails déroulants sont là pour t'aider à comprendre tes erreurs, pas pour te dispenser de l'effort.</li>
+    <li><strong>Génère le mailto récap en fin de chaque capsule</strong> pour transmettre tes résultats à ton responsable pédagogique. Tes scores et tes productions sont automatiquement intégrés.</li>
+    <li><strong>Reviens autant de fois que nécessaire</strong> : ta progression est sauvegardée dans ton navigateur (localStorage). Les questions de la banque QCM sont tirées au sort à chaque session, donc différentes à chaque fois.</li>
+  </ul>
+</div>
+
+</main>
+
+<footer class="cadp-footer">
+  <p class="cadp-name">Campus Alternance Drôme Provence</p>
+  <p>Pierrelatte (Drôme) — Site dédié à la révision E6 SFPME</p>
+  <p class="footer-meta">Promotion 2426 — Session 2026 — Production interne CADP, ressources fictives à usage strictement pédagogique</p>
+</footer>
+
 </body>
 </html>

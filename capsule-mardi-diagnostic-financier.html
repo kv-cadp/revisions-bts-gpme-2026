@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capsule GPME - Diagnostic financier complet - CADP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0B1929;--navy-light:#1a2c45;--navy-soft:#243b5c;--or:#C9A84C;--or-light:#d4b76a;--or-soft:#e6d29c;--bg:#f7f4ee;--bg-light:#fdfbf6;--text:#1a1a1a;--text-soft:#4a4a4a;--text-mute:#757575;--border:#d8d2c1;--border-light:#e8e3d4;--success:#2d6b3f;--success-bg:#e8f3eb;--error:#b13a3a;--error-bg:#f9eaea;--warning:#8a5a00;--warning-bg:#fcf3dc;--info:#1f4a7a;--info-bg:#e6eef7;--shadow:0 2px 12px rgba(11,25,41,0.08);--shadow-lg:0 8px 32px rgba(11,25,41,0.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',system-ui,sans-serif;font-size:16px;line-height:1.6;color:var(--text);background:var(--bg);min-height:100vh}
+h1,h2,h3,h4{font-family:'Playfair Display',serif;color:var(--navy);line-height:1.25}
+h1{font-size:2.4rem;font-weight:700}
+h2{font-size:1.85rem;font-weight:600;margin-bottom:1rem}
+h3{font-size:1.4rem;font-weight:600;margin:1.5rem 0 .75rem}
+h4{font-size:1.15rem;font-weight:600;margin:1rem 0 .5rem;color:var(--navy-light)}
+h5{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--navy);margin:.8rem 0 .4rem}
+p{margin-bottom:1rem}
+strong{font-weight:600;color:var(--navy)}
+em{font-style:italic;color:var(--text-soft)}
+header.cadp-header{background:var(--navy);color:var(--bg-light);padding:1.5rem 2rem;border-bottom:4px solid var(--or);box-shadow:var(--shadow);position:sticky;top:0;z-index:100}
+.header-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.brand{display:flex;flex-direction:column}
+.brand-name{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--or);letter-spacing:.5px}
+.brand-tag{font-size:.85rem;color:var(--bg-light);opacity:.8;letter-spacing:.5px;text-transform:uppercase}
+.header-info{display:flex;gap:2rem;font-size:.9rem;color:var(--bg-light)}
+.header-info span{display:flex;flex-direction:column}
+.header-info .label{font-size:.75rem;color:var(--or-soft);text-transform:uppercase;letter-spacing:.5px}
+.modal-overlay{position:fixed;inset:0;background:rgba(11,25,41,.85);display:flex;align-items:center;justify-content:center;z-index:1000;padding:1rem}
+.modal{background:var(--bg-light);max-width:540px;width:100%;border-top:6px solid var(--or);box-shadow:var(--shadow-lg);padding:2rem}
+.modal h2{color:var(--navy);margin-bottom:.5rem}
+.modal p{color:var(--text-soft);margin-bottom:1.5rem}
+.modal-form{display:flex;flex-direction:column;gap:1rem}
+.form-row{display:flex;flex-direction:column;gap:.35rem}
+.form-row label{font-weight:600;font-size:.9rem;color:var(--navy)}
+.form-row input{padding:.7rem .9rem;border:1.5px solid var(--border);background:white;font-family:inherit;font-size:1rem}
+.form-row input:focus{outline:none;border-color:var(--or)}
+.btn-primary{background:var(--navy);color:var(--or);border:2px solid var(--navy);padding:.85rem 1.5rem;font-family:inherit;font-size:1rem;font-weight:600;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;transition:all .2s}
+.btn-primary:hover{background:var(--or);color:var(--navy);border-color:var(--or)}
+.btn-secondary{background:transparent;color:var(--navy);border:2px solid var(--navy);padding:.7rem 1.3rem;font-family:inherit;font-size:.95rem;font-weight:600;cursor:pointer;letter-spacing:.3px;transition:all .2s}
+.btn-secondary:hover{background:var(--navy);color:var(--or)}
+.main-container{max-width:1100px;margin:2rem auto;padding:0 1.5rem}
+.phases-nav{display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem;margin-bottom:2rem;padding:1rem;background:white;border:1px solid var(--border);box-shadow:var(--shadow)}
+.phase-tab{padding:.85rem .5rem;text-align:center;font-size:.85rem;font-weight:600;background:var(--bg);border:1.5px solid var(--border);color:var(--text-soft);cursor:pointer;transition:all .2s}
+.phase-tab.active{background:var(--navy);color:var(--or);border-color:var(--navy)}
+.phase-tab.completed{background:var(--or-soft);color:var(--navy);border-color:var(--or)}
+.phase-tab:hover:not(.active){border-color:var(--or);color:var(--navy)}
+.phase-tab .phase-num{display:block;font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:.2rem}
+.phase-tab .phase-title{display:block;font-size:.78rem;line-height:1.2}
+.phase{display:none;background:white;padding:2.5rem;border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:2rem;animation:fadeIn .4s ease}
+.phase.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.phase-header{border-bottom:2px solid var(--or);padding-bottom:1rem;margin-bottom:1.5rem}
+.phase-header .phase-eyebrow{font-size:.85rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--or);font-weight:600;margin-bottom:.3rem}
+.subsection{background:var(--bg-light);border-left:4px solid var(--navy);padding:1.5rem 1.8rem;margin:2rem 0 1.5rem}
+.subsection-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--navy);margin-bottom:.5rem}
+.subsection-eyebrow{font-size:.8rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--or);font-weight:600;margin-bottom:.3rem}
+.encadre{border-left:4px solid;padding:1.2rem 1.5rem;margin:1.5rem 0;background:var(--bg)}
+.encadre-header{font-family:'Playfair Display',serif;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-size:.9rem;margin-bottom:.5rem}
+.encadre-note{border-color:var(--info);background:var(--info-bg)}
+.encadre-note .encadre-header{color:var(--info)}
+.encadre-important{border-color:var(--or);background:var(--warning-bg)}
+.encadre-important .encadre-header{color:var(--warning)}
+.encadre-attention{border-color:var(--error);background:var(--error-bg)}
+.encadre-attention .encadre-header{color:var(--error)}
+.doc-ressource{background:var(--bg-light);border:1px solid var(--border);padding:1.5rem 1.8rem;margin:1.5rem 0;position:relative}
+.doc-ressource::before{content:'Document ressource';position:absolute;top:-.65rem;left:1.5rem;background:var(--navy);color:var(--or);padding:.2rem .7rem;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.8px}
+.doc-meta{font-size:.85rem;color:var(--text-mute);font-style:italic;margin-top:1rem;padding-top:.7rem;border-top:1px dashed var(--border)}
+table.cadp-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.92rem;background:white}
+table.cadp-table thead th{background:var(--navy);color:var(--or);padding:.6rem .5rem;text-align:left;font-weight:600;font-size:.82rem;text-transform:uppercase;letter-spacing:.5px;border:1px solid var(--navy)}
+table.cadp-table td{padding:.5rem .55rem;border:1px solid var(--border-light)}
+table.cadp-table tbody tr:nth-child(even){background:var(--bg)}
+table.cadp-table .num-col{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+table.cadp-table .num-col.bold{font-weight:700;color:var(--navy)}
+table.cadp-table .total-row td{background:var(--navy-soft);color:white;font-weight:600;border:1px solid var(--navy-soft)}
+table.cadp-table .total-row td.total-num{color:var(--or)}
+table.cadp-table .subtotal-row td{background:var(--or-soft);font-weight:600}
+table.cadp-table .calc-input{width:100%;padding:.3rem .4rem;border:1.5px solid var(--border);background:white;font-family:inherit;font-size:.92rem;text-align:right;font-variant-numeric:tabular-nums}
+table.cadp-table .calc-input:focus{outline:none;border-color:var(--or)}
+table.cadp-table .calc-input.correct{background:var(--success-bg);border-color:var(--success)}
+table.cadp-table .calc-input.incorrect{background:var(--error-bg);border-color:var(--error)}
+table.cadp-table .empty-cell{color:var(--text-mute);text-align:center}
+.exercise{margin:1.5rem 0;padding:1.5rem;background:var(--bg-light);border:1px solid var(--border)}
+.exercise-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600;color:var(--navy);margin-bottom:.5rem}
+.exercise-instruction{color:var(--text-soft);margin-bottom:1rem;font-size:.95rem}
+.qcm-question{margin:1.2rem 0;padding:1rem 0;border-bottom:1px dashed var(--border)}
+.qcm-question:last-child{border-bottom:none}
+.qcm-stem{font-weight:600;margin-bottom:.7rem;color:var(--navy)}
+.qcm-options{display:flex;flex-direction:column;gap:.4rem}
+.qcm-option{display:flex;align-items:flex-start;padding:.6rem .9rem;background:white;border:1.5px solid var(--border);cursor:pointer;transition:all .15s;gap:.6rem}
+.qcm-option:hover{border-color:var(--or)}
+.qcm-option input{margin-top:.25rem;flex-shrink:0;accent-color:var(--navy)}
+.qcm-option.correct{background:var(--success-bg);border-color:var(--success)}
+.qcm-option.incorrect{background:var(--error-bg);border-color:var(--error)}
+.qcm-option.expected{background:var(--success-bg);border-color:var(--success);border-style:dashed}
+.qcm-feedback{margin-top:.7rem;padding:.7rem 1rem;font-size:.9rem;display:none}
+.qcm-feedback.shown{display:block}
+.qcm-feedback.success{background:var(--success-bg);color:var(--success);border-left:3px solid var(--success)}
+.qcm-feedback.error{background:var(--error-bg);color:var(--error);border-left:3px solid var(--error)}
+.saisie-question{margin:1.2rem 0;padding:1rem 0;border-bottom:1px dashed var(--border)}
+.saisie-question:last-child{border-bottom:none}
+.saisie-row{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-top:.5rem}
+.saisie-row label{font-weight:600;color:var(--navy);min-width:240px}
+.saisie-row input[type=text],.saisie-row input[type=number]{padding:.55rem .8rem;border:1.5px solid var(--border);background:white;font-family:inherit;font-size:1rem;width:130px;font-variant-numeric:tabular-nums}
+.saisie-row input:focus{outline:none;border-color:var(--or)}
+.saisie-row input.correct{border-color:var(--success);background:var(--success-bg)}
+.saisie-row input.incorrect{border-color:var(--error);background:var(--error-bg)}
+.saisie-unit{color:var(--text-soft);font-size:.95rem}
+.saisie-tolerance{display:block;font-size:.82rem;color:var(--text-mute);font-style:italic;margin-top:.3rem}
+.detail-toggle{background:none;border:1px solid var(--navy);color:var(--navy);padding:.4rem .9rem;font-family:inherit;font-size:.85rem;cursor:pointer;margin-top:.5rem;font-weight:600}
+.detail-toggle:hover{background:var(--navy);color:var(--or)}
+.detail-content{display:none;margin-top:.8rem;padding:1rem 1.2rem;background:var(--bg);border-left:3px solid var(--or);font-size:.93rem}
+.detail-content.shown{display:block}
+.detail-content h5{font-family:'Playfair Display',serif;color:var(--navy);margin-bottom:.5rem}
+.detail-content ol,.detail-content ul{margin-left:1.5rem;margin-bottom:.7rem}
+.detail-content code{background:white;padding:.1rem .4rem;border:1px solid var(--border);font-family:'Courier New',monospace;font-size:.88rem}
+.production-area{margin:1.5rem 0}
+.production-area textarea{width:100%;min-height:320px;padding:1rem;border:1.5px solid var(--border);background:white;font-family:'Source Sans 3',sans-serif;font-size:.97rem;line-height:1.6;resize:vertical}
+.production-area textarea:focus{outline:none;border-color:var(--or)}
+.production-counter{font-size:.85rem;color:var(--text-mute);margin-top:.4rem;text-align:right}
+.grille-evaluation{margin-top:1.5rem;background:white;border:1px solid var(--border);padding:1.5rem}
+.grille-evaluation h4{margin-top:0}
+.critere-row{display:grid;grid-template-columns:1fr 100px 130px;gap:1rem;align-items:center;padding:.7rem 0;border-bottom:1px solid var(--border-light)}
+.critere-row:last-child{border-bottom:none}
+.critere-libelle{font-size:.95rem}
+.critere-points{font-size:.85rem;color:var(--text-mute);text-align:center}
+.critere-input{display:flex;align-items:center;gap:.4rem;justify-content:flex-end}
+.critere-input input{width:60px;padding:.4rem;text-align:center;border:1.5px solid var(--border);font-size:.95rem}
+.critere-total{margin-top:1rem;padding-top:1rem;border-top:2px solid var(--navy);display:flex;justify-content:space-between;align-items:center;font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:600;color:var(--navy)}
+.fiche-methode{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);color:var(--bg-light);padding:2rem;margin:2rem 0;border-left:6px solid var(--or)}
+.fiche-methode h3{color:var(--or);margin-top:0}
+.fiche-methode ol{margin-left:1.5rem}
+.fiche-methode li{margin-bottom:.7rem}
+.fiche-methode strong{color:var(--or-soft)}
+.phase-nav-btns{display:flex;justify-content:space-between;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.progress-bar-wrap{height:6px;background:var(--border-light);margin:1rem 0 2rem;position:relative}
+.progress-bar-fill{height:100%;background:var(--or);width:0%;transition:width .4s}
+.progress-label{font-size:.85rem;color:var(--text-mute);margin-top:.4rem;text-align:right}
+.synthese-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.5rem 0}
+.synthese-card{background:white;border-top:4px solid var(--or);padding:1.2rem;box-shadow:var(--shadow)}
+.synthese-card-num{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:700;color:var(--or);line-height:1}
+.synthese-card-title{font-weight:600;color:var(--navy);margin:.5rem 0}
+.synthese-card-text{font-size:.92rem;color:var(--text-soft)}
+.score-final{background:white;padding:2rem;border:2px solid var(--or);text-align:center;margin:1.5rem 0}
+.score-final h3{color:var(--navy);margin-top:0}
+.score-final .score-big{font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:700;color:var(--or);line-height:1;margin:1rem 0}
+.score-detail{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-top:1.5rem}
+.score-cell{padding:.8rem;background:var(--bg);border-left:3px solid var(--or)}
+.score-cell .score-cell-label{font-size:.85rem;color:var(--text-mute)}
+.score-cell .score-cell-value{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:600;color:var(--navy)}
+.email-cta{background:var(--navy);color:var(--bg-light);padding:2rem;margin:2rem 0;border-left:6px solid var(--or);text-align:center}
+.email-cta h3{color:var(--or);margin-top:0}
+.email-cta p{margin-bottom:1.2rem}
+.email-cta a{display:inline-block;background:var(--or);color:var(--navy);padding:.85rem 2rem;text-decoration:none;font-weight:700;font-size:1rem;letter-spacing:.5px;text-transform:uppercase;transition:all .2s;border:2px solid var(--or)}
+.email-cta a:hover{background:transparent;color:var(--or)}
+footer.cadp-footer{background:var(--navy);color:var(--bg-light);padding:2rem;text-align:center;margin-top:3rem;border-top:4px solid var(--or)}
+footer.cadp-footer p{margin-bottom:.5rem;opacity:.85;font-size:.9rem}
+footer.cadp-footer .cadp-name{color:var(--or);font-family:'Playfair Display',serif;font-weight:700;font-size:1.1rem}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:1.5rem 0}
+.kpi-card{background:white;padding:1rem 1.2rem;border-left:4px solid var(--or);box-shadow:var(--shadow)}
+.kpi-label{font-size:.85rem;color:var(--text-mute);text-transform:uppercase;letter-spacing:.5px}
+.kpi-value{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--navy);margin-top:.3rem}
+.kpi-comment{font-size:.8rem;color:var(--text-soft);margin-top:.3rem;font-style:italic}
+.kpi-card.alert{border-left-color:var(--error)}
+.kpi-card.alert .kpi-value{color:var(--error)}
+.kpi-card.good{border-left-color:var(--success)}
+.kpi-card.good .kpi-value{color:var(--success)}
+.interp-block{background:var(--info-bg);border-left:4px solid var(--info);padding:1rem 1.2rem;margin:1rem 0;font-size:.95rem}
+.interp-block strong{color:var(--info)}
+.formule{background:var(--bg);padding:.8rem 1.2rem;border-left:3px solid var(--or);font-family:'Courier New',monospace;font-size:.95rem;margin:.8rem 0;color:var(--navy)}
+@media (max-width:768px){h1{font-size:1.8rem}h2{font-size:1.5rem}.main-container{padding:0 1rem}.phase{padding:1.5rem}.phases-nav{padding:.5rem}.phase-tab{padding:.5rem .2rem}.phase-tab .phase-title{font-size:.65rem}.header-info{flex-direction:column;gap:.5rem}.critere-row{grid-template-columns:1fr}table.cadp-table{font-size:.78rem}table.cadp-table thead th,table.cadp-table td{padding:.3rem .25rem}.saisie-row label{min-width:auto}}
+@media print{header.cadp-header,.phases-nav,.phase-nav-btns,.modal-overlay{display:none!important}.phase{display:block!important;page-break-after:always;box-shadow:none;border:none}}
+</style>
+</head>
+<body>
+
+<div class="modal-overlay" id="modal-id">
+  <div class="modal">
+    <h2>Identification</h2>
+    <p>Avant de commencer, identifie-toi pour que tes réponses puissent t'être attribuées et que ton récapitulatif soit transmis à ton responsable pédagogique.</p>
+    <div class="modal-form">
+      <div class="form-row"><label for="id-nom">Nom</label><input type="text" id="id-nom" placeholder="DUPONT"></div>
+      <div class="form-row"><label for="id-prenom">Prénom</label><input type="text" id="id-prenom" placeholder="Marie"></div>
+      <div class="form-row"><label for="id-classe">Classe</label><input type="text" id="id-classe" value="BTS GPME 2A - Promo 2426" readonly></div>
+      <button class="btn-primary" id="btn-id-valid">Commencer la capsule</button>
+    </div>
+  </div>
+</div>
+
+<header class="cadp-header">
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-name">CADP</span>
+      <span class="brand-tag">Campus Alternance Drôme Provence</span>
+    </div>
+    <div class="header-info">
+      <span><span class="label">Étudiant</span><strong id="header-name">-</strong></span>
+      <span><span class="label">Capsule</span><strong>Mardi 12 mai - 8h-12h</strong></span>
+      <span><span class="label">Session</span><strong>BTS GPME E6 - 2026</strong></span>
+    </div>
+  </div>
+</header>
+
+<main class="main-container">
+
+<section style="background:white;padding:2.5rem;border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:2rem;">
+  <div style="font-size:.85rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--or);font-weight:600;margin-bottom:.5rem;">Capsule de révision E6 - SFPME</div>
+  <h1>Le diagnostic financier complet de la PME</h1>
+  <p style="font-size:1.1rem;color:var(--text-soft);margin-top:1rem;">Du bilan fonctionnel au choix d'un mode de financement, en passant par les SIG, la CAF, les ratios et le plan de financement. La capsule la plus complète de ta révision E6.</p>
+  <div style="display:flex;gap:2rem;flex-wrap:wrap;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border);">
+    <div><span style="display:block;font-size:.8rem;color:var(--text-mute);text-transform:uppercase;letter-spacing:.5px;">Activité référentiel</span><strong>A4.6 - Diagnostic financier</strong></div>
+    <div><span style="display:block;font-size:.8rem;color:var(--text-mute);text-transform:uppercase;letter-spacing:.5px;">Tâches</span><strong>T.4.6.1 - T.4.6.2 - T.4.6.3</strong></div>
+    <div><span style="display:block;font-size:.8rem;color:var(--text-mute);text-transform:uppercase;letter-spacing:.5px;">Savoirs</span><strong>S 4.6.1 - S 4.6.2 - S 4.6.3</strong></div>
+  </div>
+</section>
+
+<div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill"></div></div>
+  <div class="progress-label">Progression : <span id="progress-text">0%</span></div>
+</div>
+
+<nav class="phases-nav" id="phases-nav">
+  <div class="phase-tab active" data-phase="1"><span class="phase-num">1</span><span class="phase-title">Contexte et méthode</span></div>
+  <div class="phase-tab" data-phase="2"><span class="phase-num">2</span><span class="phase-title">Bilan fonctionnel, SIG, CAF</span></div>
+  <div class="phase-tab" data-phase="3"><span class="phase-num">3</span><span class="phase-title">Ratios et interprétation</span></div>
+  <div class="phase-tab" data-phase="4"><span class="phase-num">4</span><span class="phase-title">Plan et modes de financement</span></div>
+  <div class="phase-tab" data-phase="5"><span class="phase-num">5</span><span class="phase-title">Note de diagnostic</span></div>
+</nav>
+
+<!-- ===================== PHASE 1 ===================== -->
+<section class="phase active" id="phase-1">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 1 - Durée indicative 20 minutes</div>
+    <h2>Contexte de la mission et architecture du diagnostic financier</h2>
+  </div>
+
+  <h3>Le contexte chez Olivier &amp; Filles</h3>
+
+  <div class="doc-ressource">
+    <h4>Note de cadrage stratégique 2026</h4>
+    <p><strong>De</strong> : Marie Olivier, Dirigeante - <strong>Pour</strong> : Camille Roux, apprentie GPME - <strong>Date</strong> : 5 mai 2026</p>
+    <p>Camille,</p>
+    <p>Comme tu le sais, l'année 2026 est stratégique pour Olivier &amp; Filles. Nous avons deux projets majeurs à financer :</p>
+    <ul style="margin-left:1.5rem;margin-bottom:1rem;">
+      <li><strong>L'acquisition d'un nouvel alambic en cuivre</strong> de plus grande capacité, fabriqué à Cognac, pour 600 000 euros HT. Cet investissement nous permettra de doubler notre capacité de distillation.</li>
+      <li><strong>L'aménagement d'un entrepôt dédié à l'export</strong> dans la zone d'activité de Nyons, pour 80 000 euros HT, indispensable au démarrage commercial en Allemagne, Belgique et Pays-Bas.</li>
+    </ul>
+    <p>L'investissement total atteint donc 680 000 euros HT, auxquels s'ajoute un besoin en fonds de roulement supplémentaire estimé à 220 000 euros sur la période 2026-2029.</p>
+    <p>Avant que je sollicite notre banquier, le Crédit Agricole Sud Rhône Alpes, j'ai besoin d'un diagnostic financier complet pour t'assurer que notre santé actuelle est bonne, et d'un plan de financement chiffré qui démontre que le projet est tenable. Je voudrais aussi que tu compares le coût de l'emprunt classique avec celui du crédit-bail mobilier, qui m'a été suggéré par mon expert-comptable pour l'alambic.</p>
+    <p>Tu trouveras dans la phase suivante de ta capsule l'ensemble des documents comptables 2025 préparés par notre expert-comptable.</p>
+    <p>Je t'attends de pied ferme avec une note synthétique en fin de matinée. Bonne révision.</p>
+    <p><strong>Marie Olivier</strong>, Dirigeante, Olivier &amp; Filles SARL.</p>
+    <p class="doc-meta">Document fictif rédigé pour les besoins pédagogiques. Toute ressemblance avec une situation réelle serait fortuite.</p>
+  </div>
+
+  <h3>L'architecture du diagnostic financier en cinq étapes</h3>
+
+  <p>Le diagnostic financier d'une PME se construit toujours selon la même logique. Tu vas appliquer cette démarche à Olivier &amp; Filles dans les phases suivantes.</p>
+
+  <div class="synthese-cards">
+    <div class="synthese-card"><div class="synthese-card-num">1</div><div class="synthese-card-title">Reclasser</div><div class="synthese-card-text">Du bilan comptable au bilan fonctionnel : on regroupe les éléments selon leur fonction (stable, exploitation, trésorerie).</div></div>
+    <div class="synthese-card"><div class="synthese-card-num">2</div><div class="synthese-card-title">Mesurer la performance</div><div class="synthese-card-text">SIG (Soldes Intermédiaires de Gestion) et CAF pour comprendre comment l'entreprise crée de la valeur.</div></div>
+    <div class="synthese-card"><div class="synthese-card-num">3</div><div class="synthese-card-title">Calculer les ratios</div><div class="synthese-card-text">Structure, activité, rentabilité, liquidité : 7 ratios clés pour juger la santé financière.</div></div>
+    <div class="synthese-card"><div class="synthese-card-num">4</div><div class="synthese-card-title">Projeter</div><div class="synthese-card-text">Le plan de financement projette les besoins futurs et les ressources mobilisables sur 3 à 5 ans.</div></div>
+    <div class="synthese-card"><div class="synthese-card-num">5</div><div class="synthese-card-title">Choisir</div><div class="synthese-card-text">Comparaison emprunt vs crédit-bail vs autofinancement, avec calcul de VAN pour décider.</div></div>
+  </div>
+
+  <h3>Les notions clés à maîtriser avant de commencer</h3>
+
+  <div class="encadre encadre-note">
+    <div class="encadre-header">Note - Lexique du diagnostic financier</div>
+    <ul style="margin-left:1.5rem;">
+      <li><strong>Bilan fonctionnel</strong> : reclassement du bilan comptable selon trois cycles (stable, exploitation, trésorerie). Permet de calculer FRNG, BFR et trésorerie nette.</li>
+      <li><strong>FRNG</strong> (Fonds de Roulement Net Global) : excédent des ressources stables sur les emplois stables. Marge de sécurité financière à long terme.</li>
+      <li><strong>BFR</strong> (Besoin en Fonds de Roulement) : besoin de financement généré par le cycle d'exploitation (stocks + créances - dettes fournisseurs et fiscales).</li>
+      <li><strong>Trésorerie nette</strong> : FRNG - BFR. Si positive, la PME a des liquidités. Si négative, elle dépend de découverts bancaires.</li>
+      <li><strong>SIG</strong> (Soldes Intermédiaires de Gestion) : décomposition du résultat en étapes successives (production, valeur ajoutée, EBE, résultat).</li>
+      <li><strong>CAF</strong> (Capacité d'AutoFinancement) : ressource interne dégagée par l'activité, calculable par deux méthodes qui doivent converger.</li>
+      <li><strong>VAN</strong> (Valeur Actuelle Nette) : somme actualisée des flux d'un projet ou d'un mode de financement. Plus elle est élevée (ou la moins négative), meilleur est le choix.</li>
+    </ul>
+  </div>
+
+  <div class="encadre encadre-important">
+    <div class="encadre-header">Important - Convention pédagogique</div>
+    <p>Tous les montants sont exprimés en <strong>milliers d'euros (k€)</strong>. Ne pas confondre avec les valeurs en euros bruts. L'année de référence pour le diagnostic est <strong>2025</strong> (clos au 31 décembre 2025). Le plan de financement projette sur la période <strong>2026-2029</strong>.</p>
+  </div>
+
+  <div class="encadre encadre-attention">
+    <div class="encadre-header">Attention - Erreurs à éviter dès le départ</div>
+    <ul style="margin-left:1.5rem;">
+      <li>Ne pas confondre bilan comptable (présentation légale) et bilan fonctionnel (présentation analytique pour le diagnostic).</li>
+      <li>Ne pas oublier que les amortissements et provisions de l'actif rejoignent les ressources stables au passif fonctionnel.</li>
+      <li>Ne pas mélanger les concours bancaires courants (trésorerie passive) avec les autres dettes financières (ressources stables).</li>
+      <li>Vérifier toujours que CAF additive = CAF soustractive. Si elles divergent, il y a une erreur dans tes calculs.</li>
+    </ul>
+  </div>
+
+  <div class="phase-nav-btns">
+    <span></span>
+    <button class="btn-primary" onclick="goToPhase(2)">Passer à la phase 2 - Bilan, SIG, CAF</button>
+  </div>
+</section>
+
+<!-- ===================== PHASE 2 ===================== -->
+<section class="phase" id="phase-2">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 2 - Durée indicative 90 minutes</div>
+    <h2>Du bilan comptable au bilan fonctionnel : SIG et CAF</h2>
+  </div>
+
+  <p>La phase la plus dense de la capsule. Tu vas successivement reclasser le bilan, calculer les SIG, déterminer la CAF par les deux méthodes et établir le bilan fonctionnel. Travaille méthodiquement, vérifie tes totaux à chaque étape.</p>
+
+  <!-- 2.1 BILAN COMPTABLE -->
+  <div class="subsection">
+    <div class="subsection-eyebrow">Section 2.1 - Données comptables</div>
+    <div class="subsection-title">Bilan comptable et compte de résultat 2025</div>
+  </div>
+
+  <div class="doc-ressource">
+    <h4>Bilan comptable au 31 décembre 2025 (en k€)</h4>
+    <table class="cadp-table">
+      <thead><tr><th>ACTIF</th><th class="num-col">Brut</th><th class="num-col">Amort./Prov.</th><th class="num-col">Net</th><th>PASSIF</th><th class="num-col">Net</th></tr></thead>
+      <tbody>
+        <tr><td>Immobilisations incorporelles</td><td class="num-col">60</td><td class="num-col">40</td><td class="num-col">20</td><td>Capital social</td><td class="num-col">250</td></tr>
+        <tr><td>Immobilisations corporelles</td><td class="num-col">2 740</td><td class="num-col">1 060</td><td class="num-col">1 680</td><td>Réserves</td><td class="num-col">1 369</td></tr>
+        <tr><td>Immobilisations financières</td><td class="num-col">50</td><td class="num-col">0</td><td class="num-col">50</td><td>Résultat de l'exercice</td><td class="num-col">741</td></tr>
+        <tr class="subtotal-row"><td><strong>Total actif immobilisé</strong></td><td class="num-col"><strong>2 850</strong></td><td class="num-col"><strong>1 100</strong></td><td class="num-col"><strong>1 750</strong></td><td><strong>Subventions d'investissement</strong></td><td class="num-col"><strong>70</strong></td></tr>
+        <tr><td>Stocks matières premières</td><td class="num-col">180</td><td class="num-col">0</td><td class="num-col">180</td><td>Provisions pour risques et charges</td><td class="num-col">60</td></tr>
+        <tr><td>Stocks produits finis</td><td class="num-col">1 200</td><td class="num-col">0</td><td class="num-col">1 200</td><td>Emprunts (dont CBC 50)</td><td class="num-col">920</td></tr>
+        <tr><td>Créances clients</td><td class="num-col">700</td><td class="num-col">0</td><td class="num-col">700</td><td>Dettes fournisseurs</td><td class="num-col">400</td></tr>
+        <tr><td>Autres créances</td><td class="num-col">60</td><td class="num-col">0</td><td class="num-col">60</td><td>Dettes fiscales et sociales</td><td class="num-col">380</td></tr>
+        <tr><td>VMP</td><td class="num-col">100</td><td class="num-col">0</td><td class="num-col">100</td><td>Autres dettes</td><td class="num-col">90</td></tr>
+        <tr><td>Disponibilités</td><td class="num-col">270</td><td class="num-col">0</td><td class="num-col">270</td><td>Produits constatés d'avance (PCA)</td><td class="num-col">10</td></tr>
+        <tr><td>Charges constatées d'avance (CCA)</td><td class="num-col">30</td><td class="num-col">0</td><td class="num-col">30</td><td></td><td></td></tr>
+        <tr class="total-row"><td><strong>TOTAL ACTIF</strong></td><td class="num-col"><strong>5 390</strong></td><td class="num-col"><strong>1 100</strong></td><td class="num-col total-num"><strong>4 290</strong></td><td><strong>TOTAL PASSIF</strong></td><td class="num-col total-num"><strong>4 290</strong></td></tr>
+      </tbody>
+    </table>
+    <p class="doc-meta">Bilan comptable simplifié, établi par Marc Léonetti, expert-comptable, cabinet Léonetti Conseil, mars 2026. Document fictif à usage pédagogique.</p>
+  </div>
+
+  <div class="doc-ressource">
+    <h4>Compte de résultat 2025 (en k€) - extrait</h4>
+    <table class="cadp-table">
+      <thead><tr><th>Charges</th><th class="num-col">Montant</th><th>Produits</th><th class="num-col">Montant</th></tr></thead>
+      <tbody>
+        <tr><td>Achats de matières premières</td><td class="num-col">1 050</td><td>Production vendue (CA HT)</td><td class="num-col">4 800</td></tr>
+        <tr><td>Variation stocks matières (compte 6031)</td><td class="num-col">-30</td><td>Production stockée (vieillissement)</td><td class="num-col">120</td></tr>
+        <tr><td>Autres achats et charges externes</td><td class="num-col">510</td><td>Reprises sur amort. et provisions</td><td class="num-col">30</td></tr>
+        <tr><td>Impôts, taxes et versements assimilés</td><td class="num-col">95</td><td>Produits financiers</td><td class="num-col">8</td></tr>
+        <tr><td>Salaires et traitements</td><td class="num-col">1 320</td><td></td><td></td></tr>
+        <tr><td>Charges sociales</td><td class="num-col">600</td><td></td><td></td></tr>
+        <tr><td>Dotations aux amortissements</td><td class="num-col">320</td><td></td><td></td></tr>
+        <tr><td>Dotations aux provisions</td><td class="num-col">25</td><td></td><td></td></tr>
+        <tr><td>Autres charges d'exploitation</td><td class="num-col">15</td><td></td><td></td></tr>
+        <tr><td>Charges financières (intérêts)</td><td class="num-col">65</td><td></td><td></td></tr>
+        <tr><td>Impôt sur les bénéfices (taux 25%)</td><td class="num-col">247</td><td></td><td></td></tr>
+        <tr class="total-row"><td><strong>Total charges</strong></td><td class="num-col total-num"><strong>4 217</strong></td><td><strong>Total produits</strong></td><td class="num-col total-num"><strong>4 958</strong></td></tr>
+        <tr class="subtotal-row"><td colspan="3"><strong>Résultat net de l'exercice (bénéfice)</strong></td><td class="num-col"><strong>741</strong></td></tr>
+      </tbody>
+    </table>
+    <p class="doc-meta">Compte de résultat simplifié à usage pédagogique. Source : cabinet Léonetti Conseil, mars 2026.</p>
+  </div>
+
+  <!-- 2.2 SIG -->
+  <div class="subsection">
+    <div class="subsection-eyebrow">Section 2.2 - Soldes Intermédiaires de Gestion</div>
+    <div class="subsection-title">Calcul et interprétation des SIG</div>
+  </div>
+
+  <p>Les SIG décomposent la formation du résultat en étapes successives. Pour Olivier &amp; Filles, qui est une PME industrielle (production), on s'intéresse principalement à la chaîne <strong>Production → Valeur ajoutée → EBE → Résultat d'exploitation → Résultat net</strong>. La marge commerciale est nulle car l'entreprise ne fait pas de négoce.</p>
+
+  <div class="exercise">
+    <div class="exercise-title">Exercice 2.2 - Calculer les principaux SIG</div>
+    <p class="exercise-instruction">Saisis les valeurs en k€, sans espace ni virgule. Tolérance ±1 k€.</p>
+
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Production de l'exercice :</label><input type="number" id="sig-production" data-bonne="4920" data-tol="1"><span class="saisie-unit">k€</span></div>
+      <span class="saisie-tolerance">Production vendue + Production stockée + Production immobilisée</span>
+    </div>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Consommations en provenance de tiers :</label><input type="number" id="sig-consommations" data-bonne="1530" data-tol="1"><span class="saisie-unit">k€</span></div>
+      <span class="saisie-tolerance">Achats matières + variation stock matières + autres achats et charges externes</span>
+    </div>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Valeur ajoutée :</label><input type="number" id="sig-va" data-bonne="3390" data-tol="1"><span class="saisie-unit">k€</span></div>
+      <span class="saisie-tolerance">Production - Consommations en provenance de tiers</span>
+    </div>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Excédent brut d'exploitation (EBE) :</label><input type="number" id="sig-ebe" data-bonne="1375" data-tol="1"><span class="saisie-unit">k€</span></div>
+      <span class="saisie-tolerance">VA - Impôts et taxes - Charges de personnel (salaires + charges sociales)</span>
+    </div>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Résultat d'exploitation :</label><input type="number" id="sig-re" data-bonne="1045" data-tol="1"><span class="saisie-unit">k€</span></div>
+      <span class="saisie-tolerance">EBE + Reprises - Dotations amort. - Dotations prov. - Autres charges d'expl.</span>
+    </div>
+    <button class="btn-primary" onclick="validateSaisie('sig')">Vérifier mes calculs</button>
+    <div id="sig-result" style="margin-top:1rem;"></div>
+
+    <button class="detail-toggle" onclick="toggleDetail('sig-detail')">Voir le détail des calculs SIG</button>
+    <div class="detail-content" id="sig-detail">
+      <h5>Démarche pas à pas</h5>
+      <p><strong>Production de l'exercice</strong></p>
+      <p>Formule : Production vendue + Production stockée + Production immobilisée<br>
+      Calcul : <code>4 800 + 120 + 0 = 4 920 k€</code></p>
+      <p><em>Erreur fréquente : oublier la production stockée. Pour un producteur de spiritueux, le stockage du produit fini en cours de vieillissement est une vraie production de l'exercice.</em></p>
+
+      <p><strong>Consommations en provenance de tiers</strong></p>
+      <p>Formule : Achats matières premières + Variation des stocks de matières + Autres achats et charges externes<br>
+      Calcul : <code>1 050 + (-30) + 510 = 1 530 k€</code></p>
+      <p><em>Attention au signe de la variation de stock : si le stock a diminué, on a consommé plus qu'on a acheté, ce qui augmente la consommation. Mais en plan comptable français, la variation est inscrite à part en charges. Une variation négative (-30) signifie que le stock a diminué, donc une consommation supplémentaire de 30 k€. Le signe est déjà intégré, on additionne directement.</em></p>
+
+      <p><strong>Valeur ajoutée</strong></p>
+      <p>Formule : Production - Consommations en provenance de tiers<br>
+      Calcul : <code>4 920 - 1 530 = 3 390 k€</code></p>
+      <p>La valeur ajoutée représente la richesse créée par l'entreprise. Elle est ensuite répartie entre les différents acteurs (État, salariés, prêteurs, actionnaires).</p>
+
+      <p><strong>EBE</strong></p>
+      <p>Formule : VA - Impôts et taxes - Charges de personnel<br>
+      Calcul : <code>3 390 - 95 - (1 320 + 600) = 3 390 - 95 - 1 920 = 1 375 k€</code></p>
+      <p>L'EBE mesure la performance opérationnelle pure : résultat de l'exploitation avant tout retraitement comptable (amortissements, provisions). C'est l'indicateur que les analystes financiers privilégient pour comparer des entreprises.</p>
+
+      <p><strong>Résultat d'exploitation</strong></p>
+      <p>Formule : EBE + Reprises - DAP - Dotations provisions - Autres charges<br>
+      Calcul : <code>1 375 + 30 - 320 - 25 - 15 = 1 045 k€</code></p>
+      <p><em>Erreur fréquente : oublier les reprises sur amortissements et provisions, qui ajoutent au résultat (les provisions reprises sont des charges qui n'ont pas eu lieu).</em></p>
+    </div>
+  </div>
+
+  <!-- 2.3 CAF -->
+  <div class="subsection">
+    <div class="subsection-eyebrow">Section 2.3 - Capacité d'AutoFinancement</div>
+    <div class="subsection-title">Calcul de la CAF par les deux méthodes</div>
+  </div>
+
+  <p>La CAF mesure les ressources internes que l'entreprise dégage de son activité. Elle se calcule de deux façons qui doivent <strong>impérativement</strong> donner le même résultat. Si tu trouves deux valeurs différentes, c'est qu'il y a une erreur quelque part : c'est ton premier filet de sécurité.</p>
+
+  <div class="encadre encadre-note">
+    <div class="encadre-header">Rappel des deux formules</div>
+    <p><strong>Méthode soustractive</strong> (à partir de l'EBE) : CAF = EBE + autres produits encaissables - autres charges décaissables + produits financiers - charges financières + produits exceptionnels - charges exceptionnelles - participation - IS</p>
+    <p><strong>Méthode additive</strong> (à partir du résultat net) : CAF = Résultat net + DAP - Reprises sur amort. et prov. + VNC des immo cédées - Produits de cession d'immo - Quote-part de subventions virée au résultat</p>
+  </div>
+
+  <div class="exercise">
+    <div class="exercise-title">Exercice 2.3 - Calculer la CAF par les deux méthodes</div>
+    <p class="exercise-instruction">Pour Olivier &amp; Filles, il n'y a ni produits exceptionnels, ni cessions d'immobilisations, ni participation des salariés. La quote-part de subventions virée au résultat n'est pas indiquée (on la considère nulle pour cette PME).</p>
+
+    <div class="saisie-question">
+      <div class="saisie-row"><label>CAF méthode soustractive (depuis EBE) :</label><input type="number" id="caf-soustractive" data-bonne="1056" data-tol="1"><span class="saisie-unit">k€</span></div>
+      <span class="saisie-tolerance">EBE + produits financiers - charges financières - autres charges - IS</span>
+    </div>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>CAF méthode additive (depuis résultat net) :</label><input type="number" id="caf-additive" data-bonne="1056" data-tol="1"><span class="saisie-unit">k€</span></div>
+      <span class="saisie-tolerance">Résultat net + DAP + Dotations provisions - Reprises</span>
+    </div>
+    <button class="btn-primary" onclick="validateSaisie('caf')">Vérifier mes calculs</button>
+    <div id="caf-result" style="margin-top:1rem;"></div>
+
+    <button class="detail-toggle" onclick="toggleDetail('caf-detail')">Voir le détail des calculs CAF</button>
+    <div class="detail-content" id="caf-detail">
+      <h5>Démarche pas à pas</h5>
+      <p><strong>Méthode soustractive (à partir de l'EBE)</strong></p>
+      <p>On part de l'EBE, on ajoute tout ce qui est encaissable, on retire tout ce qui est décaissable.</p>
+      <p>Calcul : <code>EBE 1 375 + autres produits 0 - autres charges 15 + produits financiers 8 - charges financières 65 - IS 247 = 1 056 k€</code></p>
+      <p><em>Détails : on n'inclut pas les DAP ni les reprises (non encaissables), ni les VNC ni les produits de cession (exceptionnels). On exclut tout ce qui ne donne pas lieu à un mouvement de trésorerie réel.</em></p>
+
+      <p><strong>Méthode additive (à partir du résultat net)</strong></p>
+      <p>On part du résultat net, on ajoute les charges calculées (non décaissables), on retire les produits calculés (non encaissables).</p>
+      <p>Calcul : <code>Résultat net 741 + DAP 320 + Dotations provisions 25 - Reprises 30 = 1 056 k€</code></p>
+      <p><em>Logique : la CAF est ce qui reste réellement dans la caisse de l'entreprise après son activité. On retraite donc le résultat comptable pour neutraliser les écritures qui ne correspondent à aucun mouvement de cash.</em></p>
+
+      <p><strong>Vérification croisée fondamentale</strong></p>
+      <p>Les deux méthodes donnent <strong>1 056 k€</strong>. Cette convergence est <em>obligatoire</em>. Si tu trouves deux valeurs différentes en examen, retravaille tes calculs immédiatement.</p>
+
+      <p><strong>Lecture économique</strong></p>
+      <p>Olivier &amp; Filles dégage 1 056 k€ de ressources internes par an. C'est plus que le résultat net comptable (741 k€) car les amortissements ne sont pas des sorties d'argent réelles. Cette CAF est la première ressource mobilisable pour financer le projet d'investissement.</p>
+    </div>
+  </div>
+
+  <!-- 2.4 BILAN FONCTIONNEL -->
+  <div class="subsection">
+    <div class="subsection-eyebrow">Section 2.4 - Bilan fonctionnel</div>
+    <div class="subsection-title">Reclassement et calcul de FRNG, BFR, Trésorerie nette</div>
+  </div>
+
+  <div class="encadre encadre-note">
+    <div class="encadre-header">Rappel - Le reclassement fonctionnel</div>
+    <p><strong>Emplois stables</strong> = immobilisations <strong>brutes</strong> (incorporelles + corporelles + financières)</p>
+    <p><strong>Ressources stables</strong> = capitaux propres + amortissements et provisions de l'actif + provisions pour risques et charges + dettes financières stables (emprunts <em>sauf</em> concours bancaires courants)</p>
+    <p><strong>Actif circulant exploitation</strong> = stocks + créances clients + CCA</p>
+    <p><strong>Passif circulant exploitation</strong> = dettes fournisseurs + dettes fiscales et sociales + PCA</p>
+    <p><strong>Actif circulant hors exploitation</strong> = autres créances</p>
+    <p><strong>Passif circulant hors exploitation</strong> = autres dettes</p>
+    <p><strong>Trésorerie active</strong> = VMP + disponibilités. <strong>Trésorerie passive</strong> = concours bancaires courants (CBC).</p>
+  </div>
+
+  <div class="exercise">
+    <div class="exercise-title">Exercice 2.4 - Calculer le FRNG, le BFR et la trésorerie nette</div>
+    <p class="exercise-instruction">Tolérance ±1 k€ sur chaque valeur.</p>
+
+    <h4>Étape 1 - Emplois stables et ressources stables</h4>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Total emplois stables :</label><input type="number" id="bf-emplois" data-bonne="2850" data-tol="1"><span class="saisie-unit">k€</span></div>
+    </div>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Total ressources stables :</label><input type="number" id="bf-ressources" data-bonne="4460" data-tol="1"><span class="saisie-unit">k€</span></div>
+    </div>
+
+    <h4>Étape 2 - FRNG</h4>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>FRNG :</label><input type="number" id="bf-frng" data-bonne="1610" data-tol="1"><span class="saisie-unit">k€</span></div>
+      <span class="saisie-tolerance">FRNG = Ressources stables - Emplois stables</span>
+    </div>
+
+    <h4>Étape 3 - BFR exploitation et BFR hors exploitation</h4>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>BFR d'exploitation (BFRE) :</label><input type="number" id="bf-bfre" data-bonne="1320" data-tol="1"><span class="saisie-unit">k€</span></div>
+    </div>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>BFR hors exploitation (BFRHE) :</label><input type="number" id="bf-bfrhe" data-bonne="-30" data-tol="1"><span class="saisie-unit">k€</span></div>
+      <span class="saisie-tolerance">Peut être négatif si les autres dettes dépassent les autres créances</span>
+    </div>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>BFR total :</label><input type="number" id="bf-bfr" data-bonne="1290" data-tol="1"><span class="saisie-unit">k€</span></div>
+    </div>
+
+    <h4>Étape 4 - Trésorerie nette</h4>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Trésorerie nette :</label><input type="number" id="bf-tresorerie" data-bonne="320" data-tol="1"><span class="saisie-unit">k€</span></div>
+      <span class="saisie-tolerance">VMP + disponibilités - CBC</span>
+    </div>
+
+    <button class="btn-primary" onclick="validateSaisie('bf')">Vérifier le bilan fonctionnel</button>
+    <div id="bf-result" style="margin-top:1rem;"></div>
+
+    <button class="detail-toggle" onclick="toggleDetail('bf-detail')">Voir le détail des calculs du bilan fonctionnel</button>
+    <div class="detail-content" id="bf-detail">
+      <h5>Démarche pas à pas</h5>
+
+      <p><strong>Emplois stables</strong> (immobilisations brutes)</p>
+      <p>Calcul : <code>60 + 2 740 + 50 = 2 850 k€</code><br>
+      <em>On utilise les valeurs brutes, pas nettes. Les amortissements sont reclassés au passif fonctionnel comme ressources stables.</em></p>
+
+      <p><strong>Ressources stables</strong></p>
+      <p>Calcul détaillé :<br>
+      Capitaux propres = 250 + 1 369 + 741 + 70 = <code>2 430 k€</code><br>
+      + Amortissements et provisions de l'actif = <code>1 100 k€</code><br>
+      + Provisions pour risques et charges = <code>60 k€</code><br>
+      + Dettes financières stables = emprunts 920 - CBC 50 = <code>870 k€</code><br>
+      Total = <code>2 430 + 1 100 + 60 + 870 = 4 460 k€</code></p>
+
+      <p><strong>FRNG</strong></p>
+      <p>Calcul : <code>4 460 - 2 850 = 1 610 k€</code><br>
+      Le FRNG est positif, ce qui est sain : les ressources stables financent intégralement les emplois stables et laissent un excédent pour le cycle d'exploitation.</p>
+
+      <p><strong>BFR d'exploitation (BFRE)</strong></p>
+      <p>Actif circulant exploitation = stocks matières 180 + stocks PF 1 200 + créances clients 700 + CCA 30 = <code>2 110 k€</code><br>
+      Passif circulant exploitation = dettes fournisseurs 400 + dettes fiscales et sociales 380 + PCA 10 = <code>790 k€</code><br>
+      BFRE = <code>2 110 - 790 = 1 320 k€</code></p>
+
+      <p><strong>BFR hors exploitation (BFRHE)</strong></p>
+      <p>Calcul : autres créances 60 - autres dettes 90 = <code>-30 k€</code><br>
+      <em>Un BFRHE négatif n'est pas anormal : il signifie que les dettes hors exploitation dépassent légèrement les créances hors exploitation.</em></p>
+
+      <p><strong>BFR total</strong></p>
+      <p>Calcul : <code>BFRE + BFRHE = 1 320 + (-30) = 1 290 k€</code></p>
+
+      <p><strong>Trésorerie nette</strong></p>
+      <p>Calcul : VMP 100 + disponibilités 270 - CBC 50 = <code>320 k€</code></p>
+
+      <p><strong>Vérification fondamentale (à connaître par cœur)</strong></p>
+      <div class="formule">FRNG = BFR + Trésorerie nette<br>1 610 = 1 290 + 320 ✓</div>
+      <p><em>Si cette égalité n'est pas vérifiée chez toi, tu as une erreur quelque part. C'est ton second filet de sécurité après la convergence des deux méthodes de la CAF.</em></p>
+    </div>
+  </div>
+
+  <div class="phase-nav-btns">
+    <button class="btn-secondary" onclick="goToPhase(1)">Retour phase 1</button>
+    <button class="btn-primary" onclick="goToPhase(3)">Passer à la phase 3 - Ratios</button>
+  </div>
+</section>
+
+<!-- ===================== PHASE 3 ===================== -->
+<section class="phase" id="phase-3">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 3 - Durée indicative 60 minutes</div>
+    <h2>Ratios financiers et interprétation du diagnostic</h2>
+  </div>
+
+  <p>Tu vas maintenant calculer 7 ratios couvrant les quatre dimensions du diagnostic : structure, activité, rentabilité, liquidité. Pour chaque ratio, tu disposeras d'une norme de référence et tu interpréteras la situation d'Olivier &amp; Filles.</p>
+
+  <!-- 3.1 STRUCTURE -->
+  <div class="subsection">
+    <div class="subsection-eyebrow">Section 3.1 - Structure financière</div>
+    <div class="subsection-title">Autonomie financière et endettement</div>
+  </div>
+
+  <div class="exercise">
+    <div class="exercise-title">Exercice 3.1 - Calcul des ratios de structure</div>
+    <p class="exercise-instruction">Saisis les valeurs en pourcentage, arrondies à l'unité. Tolérance ±1 point.</p>
+
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Autonomie financière :</label><input type="number" id="r-autonomie" data-bonne="57" data-tol="1"><span class="saisie-unit">% (arrondi)</span></div>
+      <div class="formule">Capitaux propres / Total passif x 100</div>
+      <span class="saisie-tolerance">Norme : supérieur à 33% pour une PME en bonne santé</span>
+    </div>
+
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Ratio d'endettement :</label><input type="number" id="r-endettement" data-bonne="38" data-tol="1"><span class="saisie-unit">% (arrondi)</span></div>
+      <div class="formule">Dettes financières / Capitaux propres x 100</div>
+      <span class="saisie-tolerance">Norme : doit rester inférieur à 100% (1 pour 1)</span>
+    </div>
+
+    <button class="btn-primary" onclick="validateSaisie('r-structure')">Vérifier les ratios de structure</button>
+    <div id="r-structure-result" style="margin-top:1rem;"></div>
+
+    <button class="detail-toggle" onclick="toggleDetail('r-structure-detail')">Voir le détail des calculs</button>
+    <div class="detail-content" id="r-structure-detail">
+      <h5>Démarche</h5>
+      <p><strong>Autonomie financière</strong></p>
+      <p>Calcul : <code>2 430 / 4 290 x 100 = 56,64%</code> arrondi à <strong>57%</strong>.<br>
+      Le ratio dépasse 33%, l'entreprise est très autonome financièrement.</p>
+      <p><strong>Endettement</strong></p>
+      <p>Calcul : <code>920 / 2 430 x 100 = 37,86%</code> arrondi à <strong>38%</strong>.<br>
+      Largement sous le seuil de 100%, marges importantes pour s'endetter à nouveau.</p>
+    </div>
+  </div>
+
+  <!-- 3.2 ACTIVITE -->
+  <div class="subsection">
+    <div class="subsection-eyebrow">Section 3.2 - Cycle d'activité</div>
+    <div class="subsection-title">Délais clients et rotation des stocks</div>
+  </div>
+
+  <div class="encadre encadre-important">
+    <div class="encadre-header">Important - Précisions de calcul</div>
+    <p>Pour la <strong>durée du crédit clients</strong>, on utilise le CA TTC, car les créances clients incluent la TVA. Pour Olivier &amp; Filles : CA TTC = 4 800 x 1,20 = 5 760 k€ (TVA standard 20% sur les spiritueux).</p>
+    <p>Pour la <strong>rotation des stocks</strong>, on prend la production de l'exercice (4 920 k€) au dénominateur pour les produits finis, et les consommations de matières (1 020 k€ = 1 050 + (-30)) pour les matières premières.</p>
+  </div>
+
+  <div class="exercise">
+    <div class="exercise-title">Exercice 3.2 - Calcul des ratios d'activité</div>
+    <p class="exercise-instruction">Saisis les durées en jours, arrondies à l'unité. Tolérance ±2 jours (les arrondis intermédiaires peuvent légèrement varier).</p>
+
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Durée du crédit clients :</label><input type="number" id="r-clients" data-bonne="44" data-tol="2"><span class="saisie-unit">jours</span></div>
+      <div class="formule">(Créances clients / CA TTC) x 360</div>
+    </div>
+
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Rotation des stocks de produits finis :</label><input type="number" id="r-stocks" data-bonne="88" data-tol="2"><span class="saisie-unit">jours</span></div>
+      <div class="formule">(Stocks PF / Production) x 360</div>
+    </div>
+
+    <button class="btn-primary" onclick="validateSaisie('r-activite')">Vérifier les ratios d'activité</button>
+    <div id="r-activite-result" style="margin-top:1rem;"></div>
+
+    <button class="detail-toggle" onclick="toggleDetail('r-activite-detail')">Voir le détail des calculs</button>
+    <div class="detail-content" id="r-activite-detail">
+      <h5>Démarche</h5>
+      <p><strong>Durée du crédit clients</strong></p>
+      <p>CA TTC = 4 800 x 1,20 = <code>5 760 k€</code><br>
+      Calcul : <code>(700 / 5 760) x 360 = 43,75 jours</code> arrondi à <strong>44 jours</strong>.<br>
+      <em>Pour information, la moyenne en France toutes industries confondues se situe autour de 45-50 jours. Olivier &amp; Filles est dans la norme.</em></p>
+      <p><strong>Rotation des stocks de produits finis</strong></p>
+      <p>Calcul : <code>(1 200 / 4 920) x 360 = 87,8 jours</code> arrondi à <strong>88 jours</strong>.<br>
+      <em>Une rotation de presque 3 mois est normale pour des spiritueux qui demandent un vieillissement minimum. Pour un grossiste alimentaire, on attendrait moins de 30 jours.</em></p>
+    </div>
+  </div>
+
+  <!-- 3.3 RENTABILITE -->
+  <div class="subsection">
+    <div class="subsection-eyebrow">Section 3.3 - Rentabilité</div>
+    <div class="subsection-title">Rentabilité économique et financière</div>
+  </div>
+
+  <div class="encadre encadre-note">
+    <div class="encadre-header">Note - Distinction fondamentale</div>
+    <p><strong>Rentabilité économique</strong> : mesure la performance de l'outil de production, indépendamment du mode de financement. Réf : Résultat d'exploitation (et non résultat net) au numérateur.</p>
+    <p><strong>Rentabilité financière</strong> : mesure la performance pour les actionnaires. Réf : Résultat net (et non d'exploitation) au numérateur, capitaux propres au dénominateur.</p>
+  </div>
+
+  <div class="exercise">
+    <div class="exercise-title">Exercice 3.3 - Calcul des ratios de rentabilité</div>
+    <p class="exercise-instruction">Saisis les pourcentages, arrondis à l'unité. Tolérance ±1 point. Pour la rentabilité économique, l'actif économique = immobilisations nettes + BFRE = 1 750 + 1 320 = 3 070 k€.</p>
+
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Rentabilité économique :</label><input type="number" id="r-rentaeco" data-bonne="34" data-tol="1"><span class="saisie-unit">%</span></div>
+      <div class="formule">Résultat d'exploitation / Actif économique x 100</div>
+    </div>
+
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Rentabilité financière :</label><input type="number" id="r-rentafin" data-bonne="30" data-tol="1"><span class="saisie-unit">%</span></div>
+      <div class="formule">Résultat net / Capitaux propres x 100</div>
+    </div>
+
+    <button class="btn-primary" onclick="validateSaisie('r-rentabilite')">Vérifier les ratios de rentabilité</button>
+    <div id="r-rentabilite-result" style="margin-top:1rem;"></div>
+
+    <button class="detail-toggle" onclick="toggleDetail('r-rentabilite-detail')">Voir le détail des calculs</button>
+    <div class="detail-content" id="r-rentabilite-detail">
+      <h5>Démarche</h5>
+      <p><strong>Rentabilité économique</strong></p>
+      <p>Calcul : <code>1 045 / 3 070 x 100 = 34,04%</code> arrondi à <strong>34%</strong>.<br>
+      <em>Très bonne performance. La norme se situe entre 8% et 15% pour la plupart des PME. Olivier &amp; Filles bénéficie de marges fortes, classiques dans les spiritueux premium.</em></p>
+      <p><strong>Rentabilité financière</strong></p>
+      <p>Calcul : <code>741 / 2 430 x 100 = 30,49%</code> arrondi à <strong>30%</strong>.<br>
+      <em>Excellente rentabilité pour les actionnaires familiaux. Marie Olivier et sa famille obtiennent un retour sur capital supérieur à toutes les normes habituelles.</em></p>
+      <p><strong>Effet de levier</strong> : la rentabilité financière (30%) est inférieure à la rentabilité économique (34%) parce que le coût de la dette pèse légèrement après IS. Mais avec une rentabilité économique aussi élevée, recourir à l'emprunt est créateur de valeur (effet de levier positif).</p>
+    </div>
+  </div>
+
+  <!-- 3.4 LIQUIDITE -->
+  <div class="subsection">
+    <div class="subsection-eyebrow">Section 3.4 - Liquidité</div>
+    <div class="subsection-title">Capacité à honorer les dettes à court terme</div>
+  </div>
+
+  <div class="exercise">
+    <div class="exercise-title">Exercice 3.4 - Calcul du ratio de liquidité générale</div>
+    <p class="exercise-instruction">Saisis le ratio sous forme décimale (ex : 1,5), avec une décimale. Tolérance ±0,1.</p>
+
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Liquidité générale :</label><input type="text" id="r-liquidite" data-bonne="2.7" data-tol="0.1" data-decimal="true"><span class="saisie-unit">(décimal)</span></div>
+      <div class="formule">Actif circulant / Dettes à court terme</div>
+      <span class="saisie-tolerance">Saisis avec un point ou une virgule : 2.7 ou 2,7 sont acceptés. Norme : supérieur à 1.</span>
+    </div>
+
+    <button class="btn-primary" onclick="validateSaisie('r-liquidite')">Vérifier le ratio de liquidité</button>
+    <div id="r-liquidite-result" style="margin-top:1rem;"></div>
+
+    <button class="detail-toggle" onclick="toggleDetail('r-liquidite-detail')">Voir le détail du calcul</button>
+    <div class="detail-content" id="r-liquidite-detail">
+      <h5>Démarche</h5>
+      <p>Actif circulant + CCA = 2 510 + 30 = <code>2 540 k€</code><br>
+      Dettes à court terme = dettes fournisseurs 400 + dettes fiscales et sociales 380 + autres dettes 90 + CBC 50 + PCA 10 = <code>930 k€</code><br>
+      Calcul : <code>2 540 / 930 = 2,73</code> arrondi à <strong>2,7</strong>.</p>
+      <p><em>Ratio largement supérieur à 1 : Olivier &amp; Filles peut couvrir ses dettes courtes 2,7 fois avec ses actifs circulants. Liquidité très confortable.</em></p>
+    </div>
+  </div>
+
+  <!-- 3.5 SYNTHESE -->
+  <div class="subsection">
+    <div class="subsection-eyebrow">Section 3.5 - Synthèse</div>
+    <div class="subsection-title">Tableau de bord du diagnostic</div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card good"><div class="kpi-label">Autonomie financière</div><div class="kpi-value">57%</div><div class="kpi-comment">Largement au-dessus de la norme (33%)</div></div>
+    <div class="kpi-card good"><div class="kpi-label">Endettement</div><div class="kpi-value">38%</div><div class="kpi-comment">Très en dessous du plafond 100%</div></div>
+    <div class="kpi-card good"><div class="kpi-label">Crédit clients</div><div class="kpi-value">44 j</div><div class="kpi-comment">Dans la norme française</div></div>
+    <div class="kpi-card"><div class="kpi-label">Stocks PF</div><div class="kpi-value">88 j</div><div class="kpi-comment">Cohérent avec l'activité spiritueux</div></div>
+    <div class="kpi-card good"><div class="kpi-label">Rentabilité économique</div><div class="kpi-value">34%</div><div class="kpi-comment">Très au-dessus des normes (8-15%)</div></div>
+    <div class="kpi-card good"><div class="kpi-label">Rentabilité financière</div><div class="kpi-value">30%</div><div class="kpi-comment">Excellente performance</div></div>
+    <div class="kpi-card good"><div class="kpi-label">Liquidité générale</div><div class="kpi-value">2,7</div><div class="kpi-comment">Confortable, supérieure à 1</div></div>
+  </div>
+
+  <div class="interp-block">
+    <strong>Lecture d'ensemble du diagnostic :</strong> Olivier &amp; Filles présente un profil financier remarquablement sain. La structure financière est solide (autonomie 57%, endettement maîtrisé), la rentabilité élevée (typique d'un acteur de niche dans les spiritueux premium), la trésorerie confortable. Aucun ratio ne signale d'alerte. La PME a toutes les capacités pour porter un projet d'investissement de 680 k€, à condition que le plan de financement soit bien calibré.
+  </div>
+
+  <div class="phase-nav-btns">
+    <button class="btn-secondary" onclick="goToPhase(2)">Retour phase 2</button>
+    <button class="btn-primary" onclick="goToPhase(4)">Passer à la phase 4 - Plan de financement</button>
+  </div>
+</section>
+
+<!-- ===================== PHASE 4 ===================== -->
+<section class="phase" id="phase-4">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 4 - Durée indicative 60 minutes</div>
+    <h2>Plan de financement et choix du mode de financement</h2>
+  </div>
+
+  <!-- 4.1 PLAN DE FINANCEMENT -->
+  <div class="subsection">
+    <div class="subsection-eyebrow">Section 4.1 - Plan de financement</div>
+    <div class="subsection-title">Projet export Europe 2026-2029</div>
+  </div>
+
+  <div class="encadre encadre-note">
+    <div class="encadre-header">Note - Hypothèses du projet</div>
+    <ul style="margin-left:1.5rem;">
+      <li>Investissements en 2026 : alambic 600 k€ + entrepôt 80 k€ = <strong>680 k€</strong></li>
+      <li>BFR additionnel : 60 k€ (2026), 80 k€ (2027), 50 k€ (2028), 30 k€ (2029) - montée en puissance puis stabilisation</li>
+      <li>CAF prévisionnelle progressive : 1 000 / 1 100 / 1 250 / 1 400 k€</li>
+      <li>Distribution dividendes (politique progressive) : 50 / 60 / 80 / 100 k€</li>
+      <li>Subvention export Région AURA en 2026 : 40 k€</li>
+      <li>Emprunt envisagé en 2026 : 400 k€ sur 5 ans à 3,5% (annuités constantes)</li>
+    </ul>
+  </div>
+
+  <div class="exercise">
+    <div class="exercise-title">Exercice 4.1 - Compléter le plan de financement</div>
+    <p class="exercise-instruction">Le plan de financement est partiellement pré-rempli (besoins). Tu dois calculer pour chaque année : <strong>(a)</strong> le total des besoins, <strong>(b)</strong> le total des ressources, <strong>(c)</strong> le solde annuel, <strong>(d)</strong> le solde cumulé.</p>
+
+    <p>Annuité d'emprunt : 89 k€/an. Le tableau d'amortissement de l'emprunt (capital remboursé chaque année) est : 75 / 77 / 80 / 83 (2026 / 2027 / 2028 / 2029).</p>
+
+    <table class="cadp-table" style="font-size:.88rem;">
+      <thead><tr><th>Poste (en k€)</th><th class="num-col">2026</th><th class="num-col">2027</th><th class="num-col">2028</th><th class="num-col">2029</th></tr></thead>
+      <tbody>
+        <tr><td colspan="5" style="background:var(--navy);color:var(--or);text-transform:uppercase;letter-spacing:1px;font-weight:600;">BESOINS</td></tr>
+        <tr><td>Investissements</td><td class="num-col">680</td><td class="num-col">0</td><td class="num-col">0</td><td class="num-col">0</td></tr>
+        <tr><td>Variation BFR</td><td class="num-col">60</td><td class="num-col">80</td><td class="num-col">50</td><td class="num-col">30</td></tr>
+        <tr><td>Remboursement emprunts</td><td class="num-col">75</td><td class="num-col">77</td><td class="num-col">80</td><td class="num-col">83</td></tr>
+        <tr><td>Distribution dividendes</td><td class="num-col">50</td><td class="num-col">60</td><td class="num-col">80</td><td class="num-col">100</td></tr>
+        <tr class="subtotal-row"><td><strong>Total besoins</strong></td>
+          <td class="num-col"><input type="number" class="calc-input" id="pf-besoins-2026" data-bonne="865" data-tol="1"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="pf-besoins-2027" data-bonne="217" data-tol="1"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="pf-besoins-2028" data-bonne="210" data-tol="1"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="pf-besoins-2029" data-bonne="213" data-tol="1"></td>
+        </tr>
+        <tr><td colspan="5" style="background:var(--navy);color:var(--or);text-transform:uppercase;letter-spacing:1px;font-weight:600;">RESSOURCES</td></tr>
+        <tr><td>CAF prévisionnelle</td><td class="num-col">1 000</td><td class="num-col">1 100</td><td class="num-col">1 250</td><td class="num-col">1 400</td></tr>
+        <tr><td>Nouveaux emprunts</td><td class="num-col">400</td><td class="num-col">0</td><td class="num-col">0</td><td class="num-col">0</td></tr>
+        <tr><td>Subventions</td><td class="num-col">40</td><td class="num-col">0</td><td class="num-col">0</td><td class="num-col">0</td></tr>
+        <tr class="subtotal-row"><td><strong>Total ressources</strong></td>
+          <td class="num-col"><input type="number" class="calc-input" id="pf-ressources-2026" data-bonne="1440" data-tol="1"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="pf-ressources-2027" data-bonne="1100" data-tol="1"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="pf-ressources-2028" data-bonne="1250" data-tol="1"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="pf-ressources-2029" data-bonne="1400" data-tol="1"></td>
+        </tr>
+        <tr><td colspan="5" style="background:var(--navy);color:var(--or);text-transform:uppercase;letter-spacing:1px;font-weight:600;">SOLDES</td></tr>
+        <tr><td><strong>Solde annuel</strong></td>
+          <td class="num-col"><input type="number" class="calc-input" id="pf-solde-2026" data-bonne="575" data-tol="1"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="pf-solde-2027" data-bonne="883" data-tol="1"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="pf-solde-2028" data-bonne="1040" data-tol="1"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="pf-solde-2029" data-bonne="1187" data-tol="1"></td>
+        </tr>
+        <tr class="total-row"><td><strong>Solde cumulé</strong></td>
+          <td class="num-col"><input type="number" class="calc-input" id="pf-cumul-2026" data-bonne="575" data-tol="1"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="pf-cumul-2027" data-bonne="1458" data-tol="1"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="pf-cumul-2028" data-bonne="2498" data-tol="1"></td>
+          <td class="num-col"><input type="number" class="calc-input" id="pf-cumul-2029" data-bonne="3685" data-tol="1"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button class="btn-primary" onclick="validateSaisie('pf')">Vérifier le plan de financement</button>
+    <div id="pf-result" style="margin-top:1rem;"></div>
+
+    <button class="detail-toggle" onclick="toggleDetail('pf-detail')">Voir le détail des calculs</button>
+    <div class="detail-content" id="pf-detail">
+      <h5>Démarche pour 2026 (premier exercice, illustratif)</h5>
+      <p><strong>Total besoins 2026</strong> : <code>680 + 60 + 75 + 50 = 865 k€</code></p>
+      <p><strong>Total ressources 2026</strong> : <code>1 000 + 400 + 40 = 1 440 k€</code></p>
+      <p><strong>Solde annuel 2026</strong> : <code>1 440 - 865 = +575 k€</code></p>
+      <p><strong>Solde cumulé 2026</strong> : <code>0 (initial) + 575 = 575 k€</code></p>
+      <p><em>Pour les autres années, applique la même logique. Le solde cumulé d'une année = solde cumulé de l'année précédente + solde annuel de l'année en cours.</em></p>
+      <h5>Lecture économique</h5>
+      <p>Le plan dégage un excédent cumulé de <strong>3 685 k€</strong> sur la période. Le projet est largement finançable : la CAF prévisionnelle suffit même à porter une politique de dividendes croissante. Marie Olivier pourrait même envisager de réduire le montant emprunté ou d'accélérer le remboursement.</p>
+    </div>
+  </div>
+
+  <!-- 4.2 CHOIX MODE DE FINANCEMENT -->
+  <div class="subsection">
+    <div class="subsection-eyebrow">Section 4.2 - Choix du mode de financement</div>
+    <div class="subsection-title">Emprunt vs crédit-bail pour l'alambic (600 k€)</div>
+  </div>
+
+  <div class="encadre encadre-note">
+    <div class="encadre-header">Hypothèses de comparaison</div>
+    <p><strong>Option emprunt</strong> : 600 k€ sur 5 ans à 3,5%, annuités constantes de 133 k€. Alambic amorti comptablement sur 10 ans (60 k€/an). Intérêts et amortissement comptable déductibles fiscalement.</p>
+    <p><strong>Option crédit-bail</strong> : redevances annuelles de 140 k€ sur 5 ans, valeur résiduelle 30 k€ rachetable en année 5. Redevances entièrement déductibles. Pas d'amortissement comptable (le bien n'est pas à l'actif).</p>
+    <p><strong>Hypothèses communes</strong> : taux d'IS 25%, taux d'actualisation 5%, horizon de comparaison 5 ans.</p>
+  </div>
+
+  <div class="exercise">
+    <div class="exercise-title">Exercice 4.2 - Calculer le décaissement net de l'année 1 pour chaque option</div>
+    <p class="exercise-instruction">Pour comprendre la mécanique, on te demande seulement le calcul de l'année 1. Le tableau complet et la VAN sont fournis ensuite.</p>
+
+    <h4>Option 1 : Emprunt - Année 1</h4>
+    <p>Annuité = 133 k€, dont intérêts = 21 k€. Économie d'IS = (intérêts + amortissement comptable) x 25% = (21 + 60) x 0,25 = ?</p>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Économie d'IS année 1 (emprunt) :</label><input type="number" id="ec-empr-eco" data-bonne="20" data-tol="1"><span class="saisie-unit">k€ (arrondi)</span></div>
+    </div>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Décaissement net année 1 (emprunt) :</label><input type="number" id="ec-empr-dec" data-bonne="113" data-tol="1"><span class="saisie-unit">k€ (arrondi)</span></div>
+      <span class="saisie-tolerance">Annuité - Économie d'IS</span>
+    </div>
+
+    <h4>Option 2 : Crédit-bail - Année 1</h4>
+    <p>Redevance = 140 k€. Économie d'IS = redevance x 25% = ?</p>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Économie d'IS année 1 (crédit-bail) :</label><input type="number" id="ec-cb-eco" data-bonne="35" data-tol="1"><span class="saisie-unit">k€</span></div>
+    </div>
+    <div class="saisie-question">
+      <div class="saisie-row"><label>Décaissement net année 1 (crédit-bail) :</label><input type="number" id="ec-cb-dec" data-bonne="105" data-tol="1"><span class="saisie-unit">k€</span></div>
+    </div>
+
+    <button class="btn-primary" onclick="validateSaisie('ec')">Vérifier mes calculs</button>
+    <div id="ec-result" style="margin-top:1rem;"></div>
+
+    <button class="detail-toggle" onclick="toggleDetail('ec-detail')">Voir le détail des calculs</button>
+    <div class="detail-content" id="ec-detail">
+      <h5>Démarche année 1 (illustrative pour comprendre)</h5>
+      <p><strong>Emprunt - Année 1</strong></p>
+      <p>Charges déductibles fiscalement : intérêts 21 k€ + amortissement comptable de l'alambic 60 k€ = 81 k€<br>
+      Économie d'IS = <code>81 x 25% = 20,25</code> arrondi à <strong>20 k€</strong><br>
+      Décaissement net = <code>Annuité 133 - Économie IS 20 = 113 k€</code></p>
+      <p><strong>Crédit-bail - Année 1</strong></p>
+      <p>Charge déductible : redevance 140 k€ entière<br>
+      Économie d'IS = <code>140 x 25% = 35 k€</code><br>
+      Décaissement net = <code>Redevance 140 - Économie IS 35 = 105 k€</code></p>
+      <p><em>Observation : le crédit-bail offre une économie d'IS plus élevée car la redevance est entièrement déductible (140 k€) alors qu'avec l'emprunt seuls les intérêts plus l'amortissement (81 k€) le sont.</em></p>
+    </div>
+  </div>
+
+  <h3>Tableau récapitulatif des décaissements nets sur 5 ans</h3>
+
+  <table class="cadp-table" style="font-size:.88rem;">
+    <thead><tr><th>Année</th><th class="num-col">Annuité emprunt</th><th class="num-col">Éco IS emprunt</th><th class="num-col">Déc. net emprunt</th><th class="num-col">Redevance CB</th><th class="num-col">Éco IS CB</th><th class="num-col">VR rachat</th><th class="num-col">Déc. net CB</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td class="num-col">133</td><td class="num-col">20</td><td class="num-col"><strong>113</strong></td><td class="num-col">140</td><td class="num-col">35</td><td class="num-col">0</td><td class="num-col"><strong>105</strong></td></tr>
+      <tr><td>2</td><td class="num-col">133</td><td class="num-col">19</td><td class="num-col"><strong>114</strong></td><td class="num-col">140</td><td class="num-col">35</td><td class="num-col">0</td><td class="num-col"><strong>105</strong></td></tr>
+      <tr><td>3</td><td class="num-col">133</td><td class="num-col">18</td><td class="num-col"><strong>115</strong></td><td class="num-col">140</td><td class="num-col">35</td><td class="num-col">0</td><td class="num-col"><strong>105</strong></td></tr>
+      <tr><td>4</td><td class="num-col">133</td><td class="num-col">17</td><td class="num-col"><strong>116</strong></td><td class="num-col">140</td><td class="num-col">35</td><td class="num-col">0</td><td class="num-col"><strong>105</strong></td></tr>
+      <tr><td>5</td><td class="num-col">133</td><td class="num-col">16</td><td class="num-col"><strong>117</strong></td><td class="num-col">140</td><td class="num-col">35</td><td class="num-col">30</td><td class="num-col"><strong>135</strong></td></tr>
+      <tr class="total-row"><td><strong>Total</strong></td><td class="num-col">665</td><td class="num-col">90</td><td class="num-col total-num"><strong>575</strong></td><td class="num-col">700</td><td class="num-col">175</td><td class="num-col">30</td><td class="num-col total-num"><strong>555</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Calcul des VAN des décaissements (taux d'actualisation 5%)</h3>
+
+  <div class="exercise">
+    <div class="exercise-title">Exercice 4.3 - Comparer les VAN</div>
+    <p class="exercise-instruction">Les VAN des décaissements (en valeur absolue, c'est-à-dire le coût actualisé total) ont été calculées : <strong>497 k€</strong> pour l'emprunt et <strong>478 k€</strong> pour le crédit-bail. Quelle est la conclusion ?</p>
+
+    <div id="qcm-choix"></div>
+    <button class="btn-primary" onclick="validateQCM('choix')">Valider mon choix</button>
+    <div id="qcm-result-choix" style="margin-top:1rem;"></div>
+
+    <button class="detail-toggle" onclick="toggleDetail('van-detail')">Voir le détail des calculs VAN</button>
+    <div class="detail-content" id="van-detail">
+      <h5>Formule de la VAN des décaissements</h5>
+      <div class="formule">VAN = -Σ [ Décaissement_t / (1 + i)^t ]</div>
+      <p>Plus la VAN est négative en valeur (plus son coût est élevé), moins l'option est avantageuse. Inversement, le coût actualisé le plus faible désigne l'option à privilégier.</p>
+      <h5>Calcul détaillé pour l'emprunt</h5>
+      <p><code>113/1,05 + 114/1,05² + 115/1,05³ + 116/1,05⁴ + 117/1,05⁵ = 107,6 + 103,4 + 99,3 + 95,4 + 91,7 ≈ 497,4 k€</code></p>
+      <h5>Calcul détaillé pour le crédit-bail</h5>
+      <p><code>105/1,05 + 105/1,05² + 105/1,05³ + 105/1,05⁴ + 135/1,05⁵ = 100 + 95,2 + 90,7 + 86,4 + 105,8 ≈ 478,1 k€</code></p>
+      <h5>Conclusion</h5>
+      <p>Le crédit-bail est <strong>moins coûteux de 19 k€</strong> sur 5 ans en valeur actualisée. Toutefois, ce gain doit être mis en regard des inconvénients : pas de propriété de l'alambic pendant 5 ans, valeur résiduelle à racheter, contraintes contractuelles plus rigides qu'un emprunt.</p>
+      <p><em>Le choix final n'est pas qu'arithmétique. Pour Marie Olivier, l'emprunt classique présente l'avantage de faire entrer immédiatement l'alambic dans le patrimoine de l'entreprise, ce qui est culturellement et symboliquement important pour une PME familiale. La différence de coût (19 k€ sur 5 ans, soit 3,8 k€/an, soit 0,3% du chiffre d'affaires annuel) est marginale par rapport à cet enjeu.</em></p>
+    </div>
+  </div>
+
+  <div class="phase-nav-btns">
+    <button class="btn-secondary" onclick="goToPhase(3)">Retour phase 3</button>
+    <button class="btn-primary" onclick="goToPhase(5)">Passer à la phase 5 - Note de diagnostic</button>
+  </div>
+</section>
+
+<!-- ===================== PHASE 5 ===================== -->
+<section class="phase" id="phase-5">
+  <div class="phase-header">
+    <div class="phase-eyebrow">Phase 5 - Durée indicative 30 minutes (prolongeable à la maison)</div>
+    <h2>Note de diagnostic et de recommandation</h2>
+  </div>
+
+  <p>Tu as parcouru toutes les étapes du diagnostic financier. Tu vas maintenant rédiger une <strong>note synthétique</strong> intégrant le diagnostic, l'avis sur le projet export 2026 et la recommandation de mode de financement.</p>
+
+  <div class="encadre encadre-important">
+    <div class="encadre-header">Important - Cette phase peut être prolongée à la maison</div>
+    <p>Si tu manques de temps en présentiel, sauvegarde ton brouillon (la persistance localStorage te permet de reprendre plus tard) et termine la note à la maison. Envoie ton récapitulatif quand la note est aboutie.</p>
+  </div>
+
+  <h3>Format attendu</h3>
+  <ul style="margin-left:1.5rem;margin-bottom:1rem;">
+    <li>En-tête : objet, expéditeur, destinataire, date</li>
+    <li>Introduction : rappel de la mission, problématique</li>
+    <li>Partie 1 : Diagnostic financier (santé actuelle de l'entreprise)</li>
+    <li>Partie 2 : Plan de financement et capacité à porter le projet</li>
+    <li>Partie 3 : Recommandation argumentée sur le mode de financement</li>
+    <li>Conclusion : synthèse et invitation à la décision</li>
+  </ul>
+
+  <h3>Ta note structurée</h3>
+  <div class="production-area">
+    <textarea id="note-marie" placeholder="Note de diagnostic financier et recommandation
+Projet export Europe 2026
+
+À l'attention de : Marie Olivier, Dirigeante
+De : Camille Roux, Apprentie GPME
+Date : ...
+Objet : ...
+
+Introduction
+...
+
+Partie 1 - Diagnostic financier 2025
+...
+
+Partie 2 - Plan de financement 2026-2029
+...
+
+Partie 3 - Recommandation sur le mode de financement
+...
+
+Conclusion
+..."></textarea>
+    <div class="production-counter"><span id="note-count">0</span> caractères - <span id="note-mots">0</span> mots</div>
+  </div>
+
+  <h3>Auto-évaluation pondérée sur 100 points</h3>
+
+  <div class="grille-evaluation" id="grille-eval">
+    <h4>Grille d'auto-évaluation</h4>
+    <div class="critere-row">
+      <div class="critere-libelle">Présentation et structure (en-tête, parties claires, lisibilité)</div>
+      <div class="critere-points">/ 10 pts</div>
+      <div class="critere-input"><input type="number" id="cr1" min="0" max="10" data-max="10"> <span>/ 10</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Qualité de l'introduction et formulation de la problématique</div>
+      <div class="critere-points">/ 10 pts</div>
+      <div class="critere-input"><input type="number" id="cr2" min="0" max="10" data-max="10"> <span>/ 10</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Diagnostic financier 2025 (chiffres clés, ratios, interprétation)</div>
+      <div class="critere-points">/ 25 pts</div>
+      <div class="critere-input"><input type="number" id="cr3" min="0" max="25" data-max="25"> <span>/ 25</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Analyse du plan de financement (équilibre, soldes, marges)</div>
+      <div class="critere-points">/ 20 pts</div>
+      <div class="critere-input"><input type="number" id="cr4" min="0" max="20" data-max="20"> <span>/ 20</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Recommandation argumentée sur le mode de financement</div>
+      <div class="critere-points">/ 20 pts</div>
+      <div class="critere-input"><input type="number" id="cr5" min="0" max="20" data-max="20"> <span>/ 20</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Pertinence économique des arguments (au-delà du seul calcul)</div>
+      <div class="critere-points">/ 10 pts</div>
+      <div class="critere-input"><input type="number" id="cr6" min="0" max="10" data-max="10"> <span>/ 10</span></div>
+    </div>
+    <div class="critere-row">
+      <div class="critere-libelle">Qualité rédactionnelle (orthographe, syntaxe, registre)</div>
+      <div class="critere-points">/ 5 pts</div>
+      <div class="critere-input"><input type="number" id="cr7" min="0" max="5" data-max="5"> <span>/ 5</span></div>
+    </div>
+    <div class="critere-total">
+      <span>Total auto-évaluation</span>
+      <span><span id="grille-total">0</span> / 100</span>
+    </div>
+    <button class="btn-secondary" onclick="calculerGrille()" style="margin-top:1rem;">Calculer mon score</button>
+  </div>
+
+  <button class="detail-toggle" onclick="toggleDetail('note-corr')" style="margin-top:1.5rem;">Voir un exemple de note rédigée</button>
+  <div class="detail-content" id="note-corr">
+    <h5>Exemple de note rédigée (1300 mots environ)</h5>
+
+    <p><strong>Note de diagnostic financier et recommandation - Projet export Europe 2026</strong></p>
+    <p>À l'attention de : Marie Olivier, Dirigeante<br>
+    De : Camille Roux, apprentie GPME<br>
+    Date : Lundi 12 mai 2026<br>
+    Objet : Diagnostic financier 2025, capacité de financement du projet export et recommandation sur l'arbitrage emprunt vs crédit-bail pour l'alambic.</p>
+
+    <p><strong>Introduction</strong></p>
+    <p>Conformément à ta demande du 5 mai, j'ai mené un diagnostic financier complet d'Olivier &amp; Filles à partir des comptes 2025, puis projeté un plan de financement sur la période 2026-2029 et comparé deux modes de financement pour l'alambic. Cette note synthétise les conclusions et propose une recommandation argumentée à présenter au Crédit Agricole Sud Rhône Alpes.</p>
+
+    <p><strong>Partie 1 - Diagnostic financier 2025</strong></p>
+    <p>L'analyse fait apparaître une situation financière particulièrement saine. La structure financière est solide : l'autonomie financière s'établit à 57%, très au-dessus de la norme prudente de 33%, et le ratio d'endettement à 38% laisse des marges importantes pour mobiliser de la dette nouvelle. La performance économique est exceptionnelle, avec une rentabilité économique de 34% et une rentabilité financière de 30%, niveaux conformes au positionnement premium de la maison sur le segment des spiritueux artisanaux à base de plantes provençales.</p>
+    <p>Le bilan fonctionnel confirme l'équilibre : le FRNG atteint 1 610 k€, finance intégralement le BFR de 1 290 k€ et laisse une trésorerie nette confortable de 320 k€. La rotation des stocks de produits finis (88 jours) reflète logiquement le temps de vieillissement nécessaire à nos produits, et le délai de crédit clients (44 jours) reste dans la moyenne nationale. La CAF de 1 056 k€, vérifiée par les deux méthodes de calcul, constitue une ressource interne substantielle pour porter le projet d'investissement.</p>
+
+    <p><strong>Partie 2 - Plan de financement 2026-2029 et capacité à porter le projet</strong></p>
+    <p>Le plan de financement projette les besoins (investissements 680 k€, BFR additionnel 220 k€, remboursement d'emprunts 315 k€, dividendes 290 k€) et les ressources (CAF prévisionnelle progressive 4 750 k€, emprunt 400 k€, subvention export Région AURA 40 k€). Le total des besoins (1 505 k€) est largement couvert par le total des ressources (5 190 k€), avec un solde annuel positif sur les quatre années et un solde cumulé qui atteint 3 685 k€ fin 2029.</p>
+    <p>Cette analyse démontre que le projet est <em>très</em> finançable, au point que tu pourrais légitimement envisager de réduire le montant emprunté ou de retenir une politique de dividendes plus généreuse. La marge de manœuvre est telle que la confiance du banquier devrait être totale : le ratio CAF / annuités d'emprunt dépasse 11 fois en moyenne sur la période, là où les banques considèrent généralement un ratio de 2 comme suffisant.</p>
+
+    <p><strong>Partie 3 - Recommandation sur le mode de financement de l'alambic</strong></p>
+    <p>La comparaison entre l'emprunt classique (133 k€/an d'annuités sur 5 ans) et le crédit-bail (140 k€/an de redevance plus 30 k€ de valeur résiduelle en année 5) fait ressortir un écart faible en valeur actuelle nette : 497 k€ pour l'emprunt contre 478 k€ pour le crédit-bail, soit un gain marginal de 19 k€ pour le crédit-bail sur cinq ans (3,8 k€/an, ou 0,3% du chiffre d'affaires annuel). Cet écart provient de la déductibilité fiscale plus large de la redevance de crédit-bail, qui fait l'objet d'une économie d'IS supérieure aux charges fiscales déductibles dans l'option emprunt (intérêts plus amortissement comptable).</p>
+    <p>Mon analyse va toutefois au-delà du seul calcul. Trois éléments plaident pour l'emprunt classique : (1) l'alambic en cuivre, fabriqué à Cognac, est un actif stratégique, presque emblématique de l'identité d'Olivier &amp; Filles, et il me semble cohérent qu'il entre immédiatement à l'actif ; (2) la valeur résiduelle d'un alambic après cinq ans est significativement supérieure aux 30 k€ de rachat prévus par le contrat de crédit-bail (ce type d'équipement se valorise sur 20 à 40 ans), il y aurait donc un transfert de valeur défavorable à la PME ; (3) l'autonomie financière est suffisamment forte (57%) pour absorber sans difficulté la dette nouvelle, et l'effet de levier financier reste positif puisque la rentabilité économique (34%) excède largement le coût net de la dette après IS.</p>
+    <p><strong>Recommandation</strong> : retenir l'emprunt bancaire de 600 k€ sur 5 ans à 3,5% pour l'alambic, et conserver l'emprunt complémentaire de 400 k€ pour l'aménagement de l'entrepôt et le BFR. Le coût additionnel de 19 k€ sur cinq ans est largement compensé par les bénéfices patrimoniaux et la maîtrise de la valeur résiduelle.</p>
+
+    <p><strong>Conclusion</strong></p>
+    <p>Le projet export Europe 2026 est financièrement solide. Le diagnostic ne fait apparaître aucun signal d'alerte, le plan de financement dégage des marges substantielles et l'arbitrage entre les modes de financement converge vers l'emprunt bancaire classique. Je te propose de présenter ce dossier au Crédit Agricole Sud Rhône Alpes en mettant en avant la rentabilité historique de la maison et la qualité du plan prévisionnel. Je reste à ta disposition pour préparer le rendez-vous bancaire et bâtir le dossier complémentaire qui sera demandé.</p>
+    <p>Camille Roux, apprentie GPME, Olivier &amp; Filles SARL.</p>
+  </div>
+
+  <h3>Synthèse de la capsule</h3>
+
+  <div class="encadre encadre-important">
+    <div class="encadre-header">Important - Les sept points incontournables</div>
+    <ol style="margin-left:1.5rem;margin-top:.5rem;">
+      <li>Le diagnostic financier suit une <strong>séquence stable</strong> : reclasser, mesurer, comparer aux normes, projeter, choisir.</li>
+      <li>La <strong>convergence des deux méthodes de la CAF</strong> est ton premier filet de sécurité. Si elles divergent, retravaille.</li>
+      <li>L'<strong>égalité FRNG = BFR + Trésorerie nette</strong> est ton second filet de sécurité.</li>
+      <li>Les <strong>ratios n'ont de sens qu'avec une norme de référence</strong>. Indique toujours le seuil de comparaison dans tes commentaires.</li>
+      <li>Un <strong>plan de financement équilibré</strong> ne suffit pas : analyse la marge dégagée, le ratio CAF/annuités, et la robustesse aux scénarios défavorables.</li>
+      <li>Le choix d'un mode de financement <strong>ne se réduit pas à un calcul de VAN</strong>. Intègre les enjeux patrimoniaux, contractuels, stratégiques.</li>
+      <li>Une <strong>note de diagnostic professionnelle</strong> conclut toujours par une recommandation argumentée. Ne reste pas dans le constat, prends position.</li>
+    </ol>
+  </div>
+
+  <div class="fiche-methode">
+    <h3>Fiche-mémo - Formules clés</h3>
+    <ol>
+      <li><strong>Production de l'exercice</strong> = Production vendue + Production stockée + Production immobilisée</li>
+      <li><strong>Valeur ajoutée</strong> = Production - Consommations en provenance de tiers</li>
+      <li><strong>EBE</strong> = VA - Impôts et taxes - Charges de personnel</li>
+      <li><strong>Résultat d'exploitation</strong> = EBE + Reprises - DAP - Dotations provisions - Autres charges</li>
+      <li><strong>CAF additive</strong> = Résultat net + DAP + Dotations provisions - Reprises (+ VNC - PCEA)</li>
+      <li><strong>CAF soustractive</strong> = EBE + autres prod. - autres charges + prod. fin. - charges fin. + prod. except. - charges except. - IS</li>
+      <li><strong>FRNG</strong> = Ressources stables - Emplois stables</li>
+      <li><strong>BFR</strong> = (Stocks + Créances + CCA) - (Dettes fournisseurs + Dettes fiscales/sociales + PCA)</li>
+      <li><strong>Trésorerie nette</strong> = (VMP + Disponibilités) - CBC = FRNG - BFR</li>
+      <li><strong>VAN</strong> des décaissements = Σ [Décaissement_t / (1 + i)^t], avec i = taux d'actualisation</li>
+    </ol>
+  </div>
+
+  <h3>Ton score sur la capsule</h3>
+  <div class="score-final" id="score-final">
+    <h3>Capsule mardi - Diagnostic financier complet</h3>
+    <div class="score-big" id="score-big-display">- / -</div>
+    <p>Score consolidé sur les exercices auto-corrigés (toutes phases)</p>
+    <div class="score-detail" id="score-detail-display"></div>
+  </div>
+
+  <div class="email-cta">
+    <h3>Transmettre le récapitulatif</h3>
+    <p>Génère le courriel pré-rédigé et envoie-le à ton responsable pédagogique. Si tu prolonges la note à la maison, vous pouvez tout de même envoyer ce premier récapitulatif maintenant et un second avec la note complète plus tard.</p>
+    <a href="#" id="mailto-link" onclick="genererMailto(event)">Envoyer mon récapitulatif</a>
+  </div>
+
+  <div class="phase-nav-btns">
+    <button class="btn-secondary" onclick="goToPhase(4)">Retour phase 4</button>
+    <span></span>
+  </div>
+</section>
+
+</main>
+
+<footer class="cadp-footer">
+  <p class="cadp-name">Campus Alternance Drôme Provence</p>
+  <p>2 boulevard Frédéric Mistral - 26700 Pierrelatte</p>
+  <p>Capsule de révision E6 SFPME - Session 2026 - BTS GPME 2A</p>
+</footer>
+
+<script>
+/* MOTEUR CADP - Capsule mardi - A4.6 */
+
+const QCM_CHOIX = [
+  {
+    stem: "Au regard du seul calcul de VAN des décaissements actualisés, quelle option est la moins coûteuse ?",
+    options: [
+      { txt: "L'emprunt bancaire (497 k€ de coût actualisé)", correct: false },
+      { txt: "Le crédit-bail (478 k€ de coût actualisé)", correct: true },
+      { txt: "Les deux options sont équivalentes", correct: false },
+      { txt: "On ne peut pas comparer car les durées diffèrent", correct: false }
+    ],
+    feedback: "Le crédit-bail est moins coûteux de 19 k€ sur 5 ans en valeur actualisée. Cet écart provient de la déductibilité fiscale plus large de la redevance par rapport à la combinaison intérêts + amortissement comptable de l'option emprunt."
+  },
+  {
+    stem: "Quel argument plaide en faveur de l'EMPRUNT plutôt que du crédit-bail, malgré son coût légèrement supérieur ? (plusieurs réponses possibles)",
+    options: [
+      { txt: "L'alambic entre immédiatement au patrimoine de l'entreprise", correct: true },
+      { txt: "L'emprunt offre une meilleure économie d'IS chaque année", correct: false },
+      { txt: "La valeur résiduelle réelle de l'alambic dépasse largement les 30 k€ du contrat de crédit-bail", correct: true },
+      { txt: "L'effet de levier financier reste positif vu la rentabilité économique élevée", correct: true },
+      { txt: "Le crédit-bail est interdit en SARL familiale", correct: false }
+    ],
+    feedback: "Trois bonnes réponses : la propriété immédiate de l'actif, la valeur résiduelle réelle largement supérieure au prix de rachat, et l'effet de levier positif (la rentabilité économique de 34% excède largement le coût net de la dette).",
+    multi: true
+  },
+  {
+    stem: "Pour Olivier &amp; Filles, quelle est la recommandation finale la plus défendable ?",
+    options: [
+      { txt: "Retenir le crédit-bail uniquement à cause de son coût actualisé inférieur", correct: false },
+      { txt: "Retenir l'emprunt bancaire en intégrant les enjeux patrimoniaux et stratégiques", correct: true },
+      { txt: "Refuser tout emprunt et financer uniquement par CAF", correct: false },
+      { txt: "Reporter le projet d'un an pour étudier d'autres options", correct: false }
+    ],
+    feedback: "L'emprunt s'impose : l'écart de coût (19 k€ sur 5 ans) est marginal au regard du chiffre d'affaires annuel et compensé par les avantages patrimoniaux (propriété immédiate, valorisation, autonomie). Refuser l'emprunt serait sous-optimal vu la solidité financière de la PME et l'effet de levier positif."
+  }
+];
+
+let etudiant = { nom: '', prenom: '', classe: '' };
+let scores = {};
+let phasesCompletes = new Set();
+let currentPhase = 1;
+
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('cadp-gpme-id');
+  if (saved) {
+    etudiant = JSON.parse(saved);
+    document.getElementById('id-nom').value = etudiant.nom;
+    document.getElementById('id-prenom').value = etudiant.prenom;
+  }
+  document.getElementById('btn-id-valid').addEventListener('click', validerIdentification);
+
+  construireQCM('choix', QCM_CHOIX, 'qcm-choix');
+
+  initCompteurNote('note-marie');
+
+  document.querySelectorAll('.phase-tab').forEach(tab => {
+    tab.addEventListener('click', () => goToPhase(parseInt(tab.dataset.phase)));
+  });
+
+  restaurerProgression();
+});
+
+function validerIdentification() {
+  const nom = document.getElementById('id-nom').value.trim();
+  const prenom = document.getElementById('id-prenom').value.trim();
+  if (!nom || !prenom) { alert("Renseigne ton nom et ton prénom pour continuer."); return; }
+  etudiant = { nom: nom.toUpperCase(), prenom: prenom, classe: 'BTS GPME 2A - Promo 2426' };
+  localStorage.setItem('cadp-gpme-id', JSON.stringify(etudiant));
+  document.getElementById('header-name').textContent = etudiant.prenom + ' ' + etudiant.nom;
+  document.getElementById('modal-id').style.display = 'none';
+}
+
+function construireQCM(phaseId, questions, containerId) {
+  const container = document.getElementById(containerId);
+  let html = '';
+  questions.forEach((q, idx) => {
+    const inputType = q.multi ? 'checkbox' : 'radio';
+    const name = phaseId + '-q' + idx;
+    html += '<div class="qcm-question" data-q="' + idx + '">';
+    html += '<div class="qcm-stem">Question ' + (idx + 1) + ' - ' + q.stem + '</div>';
+    html += '<div class="qcm-options">';
+    q.options.forEach((opt, i) => {
+      html += '<label class="qcm-option">';
+      html += '<input type="' + inputType + '" name="' + name + '" value="' + i + '">';
+      html += '<span>' + opt.txt + '</span>';
+      html += '</label>';
+    });
+    html += '</div>';
+    html += '<div class="qcm-feedback" id="' + phaseId + '-fb-' + idx + '"></div>';
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function validateQCM(phaseId) {
+  const questions = phaseId === 'choix' ? QCM_CHOIX : [];
+  const containerId = 'qcm-' + phaseId;
+  const resultId = 'qcm-result-' + phaseId;
+  const container = document.getElementById(containerId);
+  let bonnesReponses = 0;
+  const totalQuestions = questions.length;
+
+  questions.forEach((q, idx) => {
+    const name = phaseId + '-q' + idx;
+    const checkedInputs = document.querySelectorAll('input[name="' + name + '"]:checked');
+    const checkedValues = Array.from(checkedInputs).map(i => parseInt(i.value));
+    const correctIndices = q.options.map((opt, i) => opt.correct ? i : -1).filter(i => i !== -1);
+    const questionDiv = container.querySelector('[data-q="' + idx + '"]');
+    const optionLabels = questionDiv.querySelectorAll('.qcm-option');
+    const isCorrect = checkedValues.length === correctIndices.length && checkedValues.every(v => correctIndices.includes(v));
+    if (isCorrect) bonnesReponses++;
+    optionLabels.forEach((lbl, i) => {
+      lbl.classList.remove('correct', 'incorrect', 'expected');
+      if (correctIndices.includes(i)) {
+        if (checkedValues.includes(i)) lbl.classList.add('correct');
+        else lbl.classList.add('expected');
+      } else if (checkedValues.includes(i)) lbl.classList.add('incorrect');
+    });
+    const fb = document.getElementById(phaseId + '-fb-' + idx);
+    fb.classList.add('shown');
+    fb.classList.remove('success', 'error');
+    if (isCorrect) { fb.classList.add('success'); fb.innerHTML = '<strong>Correct.</strong> ' + q.feedback; }
+    else { fb.classList.add('error'); fb.innerHTML = '<strong>À revoir.</strong> ' + q.feedback; }
+  });
+
+  const note20 = Math.round((bonnesReponses / totalQuestions) * 20 * 10) / 10;
+  scores['qcm-' + phaseId] = { bonnes: bonnesReponses, total: totalQuestions, note20: note20 };
+
+  document.getElementById(resultId).innerHTML =
+    '<div class="encadre encadre-' + (note20 >= 14 ? 'note' : note20 >= 10 ? 'important' : 'attention') + '">' +
+    '<div class="encadre-header">Score</div>' +
+    '<p><strong>' + bonnesReponses + ' / ' + totalQuestions + '</strong>, soit <strong>' + note20.toFixed(1) + ' / 20</strong>.</p></div>';
+
+  phasesCompletes.add('qcm-' + phaseId);
+  sauvegarderProgression();
+  miseAJourScoreFinal();
+}
+
+function validateSaisie(blocId) {
+  const inputs = document.querySelectorAll('[id^="' + blocId + '-"]');
+  let bonnes = 0, total = 0;
+  inputs.forEach(inp => {
+    if (inp.tagName !== 'INPUT' || (inp.type !== 'number' && inp.type !== 'text')) return;
+    const bonneRaw = inp.dataset.bonne;
+    if (bonneRaw === undefined) return;
+    const valeurRaw = inp.value.trim().replace(',', '.');
+    const valeur = parseFloat(valeurRaw);
+    const bonne = parseFloat(bonneRaw);
+    const tol = parseFloat(inp.dataset.tol || '0');
+    inp.classList.remove('correct', 'incorrect');
+    if (!isNaN(valeur) && valeurRaw !== '') {
+      total++;
+      if (Math.abs(valeur - bonne) <= tol) { inp.classList.add('correct'); bonnes++; }
+      else inp.classList.add('incorrect');
+    }
+  });
+  const note20 = total > 0 ? Math.round((bonnes / total) * 20 * 10) / 10 : 0;
+  scores[blocId] = { bonnes: bonnes, total: total, note20: note20 };
+  let html = '';
+  if (total === 0) html = '<div class="encadre encadre-attention"><div class="encadre-header">Saisie incomplète</div><p>Renseigne au moins une valeur avant de valider.</p></div>';
+  else if (bonnes === total) html = '<div class="encadre encadre-note"><div class="encadre-header">Excellent</div><p>Toutes tes réponses sont correctes (' + bonnes + ' / ' + total + '). Si tu veux comprendre pourquoi, le détail des calculs est disponible.</p></div>';
+  else html = '<div class="encadre encadre-attention"><div class="encadre-header">Réponses partielles</div><p>' + bonnes + ' bonne(s) réponse(s) sur ' + total + '. Les saisies en rouge sont à revoir. Clique sur "Voir le détail" pour identifier ton erreur.</p></div>';
+  document.getElementById(blocId + '-result').innerHTML = html;
+  if (bonnes === total && total > 0) { phasesCompletes.add(blocId); sauvegarderProgression(); miseAJourScoreFinal(); }
+}
+
+function toggleDetail(id) { document.getElementById(id).classList.toggle('shown'); }
+
+function initCompteurNote(id) {
+  const ta = document.getElementById(id);
+  const counterC = document.getElementById('note-count');
+  const counterM = document.getElementById('note-mots');
+  if (ta && counterC && counterM) {
+    ta.addEventListener('input', () => {
+      counterC.textContent = ta.value.length;
+      counterM.textContent = ta.value.trim().split(/\s+/).filter(w => w.length > 0).length;
+      sauvegarderTextes();
+    });
+  }
+}
+
+function sauvegarderTextes() {
+  const data = { note: document.getElementById('note-marie').value };
+  localStorage.setItem('cadp-gpme-textes-mardi', JSON.stringify(data));
+}
+
+function calculerGrille() {
+  let total = 0, valide = true;
+  for (let i = 1; i <= 7; i++) {
+    const inp = document.getElementById('cr' + i);
+    const v = parseFloat(inp.value);
+    const max = parseFloat(inp.dataset.max);
+    if (isNaN(v) || v < 0 || v > max) { inp.style.borderColor = 'var(--error)'; valide = false; }
+    else { inp.style.borderColor = 'var(--border)'; total += v; }
+  }
+  if (!valide) { alert('Vérifie que toutes les notes sont remplies et qu\'aucune ne dépasse le maximum autorisé.'); document.getElementById('grille-total').textContent = '0'; return; }
+  document.getElementById('grille-total').textContent = total;
+  scores.grille = total;
+  sauvegarderProgression();
+  miseAJourScoreFinal();
+}
+
+function goToPhase(num) {
+  document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+  document.getElementById('phase-' + num).classList.add('active');
+  document.querySelectorAll('.phase-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('.phase-tab[data-phase="' + num + '"]').classList.add('active');
+  currentPhase = num;
+  if (num > 1) { phasesCompletes.add('phase' + (num - 1)); marquerPhaseCompletee(num - 1); }
+  miseAJourProgression();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function marquerPhaseCompletee(num) { document.querySelector('.phase-tab[data-phase="' + num + '"]').classList.add('completed'); }
+
+function miseAJourProgression() {
+  const pct = Math.round((Math.max(currentPhase - 1, 0) / 5) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = pct + '%';
+}
+
+function miseAJourScoreFinal() {
+  const labelMap = {
+    'sig': 'SIG (Phase 2)',
+    'caf': 'CAF (Phase 2)',
+    'bf': 'Bilan fonctionnel (Phase 2)',
+    'r-structure': 'Ratios structure (Phase 3)',
+    'r-activite': 'Ratios activité (Phase 3)',
+    'r-rentabilite': 'Ratios rentabilité (Phase 3)',
+    'r-liquidite': 'Liquidité (Phase 3)',
+    'pf': 'Plan de financement (Phase 4)',
+    'ec': 'Calcul décaissements (Phase 4)',
+    'qcm-choix': 'QCM choix mode financement (Phase 4)'
+  };
+  const scoresList = [];
+  Object.keys(labelMap).forEach(key => {
+    if (scores[key] && scores[key].total > 0) scoresList.push({ label: labelMap[key], val: scores[key].note20 });
+  });
+  if (scoresList.length === 0) {
+    document.getElementById('score-big-display').textContent = '- / 20';
+    document.getElementById('score-detail-display').innerHTML = '<p style="color:var(--text-mute);">Réalise les exercices auto-corrigés pour afficher ton score.</p>';
+    return;
+  }
+  const moyenne = scoresList.reduce((sum, s) => sum + s.val, 0) / scoresList.length;
+  document.getElementById('score-big-display').textContent = moyenne.toFixed(1) + ' / 20';
+  let detailHtml = '';
+  scoresList.forEach(s => { detailHtml += '<div class="score-cell"><div class="score-cell-label">' + s.label + '</div><div class="score-cell-value">' + s.val.toFixed(1) + ' / 20</div></div>'; });
+  if (scores.grille !== undefined) detailHtml += '<div class="score-cell"><div class="score-cell-label">Auto-évaluation note</div><div class="score-cell-value">' + scores.grille + ' / 100</div></div>';
+  document.getElementById('score-detail-display').innerHTML = detailHtml;
+}
+
+function sauvegarderProgression() {
+  localStorage.setItem('cadp-gpme-prog-mardi', JSON.stringify({ scores: scores, phasesCompletes: Array.from(phasesCompletes) }));
+}
+
+function restaurerProgression() {
+  const saved = localStorage.getItem('cadp-gpme-prog-mardi');
+  if (saved) {
+    const data = JSON.parse(saved);
+    scores = data.scores || {};
+    phasesCompletes = new Set(data.phasesCompletes || []);
+    miseAJourScoreFinal();
+  }
+  const textes = localStorage.getItem('cadp-gpme-textes-mardi');
+  if (textes) { const data = JSON.parse(textes); if (data.note) document.getElementById('note-marie').value = data.note; }
+  if (etudiant.nom) {
+    document.getElementById('header-name').textContent = etudiant.prenom + ' ' + etudiant.nom;
+    document.getElementById('modal-id').style.display = 'none';
+  }
+}
+
+function genererMailto(e) {
+  e.preventDefault();
+  const sujet = '[CADP - GPME] Capsule mardi - Diagnostic financier - ' + (etudiant.prenom || '?') + ' ' + (etudiant.nom || '?');
+  let corps = 'Bonjour,\n\nVoici le récapitulatif de ma capsule de révision sur le diagnostic financier complet.\n\n';
+  corps += '=== Identification ===\n';
+  corps += 'Nom : ' + (etudiant.nom || '-') + '\nPrénom : ' + (etudiant.prenom || '-') + '\nClasse : ' + (etudiant.classe || '-') + '\nDate : ' + new Date().toLocaleString('fr-FR') + '\n\n';
+  corps += '=== Scores aux exercices auto-corrigés ===\n';
+  const labelMap = {
+    'sig': 'SIG',
+    'caf': 'CAF',
+    'bf': 'Bilan fonctionnel',
+    'r-structure': 'Ratios structure',
+    'r-activite': 'Ratios activité',
+    'r-rentabilite': 'Ratios rentabilité',
+    'r-liquidite': 'Liquidité',
+    'pf': 'Plan de financement',
+    'ec': 'Calcul décaissements',
+    'qcm-choix': 'QCM choix mode financement'
+  };
+  Object.keys(labelMap).forEach(key => {
+    if (scores[key] && scores[key].total > 0) corps += labelMap[key] + ' : ' + scores[key].bonnes + '/' + scores[key].total + ' soit ' + scores[key].note20.toFixed(1) + '/20\n';
+  });
+  if (scores.grille !== undefined) corps += '\n=== Auto-évaluation de la note rédigée ===\nScore auto-déclaré : ' + scores.grille + '/100\n';
+  const note = document.getElementById('note-marie').value.trim();
+  if (note) corps += '\n=== Ma note de diagnostic à Marie Olivier ===\n\n' + note + '\n';
+  corps += '\n---\nCapsule de révision E6 SFPME - Activité A4.6 - BTS GPME 2A - Promo 2426\nCampus Alternance Drôme Provence';
+  const url = 'mailto:kevin.vidard@cadp.pro?subject=' + encodeURIComponent(sujet) + '&body=' + encodeURIComponent(corps);
+  window.location.href = url;
+}
+</script>
+</body>
+</html>
